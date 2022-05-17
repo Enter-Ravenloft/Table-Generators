@@ -1,3 +1,7 @@
+#  https://github.com/ItsQc/Ravenloft-Tables
+#  If you have issue with this, ping Quincy on Discord
+#  Lotsa Spaghetti
+
 
 class RowInfo:
     def __init__(self):
@@ -35,11 +39,10 @@ def GetColumnWidths(table):
     maxLeft = 0
     maxRight = 0
 
-    row = 0
     for row in range(len(table)):
-        if (len(table[row][0]) > maxLeft):
+        if len(table[row][0]) > maxLeft:
             maxLeft = len(table[row][0])
-        if (len(table[row][1]) > maxRight):
+        if len(table[row][1]) > maxRight:
             maxRight = len(table[row][1])
 
     return [maxLeft, maxRight]
@@ -85,14 +88,11 @@ def PrintTable(table):
                     if table[i + 2][1] == mergeCell:
                         postSectionEndRow.IsMerge = True
 
-
-
         currentCellValues = table[i]
         PrintRow(currentCellValues, columnWidths, previousRow, currentRow, nextRow, postSectionEndRow)
 
 
 def PrintRow(cells, widths, previous, current, nextRow, nextSectionHead):
-
     if not current.IsSectionEnd:
         left = 0
         right = 1
@@ -124,7 +124,8 @@ def PrintRow(cells, widths, previous, current, nextRow, nextSectionHead):
         #  Print cell values
         if current.DoesExist and (not current.IsSectionEnd):
             if current.IsMerge:
-                print(middleLeftEdge + "%s" % (cells[left]).center(widths[left] + widths[right] + 3), end= middleRightEdge)
+                print(middleLeftEdge + "%s" % (cells[left]).center(widths[left] + widths[right] + 3),
+                      end=middleRightEdge)
             else:
                 print(middleLeftEdge + "%s" % (cells[left]).center(widths[left] + 1), end=middleSeparator)
                 print(" %s" % (cells[right]).center(widths[right]), end=middleRightEdge)
@@ -248,5 +249,3 @@ def main():
 
 
 main()
-
-
