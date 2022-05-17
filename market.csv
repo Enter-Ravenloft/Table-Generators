@@ -1,0 +1,52 @@
+Common Items
+MERGE
+Tankard of Sobriety
+80 gp
+"Smoldering Armor (light, medium, or heavy)"
++75 gp
+Clockwork Amulet
+100 gp
+ENDSECTION
+ENDSECTION
+Uncommon Items
+MERGE
+"Mark of the Order, +1"
+425 gp
+Cap of Water Breathing
+450 gp
+ENDSECTION
+ENDSECTION
+Rare  Items
+MERGE
+Amulet of Health
+"4,000 gp"
+ENDTABLE
+Cantrip - 15gp
+1st - 25gp
+Infestation
+Healing Word
+Shape Water
+Ice Knife
+Mage Hand
+Earth Tremor
+ENDSECTION
+ENDSECTION
+2nd 150gp
+3rd - 400gp
+Rope Trick
+Wind Wall
+Blindness/Deafness
+Flame Arrows
+Melf's Acid Arrow
+Sleet Storm
+ENDTABLE
+Cloth
+Organic
+Shadowfell Linen - 750
+Plague Wood - 250
+ENDSECTION
+ENDSECTION
+Metal
+Mineral
+Osmodium - 750
+Obsidian - 500
