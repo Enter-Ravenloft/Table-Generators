@@ -19,50 +19,76 @@ class RowInfo:
         self.DoesExist = exist
 
 
-def GetCellValues(cellList):
-    cellValues = []
+class Table:
+    def __init__(self):
+        self.Cell = []
+        self.widestLeftColumn = 0
+        self.widestRightColumn = 0
+        self.widestRow = 0
+        self.widthAllowance = 28 - 7
+        self.WrapsForRow = []
+        self.DoesWrap = False
+        self.numRowsWrapped = 0
 
-    # Iterate over every line
-    for i in range(len(cellList) // 2):
-        i = i * 2
-        j = i + 1
-        leftColumn = cellList[i].rstrip()
-        leftColumn = leftColumn.strip('"')
-        rightColumn = cellList[j].rstrip()
-        rightColumn = rightColumn.strip('"')
-        cellValues.append([leftColumn, rightColumn])
+    def clearMeasurements(self):
+        self.widestLeftColumn = 0
+        self.widestRightColumn = 0
+        self.widestRow = 0
+        self.widthAllowance = 28 - 7
+        self.WrapsForRow = []
+        self.DoesWrap = False
+        self.numRowsWrapped = 0
 
-    return cellValues
-
-
-def GetColumnWidths(table, maxWidth = 28):
-    maxLeft = 0
-    maxRight = 0
-    maxWidth = maxWidth - 8
-    numWraps = 0
-    ignoreValues = ["MERGE", "ENDSECTION", ]
-
-    for row in range(len(table)):
-        if table[row][0] != "ENDSECTION":
-            if len(table[row][0]) > maxLeft:
-                maxLeft = len(table[row][0])
-            if len(table[row][1]) > maxRight:
-                if table[row][1] != "MERGE":
-                    maxRight = len(table[row][1])
-
-    if (maxLeft + maxWidth) > maxWidth:
-        wrap = True
-        numWraps = 1 + ((maxLeft + maxRight) / maxWidth)
+    def build(self, valuesList):
+        self.fillCells(valuesList)
+        self.measureDimensions()
 
 
-    return [maxLeft, maxRight, wrap, numWraps]
+
+    def fillCells(self, valuesList):
+        self.Cell = []
+
+        # Iterate over every line
+        for i in range(len(valuesList) // 2):
+            i = i * 2
+            j = i + 1
+            leftColumn = valuesList[i].rstrip()
+            leftColumn = leftColumn.strip('"')
+            rightColumn = valuesList[j].rstrip()
+            rightColumn = rightColumn.strip('"')
+            self.Cell.append([leftColumn, rightColumn])
+
+
+
+    def measureDimensions(self):
+        self.clearMeasurements()
+
+        for row in range(len(self.Cell)):
+            leftLength = len(self.Cell[row][0])
+            rightLength = len(self.Cell[row][1])
+
+            if self.Cell[row][0] != "ENDSECTION":
+                if leftLength > self.widestLeftColumn:
+                    self.widestLeftColumn = leftLength
+                if rightLength > self.widestRightColumn:
+                    if self.Cell[row][1] != "MERGE":
+                        self.widestRightColumn = rightLength
+                if self.widthAllowance < (leftLength + rightLength):
+                    self.widestRow = leftLength + rightLength
+                    self.WrapsForRow.append(row)
+                    self.numRowsWrapped = self.numRowsWrapped + 1
+                else:
+                    self.WrapsForRow.append(0)
+
+        if self.numRowsWrapped > 0:
+            self.DoesWrap = True
 
 
 def PrintTable(table):
     mergeCell = "MERGE"
     sectionEnd = "ENDSECTION"
 
-    columnWidths = GetColumnWidths(table)
+    columnWidths = measureWidths(table)
 
     previousRow = RowInfo()
     currentRow = RowInfo()
@@ -202,11 +228,12 @@ def PrintCells(leftEdge, rightEdge, leftCell, rightCell, separator, merge, width
     IsWrapText = 3
     rowWraps = 4
 
-    if merge:
-        print(leftEdge + "%s" % leftCell.center(widths[left] + widths[right] + 3), end=rightEdge)
-    else:
-        print(leftEdge + "%s" % leftCell.center(widths[left] + widths[right] + 1), end=separator)
-        print(" %s" % rightCell.center(widths[right]), end=rightEdge)
+    if (rowWraps < 1)
+        if merge:
+            print(leftEdge + "%s" % leftCell.center(widths[left] + widths[right] + 3), end=rightEdge)
+        else:
+            print(leftEdge + "%s %s %s" % (
+                leftCell.center(widths[left]), separator, rightCell.center(widths[right])), end=rightEdge)
 
 
 def MakeTable(table):
