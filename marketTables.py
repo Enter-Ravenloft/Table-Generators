@@ -35,9 +35,11 @@ def GetCellValues(cellList):
     return cellValues
 
 
-def GetColumnWidths(table):
+def GetColumnWidths(table, maxWidth = 28):
     maxLeft = 0
     maxRight = 0
+    maxWidth = maxWidth - 8
+    numWraps = 0
 
     for row in range(len(table)):
         if len(table[row][0]) > maxLeft:
@@ -45,7 +47,12 @@ def GetColumnWidths(table):
         if len(table[row][1]) > maxRight:
             maxRight = len(table[row][1])
 
-    return [maxLeft, maxRight]
+    if (maxLeft + maxWidth) > maxWidth:
+        wrap = True
+        numWraps = 1 + ((maxLeft + maxRight) / maxWidth)
+
+
+    return [maxLeft, maxRight, wrap, numWraps]
 
 
 def PrintTable(table):
@@ -96,6 +103,8 @@ def PrintRow(cells, widths, previous, current, nextRow, nextSectionHead):
     if not current.IsSectionEnd:
         left = 0
         right = 1
+        IsWrapText = 3
+        rowWraps = 4
 
         #  Default is same as for NOT IsMerge
         middleLeftEdge = "║ "
@@ -181,6 +190,19 @@ def PrintRow(cells, widths, previous, current, nextRow, nextSectionHead):
 
         print(nextLeftEdge.ljust(widths[left] + 3, nextLine), end=nextSeparator)
         print("".ljust(widths[right] + 2, nextLine), end=nextRightEdge)
+
+
+def PrintCells(leftEdge, rightEdge, leftCell, rightCell, separator, merge, widths):
+    left = 0
+    right = 1
+    IsWrapText = 3
+    rowWraps = 4
+
+    if merge:
+        print(leftEdge + "%s" % (leftCell).center(widths[left] + widths[right] + 3), end=rightEdge)
+    else:
+        print(leftEdge + "%s" % (leftCell).center(widths[left] + widths[right]+ 1), end=separator)
+        print(" %s" % (rightCell).center(widths[right]), end=rightEdge)
 
 
 def MakeTable(table):
