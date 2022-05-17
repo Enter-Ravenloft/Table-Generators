@@ -195,57 +195,70 @@ def main():
     NUM_TABLES_DEFAULT = 3
     DELIMITER_STRING = 'ENDTABLE\n'
     IsCustomTables = True
-    FILENAME_DEFAULT = 'market.csv'  # Must be UTF-8 text
+    FILENAME_DEFAULT = 'Shop Sheet.txt'  # Must be UTF-8 text
 
     userInput = input("Use only defaults? y/n: ")
     if userInput != 'n':
         IsCustomTables = False
+    else:
+        print("For individual prompts you may enter a lower case x to select the default")
 
     userFile = FILENAME_DEFAULT
     if IsCustomTables:
-        userInput = input("Hit x or Enter file name with full path: ")
+        print("When entering a file name, include the file extension (\".txt\").")
+        print("Only enter the file name, do not add anything else.")
+        userInput = input("Hit x or Enter file name: ")
         if userInput != 'x':
             userFile = userInput
 
     # Open file and save contents in a list
-    inputFile = open(userFile)
-    inputColumn = inputFile.readlines()
-    inputFile.close()
+    try:
+        inputFile = open(userFile)
+        isFileOpen = True
+    except OSError:
+        print("Error: No input file uploaded.")
+        isFileOpen = False
 
-    numTables = NUM_TABLES_DEFAULT
-    if IsCustomTables:
-        userInput = input("(Enter 'x' for default '%d') Enter number of tables to be made: " % NUM_TABLES_DEFAULT)
-        if userInput != 'x':
-            numTables = int(userInput)
+    if isFileOpen:
+        inputColumn = inputFile.readlines()
+        inputFile.close()
 
-    if numTables > 1:
-        for i in range(numTables):
+        numTables = NUM_TABLES_DEFAULT
+        if IsCustomTables:
+            userInput = input("(Enter 'x' for default '%d') Enter number of tables to be made: " % NUM_TABLES_DEFAULT)
+            if userInput != 'x':
+                numTables = int(userInput)
 
-            tableTitle = TABLE_TITLES_DEFAULTS[i]
-            if IsCustomTables:
-                userInput = input("(Enter 'x' for default '%s') Enter table title: " % TABLE_TITLES_DEFAULTS[i])
-                if userInput != 'x':
-                    tableTitle = userInput
+        if numTables > 1:
+            for i in range(numTables):
 
-            if inputColumn.count(DELIMITER_STRING) > 0:
-                IndexOfDelimiter = inputColumn.index(DELIMITER_STRING)
-                tableItems = inputColumn[0:IndexOfDelimiter]
-                inputColumn = inputColumn[(IndexOfDelimiter + 1):]
+                tableTitle = TABLE_TITLES_DEFAULTS[i]
+                if IsCustomTables:
+                    userInput = input("(Enter 'x' for default '%s') Enter table title: " % TABLE_TITLES_DEFAULTS[i])
+                    if userInput != 'x':
+                        tableTitle = userInput
+
+                if inputColumn.count(DELIMITER_STRING) > 0:
+                    IndexOfDelimiter = inputColumn.index(DELIMITER_STRING)
+                    tableItems = inputColumn[0:IndexOfDelimiter]
+                    inputColumn = inputColumn[(IndexOfDelimiter + 1):]
+                else:
+                    tableItems = inputColumn
+
+                print("**%s**" % tableTitle)
+                MakeTable(tableItems)
+
+        else:
+            userInput = input("(Enter 'x' for default '%s') Enter table title: " % TABLE_TITLES_DEFAULTS[0])
+            if userInput != 'x':
+                tableTitle = TABLE_TITLES_DEFAULTS[0]
             else:
-                tableItems = inputColumn
+                tableTitle = userInput
 
             print("**%s**" % tableTitle)
-            MakeTable(tableItems)
-
+            MakeTable(inputColumn)
     else:
-        userInput = input("(Enter 'x' for default '%s') Enter table title: " % TABLE_TITLES_DEFAULTS[0])
-        if userInput != 'x':
-            tableTitle = TABLE_TITLES_DEFAULTS[0]
-        else:
-            tableTitle = userInput
+        print("Please upload a file and run again")
 
-        print("**%s**" % tableTitle)
-        MakeTable(inputColumn)
-
-
+    print("Done.")
 main()
