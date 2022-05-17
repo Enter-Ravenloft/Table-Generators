@@ -200,14 +200,12 @@ def main():
     userInput = input("Use only defaults? y/n: ")
     if userInput != 'n':
         IsCustomTables = False
-    else:
-        print("For individual prompts you may enter a lower case x to select the default")
 
     userFile = FILENAME_DEFAULT
     if IsCustomTables:
-        print("When entering a file name, include the file extension (\".txt\").")
+        print("\nWhen entering a file name, include the file extension (\".txt\").")
         print("Only enter the file name, do not add anything else.")
-        userInput = input("Hit x or Enter file name: ")
+        userInput = input("(Enter 'x' for default '%s') Enter file name: " % FILENAME_DEFAULT)
         if userInput != 'x':
             userFile = userInput
 
