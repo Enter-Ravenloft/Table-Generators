@@ -214,7 +214,7 @@ def main():
         inputFile = open(userFile)
         isFileOpen = True
     except OSError:
-        print("Error: No input file uploaded.")
+        print("\nError: No input file uploaded.")
         isFileOpen = False
 
     if isFileOpen:
@@ -258,5 +258,5 @@ def main():
     else:
         print("Please upload a file and run again")
 
-    print("Done.")
+    print("\n\nDone.")
 main()
