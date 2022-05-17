@@ -40,12 +40,15 @@ def GetColumnWidths(table, maxWidth = 28):
     maxRight = 0
     maxWidth = maxWidth - 8
     numWraps = 0
+    ignoreValues = ["MERGE", "ENDSECTION", ]
 
     for row in range(len(table)):
-        if len(table[row][0]) > maxLeft:
-            maxLeft = len(table[row][0])
-        if len(table[row][1]) > maxRight:
-            maxRight = len(table[row][1])
+        if table[row][0] != "ENDSECTION":
+            if len(table[row][0]) > maxLeft:
+                maxLeft = len(table[row][0])
+            if len(table[row][1]) > maxRight:
+                if table[row][1] != "MERGE":
+                    maxRight = len(table[row][1])
 
     if (maxLeft + maxWidth) > maxWidth:
         wrap = True
@@ -136,8 +139,9 @@ def PrintRow(cells, widths, previous, current, nextRow, nextSectionHead):
                 print(middleLeftEdge + "%s" % (cells[left]).center(widths[left] + widths[right] + 3),
                       end=middleRightEdge)
             else:
-                print(middleLeftEdge + "%s" % (cells[left]).center(widths[left] + 1), end=middleSeparator)
-                print(" %s" % (cells[right]).center(widths[right]), end=middleRightEdge)
+                print(middleLeftEdge + "%s %s %s" % (
+                    cells[left].center(widths[left]), middleSeparator, cells[right].center(widths[right])),
+                    end=middleRightEdge)
 
         # Print next Line
         if not nextRow.DoesExist:
@@ -199,10 +203,10 @@ def PrintCells(leftEdge, rightEdge, leftCell, rightCell, separator, merge, width
     rowWraps = 4
 
     if merge:
-        print(leftEdge + "%s" % (leftCell).center(widths[left] + widths[right] + 3), end=rightEdge)
+        print(leftEdge + "%s" % leftCell.center(widths[left] + widths[right] + 3), end=rightEdge)
     else:
-        print(leftEdge + "%s" % (leftCell).center(widths[left] + widths[right]+ 1), end=separator)
-        print(" %s" % (rightCell).center(widths[right]), end=rightEdge)
+        print(leftEdge + "%s" % leftCell.center(widths[left] + widths[right] + 1), end=separator)
+        print(" %s" % rightCell.center(widths[right]), end=rightEdge)
 
 
 def MakeTable(table):
