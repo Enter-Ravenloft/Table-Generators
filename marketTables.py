@@ -197,6 +197,8 @@ def main():
     IsCustomTables = True
     FILENAME_DEFAULT = 'Shop Sheet.txt'  # Must be UTF-8 text
 
+    print("Please read the instructions to the left before typing.\n")
+
     userInput = input("Use only defaults? y/n: ")
     if userInput != 'n':
         IsCustomTables = False
@@ -258,5 +260,5 @@ def main():
     else:
         print("Please upload a file and run again")
 
-    print("\n\nDone.")
+    print("\n\nTables Complete.")
 main()
