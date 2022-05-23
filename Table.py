@@ -11,6 +11,7 @@ class Table:
         self.numRowsWrapped = 0
         self.MERGE_MARKER = "MERGE"
         self.SECTION_MARKER = "ENDSECTION"
+        self.BoxCharacters = (('┌', '╔'), '═'), '═', '╗', '╤',  '╣', '║', '╟', '┬', '─', '╢', '|', '┼', '╪', '╧', '┴', '╚', '═', '╝'
 
     def clearMeasurements(self):
         self.widestLeftColumn = 0
