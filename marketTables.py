@@ -10,10 +10,6 @@ class RowInfo:
         self.DoesExist = False
 
     def reset(self, exist=False):
-        """
-
-        :type exist: bool
-        """
         self.IsSectionEnd = False
         self.IsMerge = False
         self.DoesExist = exist
@@ -22,6 +18,7 @@ class RowInfo:
 class Table:
     def __init__(self):
         self.Cell = []
+        self.RowInfo = [{}]
         self.widestLeftColumn = 0
         self.widestRightColumn = 0
         self.widestRow = 0
@@ -29,6 +26,8 @@ class Table:
         self.WrapsForRow = []
         self.DoesWrap = False
         self.numRowsWrapped = 0
+        self.MERGE_MARKER = "MERGE"
+        self.SECTION_MARKER = "ENDSECTION"
 
     def clearMeasurements(self):
         self.widestLeftColumn = 0
@@ -39,11 +38,12 @@ class Table:
         self.DoesWrap = False
         self.numRowsWrapped = 0
 
+    def clearRowInfo(self):
+        self.RowInfo = [{}]
+
     def build(self, valuesList):
         self.fillCells(valuesList)
         self.measureDimensions()
-
-
 
     def fillCells(self, valuesList):
         self.Cell = []
@@ -58,23 +58,23 @@ class Table:
             rightColumn = rightColumn.strip('"')
             self.Cell.append([leftColumn, rightColumn])
 
-
-
     def measureDimensions(self):
         self.clearMeasurements()
+        left = 0
+        right = 1
 
         for row in range(len(self.Cell)):
-            leftLength = len(self.Cell[row][0])
-            rightLength = len(self.Cell[row][1])
+            leftValueLength = len(self.Cell[row][0])
+            rightValueLength = len(self.Cell[row][1])
 
-            if self.Cell[row][0] != "ENDSECTION":
-                if leftLength > self.widestLeftColumn:
-                    self.widestLeftColumn = leftLength
-                if rightLength > self.widestRightColumn:
-                    if self.Cell[row][1] != "MERGE":
-                        self.widestRightColumn = rightLength
-                if self.widthAllowance < (leftLength + rightLength):
-                    self.widestRow = leftLength + rightLength
+            if self.Cell[row][left] == self.SECTION_MARKER:
+                if leftValueLength > self.widestLeftColumn:
+                    self.widestLeftColumn = leftValueLength
+                if rightValueLength > self.widestRightColumn:
+                    if self.Cell[row][right] != self.MERGE_MARKER:
+                        self.widestRightColumn = rightValueLength
+                if self.widthAllowance < (leftValueLength + rightValueLength):
+                    self.widestRow = leftValueLength + rightValueLength
                     self.WrapsForRow.append(row)
                     self.numRowsWrapped = self.numRowsWrapped + 1
                 else:
@@ -82,6 +82,17 @@ class Table:
 
         if self.numRowsWrapped > 0:
             self.DoesWrap = True
+
+    def updateRowInfo(self):
+        self.clearRowInfo()
+        left = 0
+        right = 1
+
+        for row in self.Cell:
+            merge = (self.Cell[row][right] == self.MERGE_MARKER)
+            sectionEnd = (self.Cell[row][left] == self.SECTION_MARKER)
+
+            self.RowInfo.append({self.MERGE_MARKER: merge, self.SECTION_MARKER: sectionEnd})
 
 
 def PrintTable(table):
@@ -228,7 +239,7 @@ def PrintCells(leftEdge, rightEdge, leftCell, rightCell, separator, merge, width
     IsWrapText = 3
     rowWraps = 4
 
-    if (rowWraps < 1)
+    if rowWraps < 1:
         if merge:
             print(leftEdge + "%s" % leftCell.center(widths[left] + widths[right] + 3), end=rightEdge)
         else:
