@@ -1,7 +1,7 @@
 #  https://github.com/ItsQc/Ravenloft-Tables
 #  If you have issue with this, ping Quincy on Discord
 #  Lotsa Spaghetti
-
+from Table import *
 
 class RowInfo:
     def __init__(self):
@@ -15,91 +15,11 @@ class RowInfo:
         self.DoesExist = exist
 
 
-class Table:
-    def __init__(self):
-        self.Cell = []
-        self.RowInfo = [{}]
-        self.widestLeftColumn = 0
-        self.widestRightColumn = 0
-        self.widestRow = 0
-        self.widthAllowance = 28 - 7
-        self.WrapsForRow = []
-        self.DoesWrap = False
-        self.numRowsWrapped = 0
-        self.MERGE_MARKER = "MERGE"
-        self.SECTION_MARKER = "ENDSECTION"
-
-    def clearMeasurements(self):
-        self.widestLeftColumn = 0
-        self.widestRightColumn = 0
-        self.widestRow = 0
-        self.widthAllowance = 28 - 7
-        self.WrapsForRow = []
-        self.DoesWrap = False
-        self.numRowsWrapped = 0
-
-    def clearRowInfo(self):
-        self.RowInfo = [{}]
-
-    def build(self, valuesList):
-        self.fillCells(valuesList)
-        self.measureDimensions()
-
-    def fillCells(self, valuesList):
-        self.Cell = []
-
-        # Iterate over every line
-        for i in range(len(valuesList) // 2):
-            i = i * 2
-            j = i + 1
-            leftColumn = valuesList[i].rstrip()
-            leftColumn = leftColumn.strip('"')
-            rightColumn = valuesList[j].rstrip()
-            rightColumn = rightColumn.strip('"')
-            self.Cell.append([leftColumn, rightColumn])
-
-    def measureDimensions(self):
-        self.clearMeasurements()
-        left = 0
-        right = 1
-
-        for row in range(len(self.Cell)):
-            leftValueLength = len(self.Cell[row][0])
-            rightValueLength = len(self.Cell[row][1])
-
-            if self.Cell[row][left] == self.SECTION_MARKER:
-                if leftValueLength > self.widestLeftColumn:
-                    self.widestLeftColumn = leftValueLength
-                if rightValueLength > self.widestRightColumn:
-                    if self.Cell[row][right] != self.MERGE_MARKER:
-                        self.widestRightColumn = rightValueLength
-                if self.widthAllowance < (leftValueLength + rightValueLength):
-                    self.widestRow = leftValueLength + rightValueLength
-                    self.WrapsForRow.append(row)
-                    self.numRowsWrapped = self.numRowsWrapped + 1
-                else:
-                    self.WrapsForRow.append(0)
-
-        if self.numRowsWrapped > 0:
-            self.DoesWrap = True
-
-    def updateRowInfo(self):
-        self.clearRowInfo()
-        left = 0
-        right = 1
-
-        for row in self.Cell:
-            merge = (self.Cell[row][right] == self.MERGE_MARKER)
-            sectionEnd = (self.Cell[row][left] == self.SECTION_MARKER)
-
-            self.RowInfo.append({self.MERGE_MARKER: merge, self.SECTION_MARKER: sectionEnd})
-
-
 def PrintTable(table):
     mergeCell = "MERGE"
     sectionEnd = "ENDSECTION"
 
-    columnWidths = measureWidths(table)
+    ## columnWidths = measureWidths(table)
 
     previousRow = RowInfo()
     currentRow = RowInfo()
@@ -136,7 +56,7 @@ def PrintTable(table):
                         postSectionEndRow.IsMerge = True
 
         currentCellValues = table[i]
-        PrintRow(currentCellValues, columnWidths, previousRow, currentRow, nextRow, postSectionEndRow)
+        PrintRow(currentCellValues, '''columnWidths''', previousRow, currentRow, nextRow, postSectionEndRow)
 
 
 def PrintRow(cells, widths, previous, current, nextRow, nextSectionHead):
@@ -246,14 +166,6 @@ def PrintCells(leftEdge, rightEdge, leftCell, rightCell, separator, merge, width
             print(leftEdge + "%s %s %s" % (
                 leftCell.center(widths[left]), separator, rightCell.center(widths[right])), end=rightEdge)
 
-
-def MakeTable(table):
-    print("```")
-    table = GetCellValues(table)
-    PrintTable(table)
-    print("```")
-
-
 def main():
     TABLE_TITLES_DEFAULTS = ["Magic Items", "Spell Scrolls", "Special Materials"]
     NUM_TABLES_DEFAULT = 3
@@ -310,7 +222,9 @@ def main():
                     tableItems = inputColumn
 
                 print("**%s**" % tableTitle)
-                MakeTable(tableItems)
+                marketTable = Table()
+                marketTable.build(tableItems)
+                marketTable.printUnicodeTable()
 
         else:
             userInput = input("(Enter 'x' for default '%s') Enter table title: " % TABLE_TITLES_DEFAULTS[0])
@@ -320,7 +234,9 @@ def main():
                 tableTitle = userInput
 
             print("**%s**" % tableTitle)
-            MakeTable(inputColumn)
+            marketTable = Table()
+            marketTable.build(inputColumn)
+            marketTable.printUnicodeTable()
     else:
         print("Please upload a file and run again")
 
