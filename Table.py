@@ -159,7 +159,7 @@ class Table:
         separator = '!'
         edgeRight = " x"
 
-        for i in self.RowInfo:
+        for i in range(len(self.RowInfo)):
             widthLeft = self.widestLeftColumn
             widthRight = self.widestRightColumn
 
