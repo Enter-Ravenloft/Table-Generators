@@ -1,7 +1,7 @@
 class Table:
     def __init__(self, valuesList = []):
         self.Cell = []
-        self.RowInfo = [{}]
+        self.RowInfo = []
         self.widestLeftColumn = 0
         self.widestRightColumn = 0
         self.widestRow = 0
@@ -83,7 +83,7 @@ class Table:
         self.numRowsWrapped = 0
 
     def clearRowInfo(self):
-        self.RowInfo = [{}]
+        self.RowInfo = []
 
     def build(self, valuesList):
         self.fillCells(valuesList)
