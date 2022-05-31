@@ -11,7 +11,65 @@ class Table:
         self.numRowsWrapped = 0
         self.MERGE_MARKER = "MERGE"
         self.SECTION_MARKER = "ENDSECTION"
-        self.BoxCharacters = (('┌', '╔'), '═'), '═', '╗', '╤',  '╣', '║', '╟', '┬', '─', '╢', '|', '┼', '╪', '╧', '┴', '╚', '═', '╝'
+        self.BoxCharacter = {"Left":
+                             {"Corner":
+                                  {"single": '┌',
+                                   "double": '╔'},
+                              "Vertical":
+                                  {"single":
+                                       {"intersect":
+                                            {"single": '├',
+                                             "double": '╞'},
+                                        "straight": '│'},
+                                   "double ":
+                                       {"intersect":
+                                            {"single": '╟',
+                                             "double": '╠'},
+                                        "straight": '║'}},
+                              },
+                         "Center":
+                             {"single":
+                                  {"intersect":
+                                       {"down":
+                                            {"single": '┬',
+                                             "double": '╥'},
+                                        "through":
+                                            {"single": '┼',
+                                             "double": '╫'},
+                                        "up":
+                                            {"single": '┴',
+                                             "double": '╨'}},
+                                   "straight": '─'},
+                              "double":
+                                  {"intersect":
+                                       {"down":
+                                            {"single": '╤',
+                                             "double": '╦'},
+                                        "through":
+                                            {"single": '╪',
+                                             "double": '╬'},
+                                        "up":
+                                            {"single": '╧',
+                                             "double": '╩'}},
+                                   "straight": '═'}
+                              },
+                         "Right":
+                             {"Corner":
+                                  {"single": '┐',
+                                   "double": '╗'},
+                              "Vertical":
+                                  {"single":
+                                       {"intersect":
+                                            {"single": '┤',
+                                             "double": '╡'},
+                                        "straight": '│'},
+                                   "double ":
+                                       {"intersect":
+                                            {"single": '╢',
+                                             "double": '╣'},
+                                        "straight": '║'}},
+                              }
+                         }
 
     def clearMeasurements(self):
         self.widestLeftColumn = 0
