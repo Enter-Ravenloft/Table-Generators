@@ -1,5 +1,5 @@
 class Table:
-    def __init__(self):
+    def __init__(self, valuesList = []):
         self.Cell = []
         self.RowInfo = [{}]
         self.widestLeftColumn = 0
@@ -70,6 +70,8 @@ class Table:
                                         "straight": '║'}},
                               }
                          }
+        if len(valuesList) > 0:
+            self.build(valuesList)
 
     def clearMeasurements(self):
         self.widestLeftColumn = 0
@@ -148,5 +150,27 @@ class Table:
 
     def printUnicodeTable(self):
         print("```")
-        print("TODO: printUnicodeTable")
+
+        left = 0
+        right = 1
+        rowWraps = self.numRowsWrapped
+        edgeLeft = "x "
+        lineFill = '~'
+        separator = '!'
+        edgeRight = " x"
+
+        for i in self.RowInfo:
+            widthLeft = self.widestLeftColumn
+            widthRight = self.widestRightColumn
+
+            print("TODO: MAKE BOXES --------------------")
+
+            if rowWraps < 1:
+                if self.RowInfo[i][self.MERGE_MARKER]:
+                    print(edgeLeft + "%s" % self.Cell[i][left].center(widthLeft + widthRight + 3), end=edgeRight)
+                else:
+                    print(edgeLeft + "%s %s %s" % (self.Cell[i][left].center(widthLeft), separator,
+                                                   self.Cell[i][right].center(widthRight)), end=edgeRight)
+        print("TODO: MAKE BOXES --------------------")
+
         print("```")
