@@ -13,8 +13,12 @@ class Table:
         self.SECTION_MARKER = "ENDSECTION"
         self.BoxChars = {"Left":
                                  {"Corner":
-                                      {"single": '┌',
-                                       "double": '╔'},
+                                      {"Top":
+                                          {"single": '┌',
+                                           "double": '╔'},
+                                       "Bottom":
+                                          {"single": '└',
+                                           "double": '╚'}},
                                   "Vertical":
                                       {"single":
                                            {"intersect":
@@ -27,7 +31,7 @@ class Table:
                                                  "double": '╠'},
                                             "straight": '║'}},
                                   },
-                         "Center":
+                         "Horizontal":
                                  {"single":
                                       {"intersect":
                                            {"down":
@@ -55,8 +59,12 @@ class Table:
                                   },
                          "Right":
                                  {"Corner":
-                                      {"single": '┐',
-                                       "double": '╗'},
+                                      {"Top":
+                                          {"single": '┐',
+                                           "double": '╗'},
+                                       "Bottom":
+                                           {"single": '┘',
+                                            "double": '╝'}},
                                   "Vertical":
                                       {"single":
                                            {"intersect":
@@ -88,7 +96,7 @@ class Table:
     def build(self, valuesList):
         self.fillCells(valuesList)
         self.measureDimensions()
-        self.updateRowInfo()
+        self.getRowTraits()
 
     def fillCells(self, valuesList):
         self.Cell = []
@@ -129,7 +137,7 @@ class Table:
         if self.numRowsWrapped > 0:
             self.DoesWrap = True
 
-    def updateRowInfo(self):
+    def getRowTraits(self):
         self.clearRowInfo()
         left = 0
         right = 1
@@ -146,38 +154,94 @@ class Table:
 
             self.RowInfo.append({self.MERGE_MARKER: merge, self.SECTION_MARKER: sectionEnd})
 
+
+    def getContextRowChars(self, row):
+        merged = self.MERGE_MARKER
+        nextMerged = "Next Merged"
+        sectionHead = "Section Head"
+        tableHead = "Table Head"
+        sectionFoot = "Section Foot"
+        tableFoot = "Table Foot"
+        sectionMarker = self.SECTION_MARKER
+
+        traits = {merged, nextMerged, sectionHead, tableHead, tableFoot, sectionFoot,
+                  sectionMarker}
+        for key in traits:
+            traits[key] = False
+
+
+        if self.RowInfo[row][merged]:
+            traits[merged] = True
+        if self.RowInfo[row][sectionMarker]:
+            traits[sectionMarker] = True
+
+        # Process information on next printable row
+        if row < len(self.RowInfo):
+            if self.RowInfo[row + 1][sectionMarker]:
+                traits[sectionFoot] = True
+                # If row is a sectionFoot then need to check row after the section marker row
+                if row < len(self.RowInfo):
+                    if self.RowInfo[row + 2][merged]:
+                        traits[nextMerged] = True
+
+            else:
+                if self.RowInfo[row + 1][merged]:
+                    traits[nextMerged] = True
+
+
+
+
+
     def printUnicodeTable(self):
-        self.updateRowInfo()
+        self.getRowTraits()
         self.measureDimensions()
         print("```")
 
         left = 0
         right = 1
+        isMerge = 0
+        isSectionEnd = 1
         rowWraps = self.numRowsWrapped
-        edgeLeft = 'x'
-        lineFill = '~'
-        separator = '!'
-        edgeRight = "x\n"
         widthLeft = self.widestLeftColumn
         widthRight = self.widestRightColumn
 
         for i in range(len(self.RowInfo)):
 
-
             if i == 0:
-                print(self.BoxChars["Left"]["Corner"]["double"].ljust(widthLeft + widthRight + 4,
-                                                                      self.BoxChars["Center"]["double"]["straight"]),
-                      end=(self.BoxChars["Right"]["Corner"]["double"] + '\n'))
-            else:
-                print("TODO: NICE BOXES".center(widthLeft + widthRight + 3, lineFill))
+                lineFill = self.BoxChars["Horizontal"]["double"]["straight"]
+                if self.RowInfo[i][self.MERGE_MARKER]:
+                    separator = lineFill
+                else:
+                    separator = self.BoxChars["Horizontal"]["double"]["intersect"]["down"]["double"]
 
-            ##if rowWraps < 1:
-            if self.RowInfo[i][self.MERGE_MARKER]:
-                print(edgeLeft + "%s" % self.Cell[i][left].center(widthLeft + widthRight + 3), end=edgeRight)
-            else:
-                print(edgeLeft + "%s %s %s" % (self.Cell[i][left].center(widthLeft), separator,
-                                               self.Cell[i][right].center(widthRight)), end=edgeRight)
-        print("TODO: MAKE BOXES".center(widthLeft + widthRight, '~'))
+                print(self.BoxChars["Left"]["Corner"]["Top"]["double"].ljust(widthLeft + 2, lineFill), end=separator)
+                print("".rjust(widthRight + 1, lineFill), end=(self.BoxChars["Right"]["Corner"]["Top"]["double"] + '\n'))
+
+
+
+            edgeLeft = self.BoxChars["Right"]["Vertical"]["double"]["straight"]
+            lineFill = self.BoxChars["Horizontal"]["single"]["straight"]
+            separator = self.BoxChars["Left"]["Vertical"]["double"]["straight"]
+            edgeRight = self.BoxChars["Right"]["Vertical"]["double"]["straight"]
+            edgeRight = edgeRight + '\n'
+
+            if self.Cell[i][left] != self.SECTION_MARKER:
+                ##if rowWraps < 1:
+                if self.RowInfo[i][self.MERGE_MARKER]:
+                    print(edgeLeft + "%s" % self.Cell[i][left].center(widthLeft + widthRight + 3), end=edgeRight)
+                else:
+                    print(edgeLeft + "%s %s %s" % (self.Cell[i][left].center(widthLeft), separator,
+                                                   self.Cell[i][right].center(widthRight)), end=edgeRight)
+
+                if i == (len(self.RowInfo) - 1):
+                    if self.RowInfo[i][self.MERGE_MARKER]:
+                        separator = self.BoxChars["Horizontal"]["double"]["straight"]
+                    else:
+                        separator = self.BoxChars["Horizontal"]["double"]["intersect"]["up"]["double"]
+                    print(self.BoxChars["Left"]["Corner"]["Bottom"]["double"].ljust(widthLeft + 2, lineFill), end=separator)
+                    print("".rjust(widthRight + 1, lineFill), end=(self.BoxChars["Right"]["Corner"]["Bottom"]["double"] + '\n'))
+                else:
+                    print("TODO: NICE BOXES".center(widthLeft + widthRight + 3, lineFill))
 
         print("```")
 
