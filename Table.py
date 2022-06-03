@@ -5,13 +5,13 @@ class Table:
         self.widestLeftColumn = 0
         self.widestRightColumn = 0
         self.widestRow = 0
-        self.widthAllowance = 28 - 7
+        self.widthAllowance = 30  # Orignally 28 -7 based on feedback from cellphone users.
         self.WrapsForRow = []
         self.DoesWrap = False
         self.numRowsWrapped = 0
         self.MERGE_MARKER = "MERGE"
         self.SECTION_MARKER = "ENDSECTION"
-        self.BoxCharacter = {"Left":
+        self.BoxChars = {"Left":
                                  {"Corner":
                                       {"single": '┌',
                                        "double": '╔'},
@@ -27,7 +27,7 @@ class Table:
                                                  "double": '╠'},
                                             "straight": '║'}},
                                   },
-                             "Center":
+                         "Center":
                                  {"single":
                                       {"intersect":
                                            {"down":
@@ -53,7 +53,7 @@ class Table:
                                                  "double": '╩'}},
                                        "straight": '═'}
                                   },
-                             "Right":
+                         "Right":
                                  {"Corner":
                                       {"single": '┐',
                                        "double": '╗'},
@@ -69,7 +69,7 @@ class Table:
                                                  "double": '╣'},
                                             "straight": '║'}},
                                   }
-                             }
+                         }
         if len(valuesList) > 0:
             self.build(valuesList)
 
@@ -112,7 +112,7 @@ class Table:
             leftValueLength = len(self.Cell[row][left])
             rightValueLength = len(self.Cell[row][right])
 
-            if self.Cell[row][left] == self.SECTION_MARKER:
+            if self.Cell[row][left] != self.SECTION_MARKER:
                 if leftValueLength > self.widestLeftColumn:
                     self.widestLeftColumn = leftValueLength
                 if rightValueLength > self.widestRightColumn:
@@ -154,23 +154,30 @@ class Table:
         left = 0
         right = 1
         rowWraps = self.numRowsWrapped
-        edgeLeft = "x "
+        edgeLeft = 'x'
         lineFill = '~'
         separator = '!'
-        edgeRight = " x"
+        edgeRight = "x\n"
         widthLeft = self.widestLeftColumn
         widthRight = self.widestRightColumn
 
         for i in range(len(self.RowInfo)):
-            print("\n" + "TODO: MAKE BOXES".center(widthLeft + widthRight, '~'))
 
-            if rowWraps < 1:
-                if self.RowInfo[i][self.MERGE_MARKER]:
-                    print(edgeLeft + "%s" % self.Cell[i][left].center(widthLeft + widthRight + 3), end=edgeRight)
-                else:
-                    print(edgeLeft + "%s %s %s" % (self.Cell[i][left].center(widthLeft), separator,
-                                                   self.Cell[i][right].center(widthRight)), end=edgeRight)
-        print("\n" + "TODO: MAKE BOXES".center(widthLeft + widthRight, '~'))
+
+            if i == 0:
+                print(self.BoxChars["Left"]["Corner"]["double"].ljust(widthLeft + widthRight + 4,
+                                                                      self.BoxChars["Center"]["double"]["straight"]),
+                      end=(self.BoxChars["Right"]["Corner"]["double"] + '\n'))
+            else:
+                print("TODO: NICE BOXES".center(widthLeft + widthRight + 3, lineFill))
+
+            ##if rowWraps < 1:
+            if self.RowInfo[i][self.MERGE_MARKER]:
+                print(edgeLeft + "%s" % self.Cell[i][left].center(widthLeft + widthRight + 3), end=edgeRight)
+            else:
+                print(edgeLeft + "%s %s %s" % (self.Cell[i][left].center(widthLeft), separator,
+                                               self.Cell[i][right].center(widthRight)), end=edgeRight)
+        print("TODO: MAKE BOXES".center(widthLeft + widthRight, '~'))
 
         print("```")
 
