@@ -12,71 +12,71 @@ class Table:
         self.MERGE_MARKER = "MERGE"
         self.SECTION_MARKER = "ENDSECTION"
         self.BoxChars = {"Left":
-                                 {"Corner":
-                                      {"Top":
-                                          {"single": '┌',
-                                           "double": '╔'},
-                                       "Bottom":
-                                          {"single": '└',
-                                           "double": '╚'}},
-                                  "Vertical":
-                                      {"single":
-                                           {"intersect":
-                                                {"single": '├',
-                                                 "double": '╞'},
-                                            "straight": '│'},
-                                       "double ":
-                                           {"intersect":
-                                                {"single": '╟',
-                                                 "double": '╠'},
-                                            "straight": '║'}},
-                                  },
+                             {"Corner":
+                                  {"Top":
+                                       {"single": '┌',
+                                        "double": '╔'},
+                                   "Bottom":
+                                       {"single": '└',
+                                        "double": '╚'}},
+                              "Vertical":
+                                  {"single":
+                                       {"intersect":
+                                            {"single": '├',
+                                             "double": '╞'},
+                                        "straight": '│'},
+                                   "double":
+                                       {"intersect":
+                                            {"single": '╟',
+                                             "double": '╠'},
+                                        "straight": '║'}},
+                              },
                          "Horizontal":
-                                 {"single":
-                                      {"intersect":
-                                           {"down":
-                                                {"single": '┬',
-                                                 "double": '╥'},
-                                            "through":
-                                                {"single": '┼',
-                                                 "double": '╫'},
-                                            "up":
-                                                {"single": '┴',
-                                                 "double": '╨'}},
-                                       "straight": '─'},
-                                  "double":
-                                      {"intersect":
-                                           {"down":
-                                                {"single": '╤',
-                                                 "double": '╦'},
-                                            "through":
-                                                {"single": '╪',
-                                                 "double": '╬'},
-                                            "up":
-                                                {"single": '╧',
-                                                 "double": '╩'}},
-                                       "straight": '═'}
-                                  },
+                             {"single":
+                                  {"intersect":
+                                       {"down":
+                                            {"single": '┬',
+                                             "double": '╥'},
+                                        "through":
+                                            {"single": '┼',
+                                             "double": '╫'},
+                                        "up":
+                                            {"single": '┴',
+                                             "double": '╨'}},
+                                   "straight": '─'},
+                              "double":
+                                  {"intersect":
+                                       {"down":
+                                            {"single": '╤',
+                                             "double": '╦'},
+                                        "through":
+                                            {"single": '╪',
+                                             "double": '╬'},
+                                        "up":
+                                            {"single": '╧',
+                                             "double": '╩'}},
+                                   "straight": '═'}
+                              },
                          "Right":
-                                 {"Corner":
-                                      {"Top":
-                                          {"single": '┐',
-                                           "double": '╗'},
-                                       "Bottom":
-                                           {"single": '┘',
-                                            "double": '╝'}},
-                                  "Vertical":
-                                      {"single":
-                                           {"intersect":
-                                                {"single": '┤',
-                                                 "double": '╡'},
-                                            "straight": '│'},
-                                       "double ":
-                                           {"intersect":
-                                                {"single": '╢',
-                                                 "double": '╣'},
-                                            "straight": '║'}},
-                                  }
+                             {"Corner":
+                                  {"Top":
+                                       {"single": '┐',
+                                        "double": '╗'},
+                                   "Bottom":
+                                       {"single": '┘',
+                                        "double": '╝'}},
+                              "Vertical":
+                                  {"single":
+                                       {"intersect":
+                                            {"single": '┤',
+                                             "double": '╡'},
+                                        "straight": '│'},
+                                   "double":
+                                       {"intersect":
+                                            {"single": '╢',
+                                             "double": '╣'},
+                                        "straight": '║'}},
+                              }
                          }
         if len(valuesList) > 0:
             self.build(valuesList)
@@ -154,42 +154,82 @@ class Table:
 
             self.RowInfo.append({self.MERGE_MARKER: merge, self.SECTION_MARKER: sectionEnd})
 
-
-    def getContextRowChars(self, row):
+    def getBoxCharsForRow(self, row):
         merged = self.MERGE_MARKER
         nextMerged = "Next Merged"
         sectionHead = "Section Head"
         tableHead = "Table Head"
         sectionFoot = "Section Foot"
         tableFoot = "Table Foot"
+        prevMerged = "Previous Merged"
         sectionMarker = self.SECTION_MARKER
+        setOfTraits = [merged, nextMerged, sectionHead, tableHead, sectionMarker, sectionFoot, sectionMarker, prevMerged]
 
-        traits = {merged, nextMerged, sectionHead, tableHead, tableFoot, sectionFoot,
-                  sectionMarker}
-        for key in traits:
+        traits = dict()
+        for key in setOfTraits:
             traits[key] = False
 
-
-        if self.RowInfo[row][merged]:
+        if (self.RowInfo[row][merged] == True):
             traits[merged] = True
         if self.RowInfo[row][sectionMarker]:
             traits[sectionMarker] = True
 
+        if row == 0:
+            traits[tableHead] = True
+        elif row == len(self.RowInfo):
+            traits[tableFoot] = True
+        elif self.RowInfo[row -1][sectionMarker]:
+            traits[sectionHead] = True
+
         # Process information on next printable row
-        if row < len(self.RowInfo):
+        else:
             if self.RowInfo[row + 1][sectionMarker]:
                 traits[sectionFoot] = True
                 # If row is a sectionFoot then need to check row after the section marker row
                 if row < len(self.RowInfo):
                     if self.RowInfo[row + 2][merged]:
                         traits[nextMerged] = True
-
             else:
                 if self.RowInfo[row + 1][merged]:
                     traits[nextMerged] = True
 
+        nextLine = []
 
+        # Left edge and fill line
+        if traits[sectionFoot] or traits[sectionHead]: # Next line is double
+            nextLine.append(self.BoxChars["Left"]["Vertical"]["double"]["intersect"]["double"])
+            nextLine.append(self.BoxChars["Horizontal"]["double"]["straight"])
+            nextLine.append(self.BoxChars["Right"]["Vertical"]["double"]["intersect"]["double"])
+        else: # Next line is single
+            nextLine.append(self.BoxChars["Left"]["Vertical"]["double"]["intersect"]["single"])
+            nextLine.append(self.BoxChars["Horizontal"]["single"]["straight"])
+            nextLine.append(self.BoxChars["Right"]["Vertical"]["double"]["intersect"]["single"])
 
+        # Separator
+        if traits[merged]:  # Top is flat
+            if traits[nextMerged]:  # bottom flat, all flat
+                if traits[sectionFoot] or traits[sectionHead]:
+                    nextLine.append(self.BoxChars["Horizontal"]["double"]["straight"])
+                else:
+                    nextLine.append(self.BoxChars["Horizontal"]["single"]["straight"])
+            else: # points down
+                if traits[sectionFoot] or traits[sectionHead]:
+                    nextLine.append(self.BoxChars["Horizontal"]["double"]["intersect"]["down"]["single"])
+                else:
+                    nextLine.append(self.BoxChars["Horizontal"]["single"]["intersect"]["down"]["single"])
+        else:  # Points up
+            if traits[nextMerged]:  # bottom is flat
+                if traits[sectionFoot] or traits[sectionHead]:
+                    nextLine.append(self.BoxChars["Horizontal"]["double"]["intersect"]["up"]["single"])
+                else:
+                    nextLine.append(self.BoxChars["Horizontal"]["single"]["intersect"]["up"]["single"])
+            else:  # Points down as well
+                if traits[sectionFoot] or traits[sectionHead]:
+                    nextLine.append(self.BoxChars["Horizontal"]["double"]["intersect"]["through"]["single"])
+                else:
+                    nextLine.append(self.BoxChars["Horizontal"]["single"]["intersect"]["through"]["single"])
+
+        return nextLine
 
 
     def printUnicodeTable(self):
@@ -199,8 +239,6 @@ class Table:
 
         left = 0
         right = 1
-        isMerge = 0
-        isSectionEnd = 1
         rowWraps = self.numRowsWrapped
         widthLeft = self.widestLeftColumn
         widthRight = self.widestRightColumn
@@ -212,16 +250,14 @@ class Table:
                 if self.RowInfo[i][self.MERGE_MARKER]:
                     separator = lineFill
                 else:
-                    separator = self.BoxChars["Horizontal"]["double"]["intersect"]["down"]["double"]
+                    separator = self.BoxChars["Horizontal"]["double"]["intersect"]["down"]["single"]
 
                 print(self.BoxChars["Left"]["Corner"]["Top"]["double"].ljust(widthLeft + 2, lineFill), end=separator)
-                print("".rjust(widthRight + 1, lineFill), end=(self.BoxChars["Right"]["Corner"]["Top"]["double"] + '\n'))
-
-
+                print("".rjust(widthRight + 1, lineFill),
+                      end=(self.BoxChars["Right"]["Corner"]["Top"]["double"] + '\n'))
 
             edgeLeft = self.BoxChars["Right"]["Vertical"]["double"]["straight"]
-            lineFill = self.BoxChars["Horizontal"]["single"]["straight"]
-            separator = self.BoxChars["Left"]["Vertical"]["double"]["straight"]
+            separator = self.BoxChars["Left"]["Vertical"]["single"]["straight"]
             edgeRight = self.BoxChars["Right"]["Vertical"]["double"]["straight"]
             edgeRight = edgeRight + '\n'
 
@@ -234,14 +270,24 @@ class Table:
                                                    self.Cell[i][right].center(widthRight)), end=edgeRight)
 
                 if i == (len(self.RowInfo) - 1):
+                    lineFill = self.BoxChars["Horizontal"]["double"]["straight"]
                     if self.RowInfo[i][self.MERGE_MARKER]:
-                        separator = self.BoxChars["Horizontal"]["double"]["straight"]
+                        separator = lineFill
                     else:
-                        separator = self.BoxChars["Horizontal"]["double"]["intersect"]["up"]["double"]
-                    print(self.BoxChars["Left"]["Corner"]["Bottom"]["double"].ljust(widthLeft + 2, lineFill), end=separator)
-                    print("".rjust(widthRight + 1, lineFill), end=(self.BoxChars["Right"]["Corner"]["Bottom"]["double"] + '\n'))
+                        separator = self.BoxChars["Horizontal"]["double"]["intersect"]["up"]["single"]
+                    print(self.BoxChars["Left"]["Corner"]["Bottom"]["double"].ljust(widthLeft + 2, lineFill),
+                          end=separator)
+                    print("".rjust(widthRight + 1, lineFill),
+                          end=(self.BoxChars["Right"]["Corner"]["Bottom"]["double"] + '\n'))
                 else:
-                    print("TODO: NICE BOXES".center(widthLeft + widthRight + 3, lineFill))
+                    characters = self.getBoxCharsForRow(i)
+                    edgeLeft = characters[0]
+                    lineFill = characters[1]
+                    edgeRight = characters[2] + '\n'
+                    separator = characters[3]
+
+                    print(edgeLeft.ljust(widthLeft + 2, lineFill), end=separator)
+                    print("".rjust(widthRight + 1, lineFill), end=edgeRight)
 
         print("```")
 
