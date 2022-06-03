@@ -1,7 +1,7 @@
 #  https://github.com/ItsQc/Ravenloft-Tables
 #  If you have issue with this, ping Quincy on Discord
 #  Lotsa Spaghetti
-
+from Table import *
 
 class RowInfo:
     def __init__(self):
@@ -10,49 +10,16 @@ class RowInfo:
         self.DoesExist = False
 
     def reset(self, exist=False):
-        """
-
-        :type exist: bool
-        """
         self.IsSectionEnd = False
         self.IsMerge = False
         self.DoesExist = exist
-
-
-def GetCellValues(cellList):
-    cellValues = []
-
-    # Iterate over every line
-    for i in range(len(cellList) // 2):
-        i = i * 2
-        j = i + 1
-        leftColumn = cellList[i].rstrip()
-        leftColumn = leftColumn.strip('"')
-        rightColumn = cellList[j].rstrip()
-        rightColumn = rightColumn.strip('"')
-        cellValues.append([leftColumn, rightColumn])
-
-    return cellValues
-
-
-def GetColumnWidths(table):
-    maxLeft = 0
-    maxRight = 0
-
-    for row in range(len(table)):
-        if len(table[row][0]) > maxLeft:
-            maxLeft = len(table[row][0])
-        if len(table[row][1]) > maxRight:
-            maxRight = len(table[row][1])
-
-    return [maxLeft, maxRight]
 
 
 def PrintTable(table):
     mergeCell = "MERGE"
     sectionEnd = "ENDSECTION"
 
-    columnWidths = GetColumnWidths(table)
+    ## columnWidths = measureWidths(table)
 
     previousRow = RowInfo()
     currentRow = RowInfo()
@@ -89,13 +56,15 @@ def PrintTable(table):
                         postSectionEndRow.IsMerge = True
 
         currentCellValues = table[i]
-        PrintRow(currentCellValues, columnWidths, previousRow, currentRow, nextRow, postSectionEndRow)
+        PrintRow(currentCellValues, '''columnWidths''', previousRow, currentRow, nextRow, postSectionEndRow)
 
 
 def PrintRow(cells, widths, previous, current, nextRow, nextSectionHead):
     if not current.IsSectionEnd:
         left = 0
         right = 1
+        IsWrapText = 3
+        rowWraps = 4
 
         #  Default is same as for NOT IsMerge
         middleLeftEdge = "║ "
@@ -127,8 +96,9 @@ def PrintRow(cells, widths, previous, current, nextRow, nextSectionHead):
                 print(middleLeftEdge + "%s" % (cells[left]).center(widths[left] + widths[right] + 3),
                       end=middleRightEdge)
             else:
-                print(middleLeftEdge + "%s" % (cells[left]).center(widths[left] + 1), end=middleSeparator)
-                print(" %s" % (cells[right]).center(widths[right]), end=middleRightEdge)
+                print(middleLeftEdge + "%s %s %s" % (
+                    cells[left].center(widths[left]), middleSeparator, cells[right].center(widths[right])),
+                    end=middleRightEdge)
 
         # Print next Line
         if not nextRow.DoesExist:
@@ -183,12 +153,18 @@ def PrintRow(cells, widths, previous, current, nextRow, nextSectionHead):
         print("".ljust(widths[right] + 2, nextLine), end=nextRightEdge)
 
 
-def MakeTable(table):
-    print("```")
-    table = GetCellValues(table)
-    PrintTable(table)
-    print("```")
+def PrintCells(leftEdge, rightEdge, leftCell, rightCell, separator, merge, widths):
+    left = 0
+    right = 1
+    IsWrapText = 3
+    rowWraps = 4
 
+    if rowWraps < 1:
+        if merge:
+            print(leftEdge + "%s" % leftCell.center(widths[left] + widths[right] + 3), end=rightEdge)
+        else:
+            print(leftEdge + "%s %s %s" % (
+                leftCell.center(widths[left]), separator, rightCell.center(widths[right])), end=rightEdge)
 
 def main():
     TABLE_TITLES_DEFAULTS = ["Magic Items", "Spell Scrolls", "Special Materials"]
@@ -246,7 +222,9 @@ def main():
                     tableItems = inputColumn
 
                 print("**%s**" % tableTitle)
-                MakeTable(tableItems)
+                marketTable = Table()
+                marketTable.build(tableItems)
+                marketTable.printUnicodeTable()
 
         else:
             userInput = input("(Enter 'x' for default '%s') Enter table title: " % TABLE_TITLES_DEFAULTS[0])
@@ -256,7 +234,9 @@ def main():
                 tableTitle = userInput
 
             print("**%s**" % tableTitle)
-            MakeTable(inputColumn)
+            marketTable = Table()
+            marketTable.build(inputColumn)
+            marketTable.printUnicodeTable()
     else:
         print("Please upload a file and run again")
 
