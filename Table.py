@@ -1,5 +1,5 @@
 class Table:
-    def __init__(self, valuesList = []):
+    def __init__(self, valuesList=[]):
         self.Cell = []
         self.RowInfo = []
         self.widestLeftColumn = 0
@@ -12,64 +12,64 @@ class Table:
         self.MERGE_MARKER = "MERGE"
         self.SECTION_MARKER = "ENDSECTION"
         self.BoxCharacter = {"Left":
-                             {"Corner":
-                                  {"single": '┌',
-                                   "double": '╔'},
-                              "Vertical":
-                                  {"single":
-                                       {"intersect":
-                                            {"single": '├',
-                                             "double": '╞'},
-                                        "straight": '│'},
-                                   "double ":
-                                       {"intersect":
-                                            {"single": '╟',
-                                             "double": '╠'},
-                                        "straight": '║'}},
-                              },
-                         "Center":
-                             {"single":
-                                  {"intersect":
-                                       {"down":
-                                            {"single": '┬',
-                                             "double": '╥'},
-                                        "through":
-                                            {"single": '┼',
-                                             "double": '╫'},
-                                        "up":
-                                            {"single": '┴',
-                                             "double": '╨'}},
-                                   "straight": '─'},
-                              "double":
-                                  {"intersect":
-                                       {"down":
-                                            {"single": '╤',
-                                             "double": '╦'},
-                                        "through":
-                                            {"single": '╪',
-                                             "double": '╬'},
-                                        "up":
-                                            {"single": '╧',
-                                             "double": '╩'}},
-                                   "straight": '═'}
-                              },
-                         "Right":
-                             {"Corner":
-                                  {"single": '┐',
-                                   "double": '╗'},
-                              "Vertical":
-                                  {"single":
-                                       {"intersect":
-                                            {"single": '┤',
-                                             "double": '╡'},
-                                        "straight": '│'},
-                                   "double ":
-                                       {"intersect":
-                                            {"single": '╢',
-                                             "double": '╣'},
-                                        "straight": '║'}},
-                              }
-                         }
+                                 {"Corner":
+                                      {"single": '┌',
+                                       "double": '╔'},
+                                  "Vertical":
+                                      {"single":
+                                           {"intersect":
+                                                {"single": '├',
+                                                 "double": '╞'},
+                                            "straight": '│'},
+                                       "double ":
+                                           {"intersect":
+                                                {"single": '╟',
+                                                 "double": '╠'},
+                                            "straight": '║'}},
+                                  },
+                             "Center":
+                                 {"single":
+                                      {"intersect":
+                                           {"down":
+                                                {"single": '┬',
+                                                 "double": '╥'},
+                                            "through":
+                                                {"single": '┼',
+                                                 "double": '╫'},
+                                            "up":
+                                                {"single": '┴',
+                                                 "double": '╨'}},
+                                       "straight": '─'},
+                                  "double":
+                                      {"intersect":
+                                           {"down":
+                                                {"single": '╤',
+                                                 "double": '╦'},
+                                            "through":
+                                                {"single": '╪',
+                                                 "double": '╬'},
+                                            "up":
+                                                {"single": '╧',
+                                                 "double": '╩'}},
+                                       "straight": '═'}
+                                  },
+                             "Right":
+                                 {"Corner":
+                                      {"single": '┐',
+                                       "double": '╗'},
+                                  "Vertical":
+                                      {"single":
+                                           {"intersect":
+                                                {"single": '┤',
+                                                 "double": '╡'},
+                                            "straight": '│'},
+                                       "double ":
+                                           {"intersect":
+                                                {"single": '╢',
+                                                 "double": '╣'},
+                                            "straight": '║'}},
+                                  }
+                             }
         if len(valuesList) > 0:
             self.build(valuesList)
 
@@ -118,8 +118,6 @@ class Table:
                 if rightValueLength > self.widestRightColumn:
                     if self.Cell[row][right] != self.MERGE_MARKER:
                         self.widestRightColumn = rightValueLength
-                    else:
-                        rightValueLength = 0
 
                 if self.widthAllowance < (leftValueLength + rightValueLength):
                     self.widestRow = leftValueLength + rightValueLength
@@ -149,6 +147,8 @@ class Table:
             self.RowInfo.append({self.MERGE_MARKER: merge, self.SECTION_MARKER: sectionEnd})
 
     def printUnicodeTable(self):
+        self.updateRowInfo()
+        self.measureDimensions()
         print("```")
 
         left = 0
@@ -158,12 +158,11 @@ class Table:
         lineFill = '~'
         separator = '!'
         edgeRight = " x"
+        widthLeft = self.widestLeftColumn
+        widthRight = self.widestRightColumn
 
         for i in range(len(self.RowInfo)):
-            widthLeft = self.widestLeftColumn
-            widthRight = self.widestRightColumn
-
-            print("TODO: MAKE BOXES --------------------")
+            print("\n" + "TODO: MAKE BOXES".center(widthLeft + widthRight, '~'))
 
             if rowWraps < 1:
                 if self.RowInfo[i][self.MERGE_MARKER]:
@@ -171,6 +170,8 @@ class Table:
                 else:
                     print(edgeLeft + "%s %s %s" % (self.Cell[i][left].center(widthLeft), separator,
                                                    self.Cell[i][right].center(widthRight)), end=edgeRight)
-        print("TODO: MAKE BOXES --------------------")
+        print("\n" + "TODO: MAKE BOXES".center(widthLeft + widthRight, '~'))
 
         print("```")
+
+        print("Width: left %d, right %d, combined %d" % (widthLeft, widthRight, (widthLeft + widthRight)))
