@@ -196,11 +196,13 @@ class Table:
         nextLine = []
 
         # Left edge and fill line
-        if traits[sectionFoot] or traits[sectionHead]: # Next line is double
+        if traits[sectionFoot] or traits[sectionHead] or traits[tableHead]: # Next line is double
+            isDoubleLine = True
             nextLine.append(self.BoxChars["Left"]["Vertical"]["double"]["intersect"]["double"])
             nextLine.append(self.BoxChars["Horizontal"]["double"]["straight"])
             nextLine.append(self.BoxChars["Right"]["Vertical"]["double"]["intersect"]["double"])
         else: # Next line is single
+            isDoubleLine = False
             nextLine.append(self.BoxChars["Left"]["Vertical"]["double"]["intersect"]["single"])
             nextLine.append(self.BoxChars["Horizontal"]["single"]["straight"])
             nextLine.append(self.BoxChars["Right"]["Vertical"]["double"]["intersect"]["single"])
@@ -208,23 +210,23 @@ class Table:
         # Separator
         if traits[merged]:  # Top is flat
             if traits[nextMerged]:  # bottom flat, all flat
-                if traits[sectionFoot] or traits[sectionHead]:
+                if isDoubleLine:
                     nextLine.append(self.BoxChars["Horizontal"]["double"]["straight"])
                 else:
                     nextLine.append(self.BoxChars["Horizontal"]["single"]["straight"])
             else: # points down
-                if traits[sectionFoot] or traits[sectionHead]:
+                if isDoubleLine:
                     nextLine.append(self.BoxChars["Horizontal"]["double"]["intersect"]["down"]["single"])
                 else:
                     nextLine.append(self.BoxChars["Horizontal"]["single"]["intersect"]["down"]["single"])
         else:  # Points up
             if traits[nextMerged]:  # bottom is flat
-                if traits[sectionFoot] or traits[sectionHead]:
+                if isDoubleLine:
                     nextLine.append(self.BoxChars["Horizontal"]["double"]["intersect"]["up"]["single"])
                 else:
                     nextLine.append(self.BoxChars["Horizontal"]["single"]["intersect"]["up"]["single"])
             else:  # Points down as well
-                if traits[sectionFoot] or traits[sectionHead]:
+                if isDoubleLine:
                     nextLine.append(self.BoxChars["Horizontal"]["double"]["intersect"]["through"]["single"])
                 else:
                     nextLine.append(self.BoxChars["Horizontal"]["single"]["intersect"]["through"]["single"])
@@ -252,14 +254,15 @@ class Table:
                 else:
                     separator = self.BoxChars["Horizontal"]["double"]["intersect"]["down"]["single"]
 
-                print(self.BoxChars["Left"]["Corner"]["Top"]["double"].ljust(widthLeft + 2, lineFill), end=separator)
-                print("".rjust(widthRight + 1, lineFill),
+                print(self.BoxChars["Left"]["Corner"]["Top"]["double"].ljust(widthLeft + 3, lineFill), end=separator)
+                print("".rjust(widthRight + 2, lineFill),
                       end=(self.BoxChars["Right"]["Corner"]["Top"]["double"] + '\n'))
 
             edgeLeft = self.BoxChars["Right"]["Vertical"]["double"]["straight"]
+            edgeLeft = edgeLeft + ' '
             separator = self.BoxChars["Left"]["Vertical"]["single"]["straight"]
             edgeRight = self.BoxChars["Right"]["Vertical"]["double"]["straight"]
-            edgeRight = edgeRight + '\n'
+            edgeRight = ' ' + edgeRight + '\n'
 
             if self.Cell[i][left] != self.SECTION_MARKER:
                 ##if rowWraps < 1:
@@ -275,9 +278,9 @@ class Table:
                         separator = lineFill
                     else:
                         separator = self.BoxChars["Horizontal"]["double"]["intersect"]["up"]["single"]
-                    print(self.BoxChars["Left"]["Corner"]["Bottom"]["double"].ljust(widthLeft + 2, lineFill),
+                    print(self.BoxChars["Left"]["Corner"]["Bottom"]["double"].ljust(widthLeft + 3, lineFill),
                           end=separator)
-                    print("".rjust(widthRight + 1, lineFill),
+                    print("".rjust(widthRight + 2, lineFill),
                           end=(self.BoxChars["Right"]["Corner"]["Bottom"]["double"] + '\n'))
                 else:
                     characters = self.getBoxCharsForRow(i)
@@ -286,8 +289,8 @@ class Table:
                     edgeRight = characters[2] + '\n'
                     separator = characters[3]
 
-                    print(edgeLeft.ljust(widthLeft + 2, lineFill), end=separator)
-                    print("".rjust(widthRight + 1, lineFill), end=edgeRight)
+                    print(edgeLeft.ljust(widthLeft + 3, lineFill), end=separator)
+                    print("".rjust(widthRight + 2, lineFill), end=edgeRight)
 
         print("```")
 
