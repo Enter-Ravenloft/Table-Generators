@@ -2,6 +2,7 @@
 #  If you have issue with this, ping Quincy on Discord
 #  Lotsa Spaghetti
 from Table import *
+from time import *
 
 class RowInfo:
     def __init__(self):
@@ -166,11 +167,35 @@ def PrintCells(leftEdge, rightEdge, leftCell, rightCell, separator, merge, width
             print(leftEdge + "%s %s %s" % (
                 leftCell.center(widths[left]), separator, rightCell.center(widths[right])), end=rightEdge)
 
+
+def addDaysToPOSIX(add_days=1, to_hour=-1, day_cycle=-1,  cycle_start=0):
+    NANOSECONDS_PER_SECOND = 1000000000
+    SECONDS_PER_HOUR = 60 * 60
+    SECONDS_PER_DAY = SECONDS_PER_HOUR * 24
+
+    currentTimeInPOSIX = time_ns() // NANOSECONDS_PER_SECOND
+    secondsElapsedToday = currentTimeInPOSIX % SECONDS_PER_DAY
+
+    currentTimeInPOSIX = currentTimeInPOSIX - secondsElapsedToday
+
+    if day_cycle >= 0:
+        cycleOffset = (currentTimeInPOSIX - cycle_start) % (day_cycle * SECONDS_PER_DAY)
+        futureTimeInPOSIX = currentTimeInPOSIX - cycleOffset
+
+    futureTimeInPOSIX = futureTimeInPOSIX + (add_days * SECONDS_PER_DAY)
+
+    if to_hour >= 0:
+        futureTimeInPOSIX = futureTimeInPOSIX + (to_hour * SECONDS_PER_HOUR)
+
+    return futureTimeInPOSIX
+
+
 def main():
     TABLE_TITLES_DEFAULTS = ["Magic Items", "Spell Scrolls", "Special Materials"]
     NUM_TABLES_DEFAULT = 3
     DELIMITER_STRING = 'ENDTABLE\n'
     IsCustomTables = True
+    MARKET_CYCLE_START_POSIX = 1654988400
     UNIX_TIME_TO_ADD = 259200
     FILENAME_DEFAULT = 'Shop Sheet.txt'  # Must be UTF-8 text
 
@@ -207,7 +232,8 @@ def main():
             unixTimeStamp = unixTimeStamp + UNIX_TIME_TO_ADD
             closingPlayersTag = closingPlayersTag + str(unixTimeStamp) + endOfCLosingPlayersTag
         else:
-            closingPlayersTag = closingPlayersTag + "0" + endOfCLosingPlayersTag
+            threeDaysFromNow = str(addDaysToPOSIX(3, 23, 3, MARKET_CYCLE_START_POSIX))
+            closingPlayersTag = closingPlayersTag + threeDaysFromNow + endOfCLosingPlayersTag
 
         numTables = NUM_TABLES_DEFAULT
         if IsCustomTables:
