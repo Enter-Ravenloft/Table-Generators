@@ -171,11 +171,12 @@ def main():
     NUM_TABLES_DEFAULT = 3
     DELIMITER_STRING = 'ENDTABLE\n'
     IsCustomTables = True
+    UNIX_TIME_TO_ADD = 259200
     FILENAME_DEFAULT = 'Shop Sheet.txt'  # Must be UTF-8 text
 
     print("Please read the instructions to the left before typing.\n")
 
-    userInput = input("Use only defaults? y/n: ")
+    userInput = input("Make default Vistani Market tables? y/n: ")
     if userInput != 'n':
         IsCustomTables = False
 
@@ -196,14 +197,26 @@ def main():
         isFileOpen = False
 
     if isFileOpen:
-        inputColumn = inputFile.readlines()
+        unprocessedTableInput = inputFile.readlines()
         inputFile.close()
+
+        closingPlayersTag = "@Players the market closes <t:"
+        endOfCLosingPlayersTag = ":R>."
+        unixTimeStamp = int(input("Enter the previous unix time stamp or 0 to skip: "))
+        if unixTimeStamp != 0:
+            unixTimeStamp = unixTimeStamp + UNIX_TIME_TO_ADD
+            closingPlayersTag = closingPlayersTag + str(unixTimeStamp) + endOfCLosingPlayersTag
+        else:
+            closingPlayersTag = closingPlayersTag + "0" + endOfCLosingPlayersTag
 
         numTables = NUM_TABLES_DEFAULT
         if IsCustomTables:
             userInput = input("(Enter 'x' for default '%d') Enter number of tables to be made: " % NUM_TABLES_DEFAULT)
             if userInput != 'x':
                 numTables = int(userInput)
+
+        else:
+            print("__**Vistani Market**__\n")
 
         if numTables > 1:
             for i in range(numTables):
@@ -214,12 +227,12 @@ def main():
                     if userInput != 'x':
                         tableTitle = userInput
 
-                if inputColumn.count(DELIMITER_STRING) > 0:
-                    IndexOfDelimiter = inputColumn.index(DELIMITER_STRING)
-                    tableItems = inputColumn[0:IndexOfDelimiter]
-                    inputColumn = inputColumn[(IndexOfDelimiter + 1):]
+                if unprocessedTableInput.count(DELIMITER_STRING) > 0:
+                    IndexOfDelimiter = unprocessedTableInput.index(DELIMITER_STRING)
+                    tableItems = unprocessedTableInput[0:IndexOfDelimiter]
+                    unprocessedTableInput = unprocessedTableInput[(IndexOfDelimiter + 1):]
                 else:
-                    tableItems = inputColumn
+                    tableItems = unprocessedTableInput
 
                 print("**%s**" % tableTitle)
                 marketTable = Table()
@@ -235,10 +248,15 @@ def main():
 
             print("**%s**" % tableTitle)
             marketTable = Table()
-            marketTable.build(inputColumn)
+            marketTable.build(unprocessedTableInput)
             marketTable.printUnicodeTable()
+
+        print(closingPlayersTag)
+
     else:
         print("Please upload a file and run again")
 
     print("\n\nTables Complete.")
+
+
 main()
