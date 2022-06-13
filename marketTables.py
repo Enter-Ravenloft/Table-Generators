@@ -168,23 +168,26 @@ def PrintCells(leftEdge, rightEdge, leftCell, rightCell, separator, merge, width
                 leftCell.center(widths[left]), separator, rightCell.center(widths[right])), end=rightEdge)
 
 
-def addDaysToPOSIX(add_days=1, to_hour=-1, day_cycle=-1,  cycle_start=0):
+def addDaysToPOSIX(add_days=1, to_hour=-1, day_cycle=-1, cycle_start=0, start_day=-1):
     NANOSECONDS_PER_SECOND = 1000000000
     SECONDS_PER_HOUR = 60 * 60
     SECONDS_PER_DAY = SECONDS_PER_HOUR * 24
 
-    currentTimeInPOSIX = time_ns() // NANOSECONDS_PER_SECOND
-    secondsElapsedToday = currentTimeInPOSIX % SECONDS_PER_DAY
+    if start_day < 0:
+        currentTimeInPOSIX = time_ns() // NANOSECONDS_PER_SECOND
+    else:
+        currentTimeInPOSIX = start_day
 
-    currentTimeInPOSIX = currentTimeInPOSIX - secondsElapsedToday
+    secondsAfterMidnight = currentTimeInPOSIX % SECONDS_PER_DAY
+    currentTimeInPOSIX = currentTimeInPOSIX - secondsAfterMidnight
 
-    if day_cycle >= 0:
+    if day_cycle > 0:
         cycleOffset = (currentTimeInPOSIX - cycle_start) % (day_cycle * SECONDS_PER_DAY)
         futureTimeInPOSIX = currentTimeInPOSIX - cycleOffset
 
     futureTimeInPOSIX = futureTimeInPOSIX + (add_days * SECONDS_PER_DAY)
 
-    if to_hour >= 0:
+    if to_hour > 0:
         futureTimeInPOSIX = futureTimeInPOSIX + (to_hour * SECONDS_PER_HOUR)
 
     return futureTimeInPOSIX
@@ -196,6 +199,8 @@ def main():
     DELIMITER_STRING = 'ENDTABLE\n'
     IsCustomTables = True
     MARKET_CYCLE_START_POSIX = 1654988400
+    testStartTime_TEST = 1654387200
+    MARKET_CYCLE_START_POSIX = testStartTime_TEST
     UNIX_TIME_TO_ADD = 259200
     FILENAME_DEFAULT = 'Shop Sheet.txt'  # Must be UTF-8 text
 
@@ -204,6 +209,7 @@ def main():
     userInput = input("Make default Vistani Market tables? y/n: ")
     if userInput != 'n':
         IsCustomTables = False
+    print("\n\n")
 
     userFile = FILENAME_DEFAULT
     if IsCustomTables:
@@ -227,13 +233,20 @@ def main():
 
         closingPlayersTag = "@Players the market closes <t:"
         endOfCLosingPlayersTag = ":R>."
-        unixTimeStamp = int(input("Enter the previous unix time stamp or 0 to skip: "))
-        if unixTimeStamp != 0:
-            unixTimeStamp = unixTimeStamp + UNIX_TIME_TO_ADD
-            closingPlayersTag = closingPlayersTag + str(unixTimeStamp) + endOfCLosingPlayersTag
+
+        if IsCustomTables:
+            unixTimeStamp = int(input("Enter the unix time stamp or 0 to skip: "))
+            if unixTimeStamp != 0:
+                unixTimeStamp = addDaysToPOSIX(3, 23, 3, MARKET_CYCLE_START_POSIX, unixTimeStamp)
+                closingPlayersTag = closingPlayersTag + str(unixTimeStamp)
+            else:
+                threeDaysFromNow = str(addDaysToPOSIX(3, 23, 3, MARKET_CYCLE_START_POSIX))
+                closingPlayersTag = closingPlayersTag + threeDaysFromNow
         else:
             threeDaysFromNow = str(addDaysToPOSIX(3, 23, 3, MARKET_CYCLE_START_POSIX))
-            closingPlayersTag = closingPlayersTag + threeDaysFromNow + endOfCLosingPlayersTag
+            closingPlayersTag = closingPlayersTag + threeDaysFromNow
+
+        closingPlayersTag = closingPlayersTag + endOfCLosingPlayersTag
 
         numTables = NUM_TABLES_DEFAULT
         if IsCustomTables:
