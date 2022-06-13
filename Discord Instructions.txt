@@ -1,0 +1,10 @@
+1. Go to this link and select the "Shop" tab/sheet  https://docs.google.com/spreadsheets/d/12Fs8uWNpr5fqZHUoRwxzDlzztNMjdpXUrZGFSsk6tu8/edit?usp=drivesdk
+2. On an empty tile hit the backspace and all the items should randomise
+3. Save the sheet in File>Download>Comma-Separated Values (.csv)
+4. Rename the file in its file location as "Shop Sheet.txt" and then Accept the pop-up
+5. Follow instructions in the link and upload the .txt file there https://trinket.io/python3/3b91f8fd86?showInstructions=true
+6. Copy the tables from the results and save in a new .txt file.
+9 : Use this website to set a timer for 3 days time https://r.3v.fi/discord-timestamps/ just put the date forward and copy the output code
+10:  Head to #vistani-market-list ,  post "@Players the Vistani Market will close in <paste the timer code here>"
+11: Copy the contents of the text file and paste your text
+12. Use ``!br`` to close off the post
