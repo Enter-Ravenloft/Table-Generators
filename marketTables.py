@@ -4,6 +4,7 @@
 from Table import *
 from time import *
 
+
 class RowInfo:
     def __init__(self):
         self.IsSectionEnd = False
@@ -193,15 +194,23 @@ def addDaysToPOSIX(add_days=1, to_hour=-1, day_cycle=-1, cycle_start=0, start_da
     return futureTimeInPOSIX
 
 
+def getInputOrDefault(prompt="Enter input: ", stored_value="DEFAULT", code_for_default='x'):
+    userInput = str(input(prompt))
+    if userInput != code_for_default:
+        stored_value = userInput
+
+    return stored_value
+
+
 def main():
     TABLE_TITLES_DEFAULTS = ["Magic Items", "Spell Scrolls", "Special Materials"]
     NUM_TABLES_DEFAULT = 3
     DELIMITER_STRING = 'ENDTABLE\n'
     IsCustomTables = True
-    MARKET_CYCLE_START_POSIX = 1654988400
-    testStartTime_TEST = 1654387200
-    MARKET_CYCLE_START_POSIX = testStartTime_TEST
-    UNIX_TIME_TO_ADD = 259200
+    MARKET_CYCLE_START_POSIX = 1654387200  # June 5th at 12am UTC
+    POSTING_HOUR_DEFAULT = 23  # Vistani Market posting time
+    DAYS_IN_CYCLE_DEFAULT = 3  # Vistani Market market cycle length
+    DAYS_TO_ADD_DEFAULT = 3  # Number of days in the future for discord time code
     FILENAME_DEFAULT = 'Shop Sheet.txt'  # Must be UTF-8 text
 
     print("Please read the instructions to the left before typing.\n")
@@ -209,15 +218,13 @@ def main():
     userInput = input("Make default Vistani Market tables? y/n: ")
     if userInput != 'n':
         IsCustomTables = False
-    print("\n\n")
 
     userFile = FILENAME_DEFAULT
     if IsCustomTables:
-        print("\nWhen entering a file name, include the file extension (\".txt\").")
-        print("Only enter the file name, do not add anything else.")
-        userInput = input("(Enter 'x' for default '%s') Enter file name: " % FILENAME_DEFAULT)
-        if userInput != 'x':
-            userFile = userInput
+        prompt = "\nWhen entering a file name, include the file extension (\".txt\").\n"
+        prompt = prompt + "Only enter the file name, do not add anything else.\n"
+        prompt = prompt + "(Enter 'x' for default '%s') Enter file name: " % FILENAME_DEFAULT
+        userFile = getInputOrDefault(prompt, FILENAME_DEFAULT)
 
     # Open file and save contents in a list
     try:
@@ -235,36 +242,50 @@ def main():
         endOfCLosingPlayersTag = ":R>."
 
         if IsCustomTables:
-            unixTimeStamp = int(input("Enter the unix time stamp or 0 to skip: "))
-            if unixTimeStamp != 0:
-                unixTimeStamp = addDaysToPOSIX(3, 23, 3, MARKET_CYCLE_START_POSIX, unixTimeStamp)
-                closingPlayersTag = closingPlayersTag + str(unixTimeStamp)
-            else:
-                threeDaysFromNow = str(addDaysToPOSIX(3, 23, 3, MARKET_CYCLE_START_POSIX))
-                closingPlayersTag = closingPlayersTag + threeDaysFromNow
+
+            unixTimeToAdjust = int(getInputOrDefault("Enter unix time stamp. Enter 0 for automatic calculation: ",
+                                                     str(-1)))
+            daysOpen = int(getInputOrDefault("Enter the number of days until the market will close. "
+                                               "Enter x for the default: ", DAYS_TO_ADD_DEFAULT))
+            cycleLength = int(getInputOrDefault("Enter the number of days the market is supposed ot be open. "
+                                                  "Enter x for the default: ", DAYS_IN_CYCLE_DEFAULT))
+            hourToPost = int(getInputOrDefault("Enter the hour to post. 1 to 24 and in UTC time. "
+                                                 "Enter x for the default: ", POSTING_HOUR_DEFAULT))
+
+            unixTimeStamp = addDaysToPOSIX(daysOpen, hourToPost, cycleLength, MARKET_CYCLE_START_POSIX,
+                                           unixTimeToAdjust)
+            closingPlayersTag = closingPlayersTag + str(unixTimeStamp)
+
         else:
-            threeDaysFromNow = str(addDaysToPOSIX(3, 23, 3, MARKET_CYCLE_START_POSIX))
-            closingPlayersTag = closingPlayersTag + threeDaysFromNow
+            unixTimeStamp = addDaysToPOSIX(DAYS_TO_ADD_DEFAULT, POSTING_HOUR_DEFAULT, DAYS_IN_CYCLE_DEFAULT,
+                                                  MARKET_CYCLE_START_POSIX)
+            closingPlayersTag = closingPlayersTag + str(unixTimeStamp)
 
         closingPlayersTag = closingPlayersTag + endOfCLosingPlayersTag
 
         numTables = NUM_TABLES_DEFAULT
         if IsCustomTables:
-            userInput = input("(Enter 'x' for default '%d') Enter number of tables to be made: " % NUM_TABLES_DEFAULT)
-            if userInput != 'x':
-                numTables = int(userInput)
-
+            prompt = "(Enter 'x' for default '%d') Enter number of tables to be made: " % NUM_TABLES_DEFAULT
+            numTables = int(getInputOrDefault(prompt, str(NUM_TABLES_DEFAULT)))
         else:
+            print("\n\n")
             print("__**Vistani Market**__\n")
+
+        tableTitles = []
+        for i in range(numTables):
+            if i < len(TABLE_TITLES_DEFAULTS):
+                titleDefault = TABLE_TITLES_DEFAULTS[i]
+            else:
+                titleDefault = "Table %d" % (i + 1)
+
+            if IsCustomTables:
+                prompt = "(Enter 'x' for default '%s') Enter table title: " % TABLE_TITLES_DEFAULTS[i]
+                titleDefault = getInputOrDefault(prompt, titleDefault)
+
+            tableTitles.append(titleDefault)
 
         if numTables > 1:
             for i in range(numTables):
-
-                tableTitle = TABLE_TITLES_DEFAULTS[i]
-                if IsCustomTables:
-                    userInput = input("(Enter 'x' for default '%s') Enter table title: " % TABLE_TITLES_DEFAULTS[i])
-                    if userInput != 'x':
-                        tableTitle = userInput
 
                 if unprocessedTableInput.count(DELIMITER_STRING) > 0:
                     IndexOfDelimiter = unprocessedTableInput.index(DELIMITER_STRING)
@@ -273,19 +294,13 @@ def main():
                 else:
                     tableItems = unprocessedTableInput
 
-                print("**%s**" % tableTitle)
+                print("**%s**" % tableTitles[i])
                 marketTable = Table()
                 marketTable.build(tableItems)
                 marketTable.printUnicodeTable()
 
         else:
-            userInput = input("(Enter 'x' for default '%s') Enter table title: " % TABLE_TITLES_DEFAULTS[0])
-            if userInput != 'x':
-                tableTitle = TABLE_TITLES_DEFAULTS[0]
-            else:
-                tableTitle = userInput
-
-            print("**%s**" % tableTitle)
+            print("**%s**" % tableTitles[i])
             marketTable = Table()
             marketTable.build(unprocessedTableInput)
             marketTable.printUnicodeTable()
@@ -293,7 +308,7 @@ def main():
         print(closingPlayersTag)
 
     else:
-        print("Please upload a file and run again")
+        print("\n\nPlease upload the file and run again. See instructions to the left for further detail.")
 
     print("\n\nTables Complete.")
 

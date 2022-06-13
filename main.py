@@ -16,7 +16,7 @@ Instructions:
 6. Respond to the prompt with "y"
   
 
-If you have diffulcties with this, ping Quincy on discord
+If you have difficulties with this, ping Quincy on discord
 or ask in #Helpers
 ''' 
 
@@ -27,4 +27,4 @@ main()
 print("\nClick 'Run' to make another set of tables")
 
 #  You can ignore the line below unless troubleshooting
-#  Built from commit 41c15eb47d03c7d5e7ced96affdc5f432d2e854c
+#  Built from commit <>
