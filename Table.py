@@ -1,11 +1,14 @@
+from math import *
+
 class Table:
-    def __init__(self, valuesList=[]):
+    def __init__(self, valuesList=[], text_wrapping=False):
         self.Cell = []
         self.RowInfo = []
         self.widestLeftColumn = 0
         self.widestRightColumn = 0
         self.widestRow = 0
-        self.widthAllowance = 30  # Orignally 28 -7 based on feedback from cellphone users.
+        self.widthAllowance = 30  # Originally 28 -7 based on feedback from cellphone users.
+        self.PerformWrapping = text_wrapping
         self.WrapsForRow = []
         self.DoesWrap = False
         self.numRowsWrapped = 0
@@ -94,6 +97,60 @@ class Table:
     def clearRowInfo(self):
         self.RowInfo = []
 
+    def wrapCell(self, row, column, row_max_length):
+        text = self.Cell[row][column]
+        if row == 0:
+            oppositeCell = 1
+        else:
+            oppositeCell = 0
+
+        if len(self.Cell[row][oppositeCell]) < (row_max_length / 2):
+            maxTextLength = row_max_length - len(oppositeCell)
+        else:
+            maxTextLength = row_max_length / 2
+
+        numRowsNeeded = ceil(maxTextLength / len(text))
+        solutionFound = False
+        wrapPoints = []
+
+        if (text.count('(') == 1) and (text.count(')') == 1):
+            parentheticalText = text[text.find('('):text.rfind(')')]
+            if len(parentheticalText) > (len(text) * (1 / 3)):
+                if maxTextLength > (len(text) - len(parentheticalText)):
+                    solutionFound = True
+                    wrapPoints.append(text.find('('))
+                elif maxTextLength > len(parentheticalText):
+                    wrapPoints.append(text.find('('))
+
+        if not solutionFound:
+
+            numSpaces = text.count(' ')
+            if numSpaces > numRowsNeeded:
+                indicesOfSpaces = []
+                indicesOfSpaces.append(text.find(' '))
+                for i in range(numSpaces - 1):
+                    indicesOfSpaces.append(text.find(' ', indicesOfSpaces[-1]))
+
+                for j in numRowsNeeded:
+                    breakPoint = (numSpaces // (numRowsNeeded - j))
+                    breakPoint = breakPoint * (j + 1)
+                    minimumDistance = len(text)
+                    for index in indicesOfSpaces:
+                        if abs(breakPoint - index) < minimumDistance:
+                            minimumDistance = index
+
+
+    def wrapTable(self, max_length= -1):
+        if self.DoesWrap:
+            if max_length < 1:
+                max_length = self.widthAllowance
+
+            for row in self.WrapsForRow:
+                if self.Cell[row][0] > self.Cell[row][1]:
+                    self.wrapCell(row, 0, max_length)
+                else:
+                    self.wrapCell(row, 1, max_length)
+
     def build(self, valuesList):
         self.fillCells(valuesList)
         self.measureDimensions()
@@ -132,8 +189,6 @@ class Table:
                     self.widestRow = leftValueLength + rightValueLength
                     self.WrapsForRow.append(row)
                     self.numRowsWrapped = self.numRowsWrapped + 1
-                else:
-                    self.WrapsForRow.append(0)
 
         if self.numRowsWrapped > 0:
             self.DoesWrap = True

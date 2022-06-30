@@ -3,6 +3,7 @@
 #  Lotsa Spaghetti
 from Table import *
 from time import *
+from math import *
 
 def addDaysToPOSIX(add_days=1, to_hour=-1, day_cycle=-1, cycle_start=0, start_day=-1):
     NANOSECONDS_PER_SECOND = 1000000000
@@ -35,6 +36,80 @@ def getInputOrDefault(prompt="Enter input: ", stored_value="DEFAULT", code_for_d
         stored_value = userInput
 
     return stored_value
+
+def testWrapping(text, maxTextLength):
+    numRowsNeeded = ceil(len(text) / maxTextLength)
+    solutionFound = False
+    wrapPoints = []
+
+    if (text.count('(') == 1) and (text.count(')') == 1):
+        parentheticalText = text[text.find('('):text.rfind(')')]
+        if len(parentheticalText) > (len(text) * (1 / 3)):
+            if maxTextLength > (len(text) - len(parentheticalText)):
+                solutionFound = True
+                wrapPoints.append(text.find('(') - 1)
+
+    if not solutionFound:
+
+        numSpaces = text.count(' ')
+        if numSpaces > numRowsNeeded:
+            indicesOfSpaces = []
+            indicesOfSpaces.append(text.rfind(' '))
+            unsearchedText = text
+            for i in range(numSpaces - 1):
+                unsearchedText = unsearchedText[: indicesOfSpaces[0]]
+                indicesOfSpaces.insert(0, unsearchedText.rfind(' '))
+
+            breakPoint = ceil(len(text) / numRowsNeeded)
+            remainingIndices = indicesOfSpaces
+            for j in range(numRowsNeeded):
+                if j > 0:
+                    breakPoint = wrapPoints[-1] + maxTextLength
+                    charsRemaining = len(text[wrapPoints[-1]:])
+                    if charsRemaining < (2 * maxTextLength):
+                        if charsRemaining < maxTextLength:
+                            break
+                        else:
+                            breakPoint = wrapPoints[-1] + ceil(charsRemaining / 2)
+                    """
+                    numRowsNeeded = ceil(charsRemaining / maxTextLength)
+                    breakPoint = wrapPoints[-1] + ceil(charsRemaining / numRowsNeeded)"""
+                minimumDistance = len(text)
+                previousMinimum = minimumDistance
+                closestIndex = 0
+                for index in remainingIndices:
+                    distance = abs(breakPoint - index)
+                    if distance < minimumDistance:
+                        previousMinimum = minimumDistance
+                        minimumDistance = distance
+                        closestIndex = index
+                    elif distance > previousMinimum:
+                        break
+
+                wrapPoints.append(closestIndex)
+                indexOfIndex = indicesOfSpaces.index(closestIndex)
+                indexOfIndex += 1
+                remainingIndices = indicesOfSpaces[indexOfIndex:]
+
+    newCells = [text[:wrapPoints[0]]]
+    numBreaks = len(wrapPoints)
+    for k in range(numBreaks):
+        if (k > 0) and (k < len(wrapPoints)):
+            if k == 1:
+                startIndex = wrapPoints[0]
+                endIndex = wrapPoints[k]
+            elif k >= (len(wrapPoints) - 1):
+                startIndex = wrapPoints[k - 1]
+                endIndex = wrapPoints[-1]
+            else:
+                startIndex = wrapPoints[k - 1]
+                endIndex = wrapPoints[k]
+            startIndex = startIndex + 1
+            newCells.append(text[startIndex:endIndex])
+    newCells.append(text[(wrapPoints[-1] + 1):])
+
+    print(wrapPoints, end=" Wrap points\n\n")
+    return newCells
 
 
 def main():
