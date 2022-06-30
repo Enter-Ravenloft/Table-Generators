@@ -1,52 +1,60 @@
 Common Items
 MERGE
-Tankard of Sobriety
-80 gp
-"Smoldering Armor (light, medium, or heavy)"
-+75 gp
-Clockwork Amulet
-100 gp
+Cleansing Stone
+50 gp
+Wand Sheath
+75 gp
+Wand Sheath
+75 gp
 ENDSECTION
 ENDSECTION
 Uncommon Items
 MERGE
-"Mark of the Order, +1"
-425 gp
-Cap of Water Breathing
-450 gp
+Dust of Sneezing and Choking
+150 gp
+Alchemy Jug
+100 gp
 ENDSECTION
 ENDSECTION
 Rare  Items
 MERGE
-Amulet of Health
-"4,000 gp"
+Ring of Free Action
+"4,500 gp"
 ENDTABLE
 Cantrip - 15gp
 1st - 25gp
-Infestation
-Healing Word
-Shape Water
-Ice Knife
-Mage Hand
-Earth Tremor
+Sacred Flame
+Wrathful Smite
+Message
+Illusory Script
+Produce Flame
+Tenser's Floating Disk
 ENDSECTION
 ENDSECTION
-2nd 150gp
+2nd - 150gp
 3rd - 400gp
-Rope Trick
-Wind Wall
-Blindness/Deafness
-Flame Arrows
-Melf's Acid Arrow
-Sleet Storm
+Web
+Enemies abound
+Enthrall
+Clairvoyance
+Branding Smite
+Thunder Step
 ENDTABLE
 Cloth
 Organic
-Shadowfell Linen - 750
-Plague Wood - 250
+Infernal Leather 
+Plague Wood 
+SAMELINE
+SAMELINE
+750gp
+250gp
 ENDSECTION
 ENDSECTION
 Metal
 Mineral
-Osmodium - 750
-Obsidian - 500
+Orichalcum 
+Eternal Ice 
+SAMELINE
+SAMELINE
+650gp
+600gp

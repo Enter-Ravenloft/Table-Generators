@@ -11,6 +11,7 @@ class Table:
         self.numRowsWrapped = 0
         self.MERGE_MARKER = "MERGE"
         self.SECTION_MARKER = "ENDSECTION"
+        self.COMBINE_ROW_MARKER = "SAMELINE"
         self.BoxChars = {"Left":
                              {"Corner":
                                   {"Top":
@@ -147,12 +148,18 @@ class Table:
                 merge = True
             else:
                 merge = False
+
             if self.Cell[row][left] == self.SECTION_MARKER:
                 sectionEnd = True
             else:
                 sectionEnd = False
 
-            self.RowInfo.append({self.MERGE_MARKER: merge, self.SECTION_MARKER: sectionEnd})
+            if self.Cell[row][left] == self.COMBINE_ROW_MARKER:
+                combine = True
+            else:
+                combine = False
+
+            self.RowInfo.append({self.MERGE_MARKER: merge, self.SECTION_MARKER: sectionEnd, self.COMBINE_ROW_MARKER: combine})
 
     def getBoxCharsForRow(self, row):
         merged = self.MERGE_MARKER
@@ -163,13 +170,14 @@ class Table:
         tableFoot = "Table Foot"
         prevMerged = "Previous Merged"
         sectionMarker = self.SECTION_MARKER
-        setOfTraits = [merged, nextMerged, sectionHead, tableHead, sectionMarker, sectionFoot, sectionMarker, prevMerged]
+        setOfTraits = [merged, nextMerged, sectionHead, tableHead, sectionMarker, sectionFoot, sectionMarker,
+                       prevMerged]
 
         traits = dict()
         for key in setOfTraits:
             traits[key] = False
 
-        if (self.RowInfo[row][merged] == True):
+        if self.RowInfo[row][merged]:
             traits[merged] = True
         if self.RowInfo[row][sectionMarker]:
             traits[sectionMarker] = True
@@ -178,7 +186,7 @@ class Table:
             traits[tableHead] = True
         elif row == len(self.RowInfo):
             traits[tableFoot] = True
-        elif self.RowInfo[row -1][sectionMarker]:
+        elif self.RowInfo[row - 1][sectionMarker]:
             traits[sectionHead] = True
 
         # Process information on next printable row
@@ -196,12 +204,12 @@ class Table:
         nextLine = []
 
         # Left edge and fill line
-        if traits[sectionFoot] or traits[sectionHead] or traits[tableHead]: # Next line is double
+        if traits[sectionFoot] or traits[sectionHead] or traits[tableHead]:  # Next line is double
             isDoubleLine = True
             nextLine.append(self.BoxChars["Left"]["Vertical"]["double"]["intersect"]["double"])
             nextLine.append(self.BoxChars["Horizontal"]["double"]["straight"])
             nextLine.append(self.BoxChars["Right"]["Vertical"]["double"]["intersect"]["double"])
-        else: # Next line is single
+        else:  # Next line is single
             isDoubleLine = False
             nextLine.append(self.BoxChars["Left"]["Vertical"]["double"]["intersect"]["single"])
             nextLine.append(self.BoxChars["Horizontal"]["single"]["straight"])
@@ -214,7 +222,7 @@ class Table:
                     nextLine.append(self.BoxChars["Horizontal"]["double"]["straight"])
                 else:
                     nextLine.append(self.BoxChars["Horizontal"]["single"]["straight"])
-            else: # points down
+            else:  # points down
                 if isDoubleLine:
                     nextLine.append(self.BoxChars["Horizontal"]["double"]["intersect"]["down"]["single"])
                 else:
@@ -233,7 +241,6 @@ class Table:
 
         return nextLine
 
-
     def printUnicodeTable(self):
         self.getRowTraits()
         self.measureDimensions()
@@ -247,7 +254,7 @@ class Table:
 
         for i in range(len(self.RowInfo)):
 
-            if i == 0:
+            if i == 0:  # Print Table Header
                 lineFill = self.BoxChars["Horizontal"]["double"]["straight"]
                 if self.RowInfo[i][self.MERGE_MARKER]:
                     separator = lineFill
@@ -264,14 +271,16 @@ class Table:
             edgeRight = self.BoxChars["Right"]["Vertical"]["double"]["straight"]
             edgeRight = ' ' + edgeRight + '\n'
 
-            if self.Cell[i][left] != self.SECTION_MARKER:
+            if (not self.RowInfo[i][self.COMBINE_ROW_MARKER]) and (self.Cell[i][left] != self.SECTION_MARKER):
                 ##if rowWraps < 1:
+
                 if self.RowInfo[i][self.MERGE_MARKER]:
                     print(edgeLeft + "%s" % self.Cell[i][left].center(widthLeft + widthRight + 3), end=edgeRight)
                 else:
                     print(edgeLeft + "%s %s %s" % (self.Cell[i][left].center(widthLeft), separator,
                                                    self.Cell[i][right].center(widthRight)), end=edgeRight)
 
+                # Print Table Footer
                 if i == (len(self.RowInfo) - 1):
                     lineFill = self.BoxChars["Horizontal"]["double"]["straight"]
                     if self.RowInfo[i][self.MERGE_MARKER]:
@@ -282,7 +291,8 @@ class Table:
                           end=separator)
                     print("".rjust(widthRight + 2, lineFill),
                           end=(self.BoxChars["Right"]["Corner"]["Bottom"]["double"] + '\n'))
-                else:
+
+                elif not self.RowInfo[i + 1][self.COMBINE_ROW_MARKER]:  # Print bottom line of row
                     characters = self.getBoxCharsForRow(i)
                     edgeLeft = characters[0]
                     lineFill = characters[1]
