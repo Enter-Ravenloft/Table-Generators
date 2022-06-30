@@ -4,10 +4,12 @@ class Table:
     def __init__(self, valuesList=[], text_wrapping=False):
         self.Cell = []
         self.RowInfo = []
+        self.WrapSheet = []
         self.widestLeftColumn = 0
         self.widestRightColumn = 0
         self.widestRow = 0
-        self.widthAllowance = 30  # Originally 28 -7 based on feedback from cellphone users.
+        self.WIDTH_DEFAULT = 34  # Originally 28 -7 based on feedback from cellphone users.
+        self.widthAllowance = self.WIDTH_DEFAULT
         self.PerformWrapping = text_wrapping
         self.WrapsForRow = []
         self.DoesWrap = False
@@ -89,7 +91,7 @@ class Table:
         self.widestLeftColumn = 0
         self.widestRightColumn = 0
         self.widestRow = 0
-        self.widthAllowance = 28 - 7
+        self.widthAllowance = self.WIDTH_DEFAULT
         self.WrapsForRow = []
         self.DoesWrap = False
         self.numRowsWrapped = 0
@@ -97,64 +99,187 @@ class Table:
     def clearRowInfo(self):
         self.RowInfo = []
 
+    def getWrapItemNumber(self, wrap):
+        itemNumber = -1
+        for namedItem in range(len(self.WrapSheet)):
+            for rowAddress in range(len(self.WrapSheet[namedItem])):
+                if self.WrapSheet[namedItem][rowAddress] == wrap:
+                    itemNumber = namedItem
+                    break
+        return itemNumber
+
+    def refreshWrapSheet(self):
+        stepCount = 0
+        for namedItem in range(len(self.WrapSheet)):
+            for rowAddress in range(len(self.WrapSheet[namedItem])):
+                self.WrapSheet[namedItem][rowAddress] = stepCount
+                stepCount += 1
+
+    def addWraps(self, item, wraps):
+        for address in range(wraps):
+            self.WrapSheet[item].append([address])
+        self.refreshWrapSheet()
+
     def wrapCell(self, row, column, row_max_length):
         text = self.Cell[row][column]
-        if row == 0:
+        if column == 0:
             oppositeCell = 1
         else:
             oppositeCell = 0
 
-        if len(self.Cell[row][oppositeCell]) < (row_max_length / 2):
-            maxTextLength = row_max_length - len(oppositeCell)
-        else:
-            maxTextLength = row_max_length / 2
+        newCells = self.Cell[row]
+        if row_max_length > (len(text) + len(newCells[oppositeCell])):
+            return newCells
 
-        numRowsNeeded = ceil(maxTextLength / len(text))
         solutionFound = False
-        wrapPoints = []
+        attempts = 0
+        while not solutionFound:
+            if len(self.Cell[row][oppositeCell]) < (row_max_length / 2):
+                maxTextLength = row_max_length - len(self.Cell[row][oppositeCell])
+            else:
+                maxTextLength = row_max_length / 2
 
-        if (text.count('(') == 1) and (text.count(')') == 1):
-            parentheticalText = text[text.find('('):text.rfind(')')]
-            if len(parentheticalText) > (len(text) * (1 / 3)):
-                if maxTextLength > (len(text) - len(parentheticalText)):
-                    solutionFound = True
-                    wrapPoints.append(text.find('('))
-                elif maxTextLength > len(parentheticalText):
-                    wrapPoints.append(text.find('('))
+            numRowsNeeded = ceil(len(text) / maxTextLength)
+            wrapPoints = []
 
-        if not solutionFound:
+            if (text.count('(') == 1) and (text.count(')') == 1):
+                parentheticalText = text[text.find('('):text.rfind(')')]
+                if len(parentheticalText) > (len(text) * (1 / 3)):
+                    if maxTextLength > (len(text) - len(parentheticalText)):
+                        solutionFound = True
+                        wrapPoints.append(text.find('(') - 1)
 
             numSpaces = text.count(' ')
-            if numSpaces > numRowsNeeded:
-                indicesOfSpaces = []
-                indicesOfSpaces.append(text.find(' '))
-                for i in range(numSpaces - 1):
-                    indicesOfSpaces.append(text.find(' ', indicesOfSpaces[-1]))
+            if not solutionFound and (numSpaces > 0):
+                solutionFound = True
+                if numSpaces >= (1 - numRowsNeeded):
+                    indicesOfSpaces = []
+                    indicesOfSpaces.append(text.rfind(' '))
+                    unsearchedText = text
+                    for i in range(numSpaces - 1):
+                        unsearchedText = unsearchedText[: indicesOfSpaces[0]]
+                        indicesOfSpaces.insert(0, unsearchedText.rfind(' '))
+                    breakPoint = ceil(len(text) / numRowsNeeded)
+                    remainingIndices = indicesOfSpaces
+                    for j in range(numRowsNeeded):
+                        if len(remainingIndices) > 0:
+                            if j > 0:
+                                breakPoint = wrapPoints[-1] + maxTextLength
+                                charsRemaining = len(text[wrapPoints[-1]:])
+                                if charsRemaining < (2 * maxTextLength):
+                                    if charsRemaining < maxTextLength:
+                                        break
+                                    else:
+                                        breakPoint = wrapPoints[-1] + ceil(charsRemaining / 2)
+                            minimumDistance = len(text)
+                            previousMinimum = minimumDistance
+                            closestIndex = 0
+                            for index in remainingIndices:
+                                distance = abs(breakPoint - index)
+                                if distance < minimumDistance:
+                                    previousMinimum = minimumDistance
+                                    minimumDistance = distance
+                                    closestIndex = index
+                                elif distance > previousMinimum:
+                                    break
 
-                for j in numRowsNeeded:
-                    breakPoint = (numSpaces // (numRowsNeeded - j))
-                    breakPoint = breakPoint * (j + 1)
-                    minimumDistance = len(text)
-                    for index in indicesOfSpaces:
-                        if abs(breakPoint - index) < minimumDistance:
-                            minimumDistance = index
+                            wrapPoints.append(closestIndex)
+                            indexOfIndex = 1 + indicesOfSpaces.index(closestIndex)
+                            remainingIndices = indicesOfSpaces[indexOfIndex:]
 
+            if not solutionFound:
+                attempts += 1
+                if attempts > 1:
+                    break
+                else:
+                    temp = column
+                    column = oppositeCell
+                    oppositeCell = temp
+
+        if solutionFound:
+            newCells = []
+            newCells.append(text[:wrapPoints[0]])
+            numBreaks = len(wrapPoints)
+            for k in range(numBreaks):
+                if (k > 0) and (k < len(wrapPoints)):
+                    if k == 1:
+                        startIndex = wrapPoints[0]
+                        endIndex = wrapPoints[k]
+                    elif k >= (len(wrapPoints) - 1):
+                        startIndex = wrapPoints[k - 1]
+                        endIndex = wrapPoints[-1]
+                    else:
+                        startIndex = wrapPoints[k - 1]
+                        endIndex = wrapPoints[k]
+                    startIndex = startIndex + 1
+                    newCells.append(text[startIndex:endIndex])
+            newCells.append(text[(wrapPoints[-1] + 1):])
+
+        return newCells
 
     def wrapTable(self, max_length= -1):
         if self.DoesWrap:
             if max_length < 1:
                 max_length = self.widthAllowance
 
-            for row in self.WrapsForRow:
-                if self.Cell[row][0] > self.Cell[row][1]:
-                    self.wrapCell(row, 0, max_length)
+
+            for item in range((len(self.WrapsForRow) > 0)):
+                row = self.WrapsForRow[-1]
+                for line in range(len(self.WrapsForRow)):
+                    if len(self.WrapSheet[line]) == 1:
+                        row = self.WrapsForRow[line]
+                        break
+
+                itemNumber = self.getWrapItemNumber(row)
+                rowWidth = len(self.Cell[row][0]) + len(self.Cell[row][1])
+                if (1 < len(self.WrapSheet[itemNumber])) and (rowWidth < ceil(1.25 * max_length)):
+                    break
+
+                if len(self.Cell[row][0]) > len(self.Cell[row][1]):
+                    smallerCell = 1
+                    newCells = self.wrapCell(row, 0, max_length)
                 else:
-                    self.wrapCell(row, 1, max_length)
+                    smallerCell = 0
+                    newCells = self.wrapCell(row, 1, max_length)
+
+                self.addWraps(itemNumber, len(newCells))
+
+                if self.RowInfo[row][self.MERGE_MARKER]:
+                    matchingCells = [self.MERGE_MARKER] * len(newCells)
+                    sameLineMarkers = [self.COMBINE_ROW_MARKER, self.MERGE_MARKER]
+                else:
+                    matchingCells = [" "] * (len(newCells) - 1)
+                    matchingCells.insert(0, self.Cell[row][smallerCell])
+                    sameLineMarkers = [self.COMBINE_ROW_MARKER, self.COMBINE_ROW_MARKER]
+                self.Cell.pop(row)
+                for i in range(len(newCells)):
+                    if smallerCell == 1:
+                        newRow = [newCells[i], matchingCells[i]]
+                    else:
+                        newRow = [matchingCells[i], newCells[i]]
+
+                    if i == 0:
+                        self.Cell.insert(row, newRow)
+                    else:
+                        self.Cell.insert(sameLineIndex + 1, newRow)
+                    if i < (len(newCells) - 1):
+                        newRowIndex = self.Cell.index(newRow)
+                        self.Cell.insert(newRowIndex + 1, sameLineMarkers)
+                        sameLineIndex = self.Cell.index(sameLineMarkers, newRowIndex)
+
+                    self.getRowTraits()
+                    self.measureDimensions()
 
     def build(self, valuesList):
         self.fillCells(valuesList)
         self.measureDimensions()
         self.getRowTraits()
+        for i in range(len(self.Cell)):
+            self.WrapSheet.append([i])
+        self.refreshWrapSheet()
+
+        if self.PerformWrapping and self.DoesWrap:
+            self.wrapTable()
 
     def fillCells(self, valuesList):
         self.Cell = []
@@ -169,6 +294,20 @@ class Table:
             rightColumn = rightColumn.strip('"')
             self.Cell.append([leftColumn, rightColumn])
 
+    def checkToWrap(self, row):
+        left = 0
+        right = 1
+        leftValueLength = len(self.Cell[row][left])
+        rightValueLength = len(self.Cell[row][right])
+        if self.Cell[row][right] == self.MERGE_MARKER:
+            rightValueLength = 0
+
+        if (self.Cell[row][left] != self.SECTION_MARKER) and (self.Cell[row][left] != self.COMBINE_ROW_MARKER):
+            if leftValueLength > self.widestLeftColumn:
+                self.widestLeftColumn = leftValueLength
+            if rightValueLength > self.widestRightColumn:
+                self.widestRightColumn = rightValueLength
+
     def measureDimensions(self):
         self.clearMeasurements()
         left = 0
@@ -177,13 +316,14 @@ class Table:
         for row in range(len(self.Cell)):
             leftValueLength = len(self.Cell[row][left])
             rightValueLength = len(self.Cell[row][right])
+            if self.Cell[row][right] == self.MERGE_MARKER:
+                rightValueLength = 0
 
-            if self.Cell[row][left] != self.SECTION_MARKER:
+            if (self.Cell[row][left] != self.SECTION_MARKER) and (self.Cell[row][left] != self.COMBINE_ROW_MARKER):
                 if leftValueLength > self.widestLeftColumn:
                     self.widestLeftColumn = leftValueLength
                 if rightValueLength > self.widestRightColumn:
-                    if self.Cell[row][right] != self.MERGE_MARKER:
-                        self.widestRightColumn = rightValueLength
+                    self.widestRightColumn = rightValueLength
 
                 if self.widthAllowance < (leftValueLength + rightValueLength):
                     self.widestRow = leftValueLength + rightValueLength
@@ -303,7 +443,6 @@ class Table:
 
         left = 0
         right = 1
-        rowWraps = self.numRowsWrapped
         widthLeft = self.widestLeftColumn
         widthRight = self.widestRightColumn
 
@@ -327,7 +466,6 @@ class Table:
             edgeRight = ' ' + edgeRight + '\n'
 
             if (not self.RowInfo[i][self.COMBINE_ROW_MARKER]) and (self.Cell[i][left] != self.SECTION_MARKER):
-                ##if rowWraps < 1:
 
                 if self.RowInfo[i][self.MERGE_MARKER]:
                     print(edgeLeft + "%s" % self.Cell[i][left].center(widthLeft + widthRight + 3), end=edgeRight)
@@ -359,4 +497,3 @@ class Table:
 
         print("```")
 
-        ##print("Width: left %d, right %d, combined %d" % (widthLeft, widthRight, (widthLeft + widthRight)))

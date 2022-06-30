@@ -23,32 +23,7 @@ or ask in #Helpers
 
 from marketTables import *
 
-# BEGINING TESTING
-def miniTest(input):
-    for test in input:
-        print("%d Characters long" % len(test))
-        print(test)
-        print(" " * (len(test) // 2), end="^\n")
-        result = testWrapping(test, 30)
-        charsPerRow = []
-        for section in result:
-            charsPerRow.append(len(section))
-            print(section)
-        print()
-        print(charsPerRow, end=" Characters for each row\n")
-        print("---------")
-
-annoyingItemNames = ["Adamantine Armor (medium or heavy, but not hide)",
-                     "Molten Bronze Skin (breastplate, half plate, or plate)",  "Vicious Weapon (any weapon)",
-                     "Amulet of Protection from Turning",  "Amulet of Proof Against Detection and Location",
-                     "Instrument of the Bards (Fochlucan Bandore)",
-                     "Dan's Item with a Really Long Ass Name, then he kept goin and goin without any end in sight"]
-
-miniTest(annoyingItemNames)
-# END TESTING
-
-
-## main()
+main()
 print("\nClick 'Run' to make another set of tables")
 
 #  You can ignore the line below unless troubleshooting
