@@ -125,6 +125,7 @@ def main():
 
             tableTitles.append(titleDefault)
 
+        tablesWidths = []
         if numTables > 1:
             for i in range(numTables):
 
@@ -138,11 +139,14 @@ def main():
                 print("**%s**" % tableTitles[i])
                 marketTable = Table(tableItems, TextWrapping)
                 marketTable.printUnicodeTable()
+                tablesWidths.append(marketTable.widestRow)
 
         else:
             print("**%s**" % tableTitles[i])
             marketTable = Table(unprocessedTableInput, TextWrapping)
             marketTable.printUnicodeTable()
+            tablesWidths.append(marketTable.widestRow)
+
 
         print(closingPlayersTag)
 
@@ -150,4 +154,6 @@ def main():
         print("\n\nPlease upload the file and run again. See instructions to the left for further detail.")
 
     print("\n\nTables Complete.")
+    if not IsCustomTables:
+        print("Table widths: %d, %d, %d" % (tablesWidths[0], tablesWidths[1], tablesWidths[2]))
 
