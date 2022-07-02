@@ -4,8 +4,8 @@ Cleansing Stone
 50 gp
 Wand Sheath
 75 gp
-Wand Sheath
-75 gp
+Some other thing
+69 gp
 ENDSECTION
 ENDSECTION
 Uncommon Items
@@ -18,8 +18,25 @@ ENDSECTION
 ENDSECTION
 Rare  Items
 MERGE
-Ring of Free Action
+Dan's Item with a Really Long Ass Name
 "4,500 gp"
+ENDTABLE
+Fuckery
+MERGE
+"Adamantine Armor (medium or heavy, but not hide)"
+21gp
+"Molten Bronze Skin (breastplate, half plate, or plate)"
+21gp
+Vicious Weapon (any weapon)
+21gp
+Amulet of Protection from Turning
+21gp
+Amulet of Proof Against Detection and Location
+21gp
+Instrument of the Bards (Fochlucan Bandore)
+MERGE
+Dan's Item with a Really Long Ass Name then he kept goin and goin without any end in sight
+13cp
 ENDTABLE
 Cantrip - 15gp
 1st - 25gp
@@ -39,22 +56,3 @@ Enthrall
 Clairvoyance
 Branding Smite
 Thunder Step
-ENDTABLE
-Cloth
-Organic
-Infernal Leather 
-Plague Wood 
-SAMELINE
-SAMELINE
-750gp
-250gp
-ENDSECTION
-ENDSECTION
-Metal
-Mineral
-Orichalcum 
-Eternal Ice 
-SAMELINE
-SAMELINE
-650gp
-600gp
