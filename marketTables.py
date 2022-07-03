@@ -3,7 +3,6 @@
 #  Lotsa Spaghetti
 from Table import *
 from time import *
-from math import *
 
 def addDaysToPOSIX(add_days=1, to_hour=-1, day_cycle=-1, cycle_start=0, start_day=-1):
     NANOSECONDS_PER_SECOND = 1000000000
