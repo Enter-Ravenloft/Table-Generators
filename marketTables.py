@@ -126,8 +126,6 @@ def main():
 
             tableTitles.append(titleDefault)
 
-        testing_tablesWidths = []
-        testing_tablesAllowances = []
         if numTables > 1:
             for i in range(numTables):
 
@@ -141,15 +139,11 @@ def main():
                 print("**%s**" % tableTitles[i])
                 marketTable = Table(tableItems, TextWrapping, DesiredWidth)
                 marketTable.printUnicodeTable()
-                testing_tablesWidths.append(marketTable.widestLeftColumn + marketTable.widestRightColumn + marketTable.NON_CONTENT_WIDTH)
-                testing_tablesAllowances.append(marketTable.widthAllowance)
 
         else:
             print("**%s**" % tableTitles[i])
             marketTable = Table(unprocessedTableInput, TextWrapping, DesiredWidth)
             marketTable.printUnicodeTable()
-            testing_tablesWidths.append(marketTable.widestLeftColumn + marketTable.widestRightColumn + marketTable.NON_CONTENT_WIDTH)
-            testing_tablesAllowances.append(marketTable.widthAllowance)
 
 
         print(closingPlayersTag)
@@ -158,8 +152,3 @@ def main():
         print("\n\nPlease upload the file and run again. See instructions to the left for further detail.")
 
     print("\n\nTables Complete.")
-    if not IsCustomTables:
-        print("Desired width: %d" % DesiredWidth)
-        print("Table widths: %d, %d, %d" % (testing_tablesWidths[0], testing_tablesWidths[1], testing_tablesWidths[2]))
-        print("Width allowances: %d, %d, %d" % (testing_tablesAllowances[0], testing_tablesAllowances[1], testing_tablesAllowances[2]))
-

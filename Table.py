@@ -90,7 +90,6 @@ class Table:
                                         "straight": '║'}},
                               }
                          }
-        self.TESTING = []
         if len(valuesList) > 0:
             self.build(valuesList)
 
@@ -157,33 +156,19 @@ class Table:
 
         return joinedColumns
 
-    def testingGetWrapContent(self, table):
-        content = []
-        for i in range(len(table)):
-            content.append(self.Cell[i])
-
-        return content
-
     def wrapTable(self, max_length= -1):
         if self.DoesWrap:
             if max_length < 1:
                 max_length = self.widthAllowance - self.NON_CONTENT_WIDTH
 
-            count = 0
             itemsToWrap = []
             for i in range(len(self.WrapSheet)):
                 content = self.Cell[i][0]
                 if not ((content == self.COMBINE_ROW_MARKER) or (content == self.SECTION_MARKER)):
                     itemsToWrap.append(self.WrapSheet[i])
             itemsToWrap.reverse()
-            contentToBeWrapped = []
-            self.TESTING.append(["Items wrapped: "])
             for item in itemsToWrap:
                 row = item[0]
-
-                # Testing
-                count = count + 1
-                contentToBeWrapped = self.Cell[row]
 
                 if len(self.Cell[row][0]) > len(self.Cell[row][1]):
                     smallerCell = 1
@@ -230,22 +215,9 @@ class Table:
                             self.Cell.insert(newRowIndex + 1, sameLineMarkers)
                             previousLineIndex = self.Cell.index(sameLineMarkers, newRowIndex)
 
-                self.TESTING[0].append(str(row + 1))
 
                 self.getRowTraits()
                 self.measureDimensions()
-                contentToBeWrapped = self.testingGetWrapContent(itemsToWrap)
-
-            wrappedRowsText = ""
-            """for thingy in itemsToWrap:
-                if itemsToWrap.index(thingy) > 0:
-                    wrappedRowsText = wrappedRowsText + ','
-                wrappedRowsText = wrappedRowsText + " " + str(thingy + 1)
-            nonItems = 0
-            for otherThing in range(len(self.Cell)):
-                if self.Cell[otherThing][0] == self.SECTION_MARKER:
-                    nonItems += 1
-            self.TESTING.append("Total Items: %d\nRows in itemsToWrap:%s" % (len(self.WrapSheet) - nonItems, wrappedRowsText))"""
 
     def build(self, valuesList):
         self.fillCells(valuesList)
@@ -473,12 +445,3 @@ class Table:
                     print("".rjust(widthRight + 2, lineFill), end=edgeRight)
 
         print("```")
-        for i in self.TESTING:
-            print(i)
-
-        print("Table width: %d" % (self.widestLeftColumn + self.widestRightColumn + self.NON_CONTENT_WIDTH))
-        self.measureDimensions()
-        print("Width allowance: %d" % self.widthAllowance)
-        print("Widest: left %d, right %d, row %d" % (self.widestLeftColumn, self.widestRightColumn, self.widestRow))
-        print('\n')
-
