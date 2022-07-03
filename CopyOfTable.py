@@ -234,11 +234,13 @@ class CopyOfTable:
 
         return content
 
+
+
+
     def wrapTable(self, max_length= -1):
         if self.DoesWrap:
             if max_length < 1:
                 max_length = self.widthAllowance
-
 
             count = 0
             contentToBeWrapped = self.testingGetWrapContent()

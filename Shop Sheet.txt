@@ -1,58 +1,56 @@
 Common Items
 MERGE
-Cleansing Stone
-50 gp
-Wand Sheath
-75 gp
-Some other thing
-69 gp
+Cloak of Many Fashions
+90 gp
+Shiftweave
+100 gp
+Wand of Conducting
+90 gp
 ENDSECTION
 ENDSECTION
 Uncommon Items
 MERGE
-Dust of Sneezing and Choking
-150 gp
-Alchemy Jug
-100 gp
+Slumbering Dragon Vessel
+"2,750 gp"
+Keoghtom's Ointment (5 doses)
+1250 gp
 ENDSECTION
 ENDSECTION
 Rare  Items
 MERGE
-Dan's Item with a Really Long Ass Name
-"4,500 gp"
+Needle of Mending (dagger)
+"1,400 gp"
 ENDTABLE
-Fuckery
-MERGE
-"Adamantine Armor (medium or heavy, but not hide)"
-21gp
-"Molten Bronze Skin (breastplate, half plate, or plate)"
-21gp
-Vicious Weapon (any weapon)
-21gp
-Amulet of Protection from Turning
-21gp
-Amulet of Proof Against Detection and Location
-21gp
-Instrument of the Bards (Fochlucan Bandore)
-MERGE
-Dan's Item with a Really Long Ass Name then he kept goin and goin without any end in sight
-13cp
-ENDTABLE
-Cantrip - 15gp
-1st - 25gp
-Sacred Flame
+Cantrip: 15gp
+1st: 25gp
+Shillelagh
+Hex
+Shape Water
 Wrathful Smite
-Message
-Illusory Script
-Produce Flame
-Tenser's Floating Disk
+Thorn Whip
+Bane
 ENDSECTION
 ENDSECTION
-2nd - 150gp
-3rd - 400gp
-Web
-Enemies abound
-Enthrall
-Clairvoyance
-Branding Smite
-Thunder Step
+2nd: 150gp
+3rd: 400gp
+Barkskin
+Gaseous Form
+Ray of Enfeeblement
+Wind Wall
+Ray of Enfeeblement
+Feign Death
+ENDTABLE
+Cloth
+Organic
+Infernal Leather 
+Asmoroch Wood
+750gp
+500gp
+ENDSECTION
+ENDSECTION
+Metal
+Mineral
+Osmodium 
+Eternal Ice
+750gp
+600gp

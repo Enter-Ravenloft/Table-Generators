@@ -44,6 +44,7 @@ def main():
     DELIMITER_STRING = 'ENDTABLE\n'
     IsCustomTables = True
     TextWrapping = True
+    DesiredWidth = 28
     MARKET_CYCLE_START_POSIX = 1654387200  # June 5th at 12am UTC
     POSTING_HOUR_DEFAULT = 23  # Vistani Market posting time
     DAYS_IN_CYCLE_DEFAULT = 3  # Vistani Market market cycle length
@@ -125,7 +126,8 @@ def main():
 
             tableTitles.append(titleDefault)
 
-        tablesWidths = []
+        testing_tablesWidths = []
+        testing_tablesAllowances = []
         if numTables > 1:
             for i in range(numTables):
 
@@ -137,15 +139,17 @@ def main():
                     tableItems = unprocessedTableInput
 
                 print("**%s**" % tableTitles[i])
-                marketTable = Table(tableItems, TextWrapping)
+                marketTable = Table(tableItems, TextWrapping, DesiredWidth)
                 marketTable.printUnicodeTable()
-                tablesWidths.append(marketTable.widestRow)
+                testing_tablesWidths.append(marketTable.widestLeftColumn + marketTable.widestRightColumn + marketTable.NON_CONTENT_WIDTH)
+                testing_tablesAllowances.append(marketTable.widthAllowance)
 
         else:
             print("**%s**" % tableTitles[i])
-            marketTable = Table(unprocessedTableInput, TextWrapping)
+            marketTable = Table(unprocessedTableInput, TextWrapping, DesiredWidth)
             marketTable.printUnicodeTable()
-            tablesWidths.append(marketTable.widestRow)
+            testing_tablesWidths.append(marketTable.widestLeftColumn + marketTable.widestRightColumn + marketTable.NON_CONTENT_WIDTH)
+            testing_tablesAllowances.append(marketTable.widthAllowance)
 
 
         print(closingPlayersTag)
@@ -155,5 +159,7 @@ def main():
 
     print("\n\nTables Complete.")
     if not IsCustomTables:
-        print("Table widths: %d, %d, %d" % (tablesWidths[0], tablesWidths[1], tablesWidths[2]))
+        print("Desired width: %d" % DesiredWidth)
+        print("Table widths: %d, %d, %d" % (testing_tablesWidths[0], testing_tablesWidths[1], testing_tablesWidths[2]))
+        print("Width allowances: %d, %d, %d" % (testing_tablesAllowances[0], testing_tablesAllowances[1], testing_tablesAllowances[2]))
 
