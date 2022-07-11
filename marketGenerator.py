@@ -2,10 +2,16 @@ from math import *
 from textwrap import wrap
 from time import *
 
-words = "Common Items\nMERGE\nImbued Wood Focus\n75 gp\nHorn of Silent Alarm\n85 gp\nVeteran's Cane\n50 gp\nENDSECTION\nENDSECTION\nUncommon Items\nMERGE\nRing of Truth Telling\n350 gp\nArcane Whip Tip (Fire)\n50 gp\nENDSECTION\nENDSECTION\nRare  Items\nMERGE\nLyre of Building\n4,750 gp\nENDTABLE\nCantrip: gp\n1st: 25gp\nMold earth\nCause Fear\nThorn Whip\nIllusory Script\nSword Burst\nShield of Faith\nENDSECTION\nENDSECTION\n2nd: 150gp\n3rd: 400gp\nMisty Step\nCreate Food and Water\nPass Without Trace\nEnemies Abound\nMirror Image\nConjure Barrage\nENDTABLE\nCloth\nOrganic\nShadowfell Linen\nPlague Wood\nSAMELINE\nSAMELINE\n750gp\n250gp\nENDSECTION\nENDSECTION\nMetal\nMineral\nCold Iron\nObsidian\nSAMELINE\nSAMELINE\n100gp\n100gp"
+words = "Common Items\nMERGE\nImbued Wood Focus\n75 gp\nHorn of Silent Alarm\n85 gp\nVeteran's Cane\n50 " \
+        "gp\nENDSECTION\nENDSECTION\nUncommon Items\nMERGE\nRing of Truth Telling\n350 gp\nArcane Whip Tip (Fire)\n50 " \
+        "gp\nENDSECTION\nENDSECTION\nRare  Items\nMERGE\nLyre of Building\n4,750 gp\nENDTABLE\nCantrip: gp\n1st: " \
+        "25gp\nMold earth\nCause Fear\nThorn Whip\nIllusory Script\nSword Burst\nShield of " \
+        "Faith\nENDSECTION\nENDSECTION\n2nd: 150gp\n3rd: 400gp\nMisty Step\nCreate Food and Water\nPass Without " \
+        "Trace\nEnemies Abound\nMirror Image\nConjure Barrage\nENDTABLE\nCloth\nOrganic\nShadowfell Linen\nPlague " \
+        "Wood\nSAMELINE\nSAMELINE\n750gp\n250gp\nENDSECTION\nENDSECTION\nMetal\nMineral\nCold " \
+        "Iron\nObsidian\nSAMELINE\nSAMELINE\n100gp\n100gp "
 
 MANUAL_INPUT = words.split('\n')
-
 
 
 def longestWord(text):
@@ -207,7 +213,7 @@ class Table:
 
         return joinedColumns
 
-    def wrapTable(self, max_length= -1):
+    def wrapTable(self, max_length=-1):
         if self.DoesWrap:
             if max_length < 1:
                 max_length = self.widthAllowance - self.NON_CONTENT_WIDTH
@@ -241,7 +247,8 @@ class Table:
 
                     smallCellContent = self.Cell[row][smallerCell]
                     if self.Cell[row][smallerCell] != self.MERGE_MARKER:
-                        secondaryCells = shortestWrap(self.Cell[row][smallerCell], (max_length - secondaryLengthConstraint))
+                        secondaryCells = shortestWrap(self.Cell[row][smallerCell],
+                                                      (max_length - secondaryLengthConstraint))
                         sameLineMarkers = [self.COMBINE_ROW_MARKER, self.MERGE_MARKER]
                     else:
                         secondaryCells = [self.MERGE_MARKER]
@@ -265,7 +272,6 @@ class Table:
                             newRowIndex = self.Cell.index(line)
                             self.Cell.insert(newRowIndex + 1, sameLineMarkers)
                             previousLineIndex = self.Cell.index(sameLineMarkers, newRowIndex)
-
 
                 self.getRowTraits()
                 self.measureDimensions()
@@ -354,7 +360,8 @@ class Table:
             else:
                 combine = False
 
-            self.RowInfo.append({self.MERGE_MARKER: merge, self.SECTION_MARKER: sectionEnd, self.COMBINE_ROW_MARKER: combine})
+            self.RowInfo.append(
+                {self.MERGE_MARKER: merge, self.SECTION_MARKER: sectionEnd, self.COMBINE_ROW_MARKER: combine})
 
     def getBoxCharsForRow(self, row):
         merged = self.MERGE_MARKER
@@ -538,7 +545,7 @@ def getInputOrDefault(prompt="Enter input: ", stored_value="DEFAULT", code_for_d
 def main():
     TABLE_TITLES_DEFAULTS = ["Magic Items", "Spell Scrolls", "Special Materials"]
     NUM_TABLES_DEFAULT = 3
-    DELIMITER_STRING = 'ENDTABLE\n'
+    DELIMITER_STRING = 'ENDTABLE'
     IsCustomTables = True
     TextWrapping = True
     WRAP_WIDTH_DEFAULT = 29
@@ -565,7 +572,7 @@ def main():
     desiredWidth = WRAP_WIDTH_DEFAULT
     if IsCustomTables:
         desiredWidth = int(getInputOrDefault("Enter how wide you want the tables to be in number of characters."
-                                               "Enter x for the default: ", WRAP_WIDTH_DEFAULT))
+                                             "Enter x for the default: ", WRAP_WIDTH_DEFAULT))
 
     # Open file and save contents in a list
     """try:
@@ -585,11 +592,11 @@ def main():
             unixTimeToAdjust = int(getInputOrDefault("Enter unix time stamp. Enter x for automatic calculation: ",
                                                      str(-1)))
             daysOpen = int(getInputOrDefault("Enter the number of days until the market will close. "
-                                               "Enter x for the default: ", DAYS_TO_ADD_DEFAULT))
+                                             "Enter x for the default: ", DAYS_TO_ADD_DEFAULT))
             cycleLength = int(getInputOrDefault("Enter the number of days the market is supposed ot be open. "
-                                                  "Enter x for the default: ", DAYS_IN_CYCLE_DEFAULT))
+                                                "Enter x for the default: ", DAYS_IN_CYCLE_DEFAULT))
             hourToPost = int(getInputOrDefault("Enter the hour to post. 1 to 24 and in UTC time. "
-                                                 "Enter x for the default: ", POSTING_HOUR_DEFAULT))
+                                               "Enter x for the default: ", POSTING_HOUR_DEFAULT))
 
             unixTimeStamp = addDaysToPOSIX(daysOpen, hourToPost, cycleLength, MARKET_CYCLE_START_POSIX,
                                            unixTimeToAdjust)
@@ -597,7 +604,7 @@ def main():
 
         else:
             unixTimeStamp = addDaysToPOSIX(DAYS_TO_ADD_DEFAULT, POSTING_HOUR_DEFAULT, DAYS_IN_CYCLE_DEFAULT,
-                                                  MARKET_CYCLE_START_POSIX)
+                                           MARKET_CYCLE_START_POSIX)
             closingPlayersTag = closingPlayersTag + str(unixTimeStamp)
 
         closingPlayersTag = closingPlayersTag + endOfCLosingPlayersTag
@@ -647,12 +654,12 @@ def main():
             marketTable = Table(unprocessedTableInput, TextWrapping, desiredWidth)
             marketTable.printUnicodeTable()
 
-
         print(closingPlayersTag)
 
     else:
         print("\n\nPlease upload the file and run again. See instructions to the left for further detail.")
 
     print("\n\nTables Complete.")
+
 
 main()

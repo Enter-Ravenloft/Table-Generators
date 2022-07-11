@@ -157,8 +157,11 @@ itemList = []
 for item in Items:
     itemList.append(item["name"])
 
-compareWraps(itemList)"""
+compareWraps(itemList)
+
 value = False
 test = wrap(sentence, maximum, initial_indent='', subsequent_indent='', expand_tabs=True, replace_whitespace=True,
             fix_sentence_endings=False, break_long_words=value)
 print(test)
+"""
+

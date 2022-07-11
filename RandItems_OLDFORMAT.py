@@ -3,6 +3,29 @@
 from random import*
 from ItemsMasterList import*
 
+def getScrolls(num_scrolls=1, max_level=1, min_level=-1):
+    if min_level > max_level:
+        min_level = max_level
+    # TODO add checks for valid arguments
+
+    scrolls = []
+    for i in range(num_scrolls):
+        attempts = 0
+        while True:
+            attempts = attempts + 1
+            level = randint(min_level, max_level)
+            randNum = randint(0, len(MasterList[level]))
+            newScroll = AllSpells[level][randNum]
+            if newScroll not in scrolls:
+                break
+            elif attempts > 100:
+                # TESTING STATEMENT
+                scrolls.append(["Exceeded maximum attempts for this scroll", str(attempts)])
+                break
+        scrolls.append(newScroll)
+
+    return scrolls
+
 
 def getItems(tableName="Items", numItems=1, rarity="Uncommon"):
     TableList = ["Potions", "Scrolls", "SpellGems", "Items", "SpecialMaterials"]
@@ -76,5 +99,69 @@ def makeFileOLD_FORMAT():
     else:
         print("Unable to open file")
 
+def getVistaniItems():
+    marketList = ["Items", "Scrolls", "SpecialMaterials"]
+    spellLevelAndCost = ["Cantrip: 15gp", "1st: 25gp", "2nd: 150gp", "3rd: 400gp"]
+    raritiesList = ["Common", "Uncommon", "Rare"]
+
+    itemList = []
+    maxItemsPerSubcategory = 3
+    for i in range(len(raritiesList)):
+        itemList.append(raritiesList[i])
+        for j in range(maxItemsPerSubcategory - i):
+            itemList.append(getItems(marketList[0], 1, raritiesList[i]))
+
+    for i in range(len(spellLevelAndCost) // 2):
+        lesserScrollLevel = i * 2
+        greaterScrollLevel = lesserScrollLevel + 1
+        itemList.append(spellLevelAndCost[lesserScrollLevel])
+        itemList.append(spellLevelAndCost[greaterScrollLevel])
+
+        weakerScrolls = getScrolls(maxItemsPerSubcategory, lesserScrollLevel)
+        strongerScrolls = getScrolls(maxItemsPerSubcategory, greaterScrollLevel)
+
+        for j in range(maxItemsPerSubcategory):
+            itemList.append(weakerScrolls[j])
+            itemList.append(strongerScrolls[j])
+
+    return itemList
+
+
+def makeSnakeboxItems():
+    TableList = ["Potions", "Scrolls", "SpellGems", "Items", "SpecialMaterials"]
+    printList = ["Potions", "Items", "SpecialMaterials"]
+    repetitions = 3
+
+    tableResults = []
+    for i in range(len(printList)):
+        tableResults.append(getItems(printList[i], repetitions))
+
+    tableInput = ""
+    for category in tableResults:
+        for item in range(len(category)):
+            line = str(category[item][0]) + '\n' + str(category[item][1])
+            tableInput = tableInput + line
+            if item < (len(category) - 1):
+                tableInput = tableInput + '\n'
+
+    filename = "snakeboxString.txt"
+    try:
+        outputFile = open(filename, 'w')
+        isFileOpen = True
+    except OSError:
+        print("\nError: No input file uploaded.")
+        isFileOpen = False
+
+    if outputFile.writable():
+        outputFile.write(tableInput)
+        outputFile.close()
+        print("File written successfully")
+
+    else:
+        print("Unable to open file")
+
+    return tableInput
+
 
 makeFileOLD_FORMAT()
+makeSnakeboxItems()

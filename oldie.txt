@@ -1,9 +1,9 @@
-Potion of Animal Friendship	|	200 gp
-Bottled Breath	|	350 gp
-Potion of Resistance	|	500 gp
-Mizzium Apparatus	|	500 gp
-Night Caller	|	350 gp
-Ambitious Medic's Box	|	500 gp
+Potion of Growth	|	300 gp
+Potion of Fire Breath	|	350 gp
+Oil of Slipperiness	|	250 gp
+Medallion of Thoughts	|	300 gp
+Periapt of Health	|	250 gp
+Spies' Murmur	|	475 gp
+Obsidian 	|	500 gp
 Ignium 	|	100 gp
-Osmodium 	|	760 gp
-Aerocrystal 	|	750 gp
+Orichalcum 	|	650 gp
