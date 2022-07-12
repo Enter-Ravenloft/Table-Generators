@@ -14,8 +14,7 @@ from time import *
 
 
 seed(time_ns() * random() + thread_time_ns() * int(token_hex(), 16) * process_time_ns() + int(token_hex(), 16))
-seedList = sample(range(randint(9001, int(1000000 * (100 * random())
-                                          ))), 9000)
+seedList = sample(range(randint(9001, int(1000000 * (100 * random())))), 9000)
 shuffle(seedList)
 seed(seedList[(randint(0, len(seedList)))])
 
