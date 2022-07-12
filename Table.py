@@ -1,6 +1,7 @@
 from math import *
 from easyWraps import *
 
+
 class Table:
     def __init__(self, valuesList=[], text_wrapping=False, max_width=-1):
         self.Cell = []
@@ -139,7 +140,7 @@ class Table:
             lesserColumn = left_column
             GreaterIsLeftmost = False
 
-        if len(lesserColumn) == 0:
+        if len(lesserColumn) == 0 or lesserColumn[0] == self.MERGE_MARKER:
             filler = self.MERGE_MARKER
         else:
             filler = " "
@@ -268,7 +269,8 @@ class Table:
             if self.Cell[row][right] == self.MERGE_MARKER:
                 rightValueLength = 0
 
-            if (self.Cell[row][left] != self.SECTION_MARKER) and (self.Cell[row][left] != self.COMBINE_ROW_MARKER):
+            if (self.Cell[row][left] != self.SECTION_MARKER) and (self.Cell[row][left] != self.COMBINE_ROW_MARKER) and \
+                    (self.Cell[row][right] != self.MERGE_MARKER):
                 if leftValueLength > self.widestLeftColumn:
                     self.widestLeftColumn = leftValueLength
                 if rightValueLength > self.widestRightColumn:
@@ -307,6 +309,7 @@ class Table:
 
     def getBoxCharsForRow(self, row):
         merged = self.MERGE_MARKER
+        noPrint = self.COMBINE_ROW_MARKER
         nextMerged = "Next Merged"
         sectionHead = "Section Head"
         tableHead = "Table Head"
@@ -326,20 +329,50 @@ class Table:
         if self.RowInfo[row][sectionMarker]:
             traits[sectionMarker] = True
 
+        # Adjust for multi-line rows due to text wrapping
+        nextPrintableRow = row
+        nextFound = False
+        checkRow = row + 1
+        while (not nextFound) and (checkRow < (len(self.Cell) - 1)):
+            if not self.RowInfo[checkRow][noPrint]:
+                nextPrintableRow = checkRow
+                nextFound = True
+            else:
+                checkRow += 1
+
+        secondNextPrintableRow = nextPrintableRow
+        for i in range(len(self.Cell) - (nextPrintableRow - 1)):
+            nextFound = False
+            checkRow = nextPrintableRow + 1
+            while (not nextFound) and (checkRow < (len(self.Cell) - 1)):
+                if not self.RowInfo[checkRow][noPrint]:
+                    secondNextPrintableRow = checkRow
+                    nextFound = True
+                else:
+                    checkRow += 1
+
         if row == 0:
             traits[tableHead] = True
         elif row == len(self.RowInfo):
             traits[tableFoot] = True
         elif self.RowInfo[row - 1][sectionMarker]:
             traits[sectionHead] = True
-
-        # Process information on next printable row
         else:
-            if self.RowInfo[row + 1][sectionMarker]:
+            if row > 1:
+                # Check if part of a multi-line section head or table head
+                previousPrintableRow = row - 1
+                while self.RowInfo[previousPrintableRow][noPrint] and (previousPrintableRow > -1):
+                    previousPrintableRow -= 1
+
+                if previousPrintableRow == 0 or self.RowInfo[previousPrintableRow][self.SECTION_MARKER]:
+                    traits[sectionHead] = True
+
+            # Process information for next printable rows
+            if self.RowInfo[nextPrintableRow][sectionMarker]:
                 traits[sectionFoot] = True
                 # If row is a sectionFoot then need to check row after the section marker row
                 if row < len(self.RowInfo):
-                    if self.RowInfo[row + 2][merged]:
+                    if self.RowInfo[secondNextPrintableRow][merged]:
                         traits[nextMerged] = True
             else:
                 if self.RowInfo[row + 1][merged]:

@@ -1,6 +1,7 @@
 from math import *
 from textwrap import wrap
 from time import *
+from RandItems_OLDFORMAT import *
 
 words = "Common Items\nMERGE\nImbued Wood Focus\n75 gp\nHorn of Silent Alarm\n85 gp\nVeteran's Cane\n50 " \
         "gp\nENDSECTION\nENDSECTION\nUncommon Items\nMERGE\nRing of Truth Telling\n350 gp\nArcane Whip Tip (Fire)\n50 " \
@@ -12,6 +13,7 @@ words = "Common Items\nMERGE\nImbued Wood Focus\n75 gp\nHorn of Silent Alarm\n85
         "Iron\nObsidian\nSAMELINE\nSAMELINE\n100gp\n100gp "
 
 MANUAL_INPUT = words.split('\n')
+MANUAL_INPUT = getVistaniItems()
 
 
 def longestWord(text):

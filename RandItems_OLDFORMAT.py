@@ -140,21 +140,30 @@ def getVistaniItems():
     spellLevelAndCost = ["Cantrip: 15gp", "1st: 25gp", "2nd: 150gp", "3rd: 400gp"]
     raritiesList = ["Common", "Uncommon", "Rare"]
     materialTypes = ["Cloth", "Organic", "Metal", "Mineral"]
+    endTableMarker = "ENDTABLE"
+    sectionMarker = "ENDSECTION"
+    mergeMarker = "MERGE"
 
     itemList = []
     maxItemsPerSubcategory = 3
     for i in range(len(raritiesList)):
         itemList.append(raritiesList[i])
+        itemList.append(mergeMarker)
+        itemList.append(sectionMarker)
+        itemList.append(sectionMarker)
         for j in range(maxItemsPerSubcategory - i):
             newItem = getItems(marketList[0], 1, raritiesList[i])
             itemList.append(newItem[0])
             itemList.append(newItem[1])
+    itemList.append(endTableMarker)
 
     for i in range(len(spellLevelAndCost) // 2):
         lesserScrollLevel = i * 2
         greaterScrollLevel = lesserScrollLevel + 1
         itemList.append(spellLevelAndCost[lesserScrollLevel])
         itemList.append(spellLevelAndCost[greaterScrollLevel])
+        itemList.append(sectionMarker)
+        itemList.append(sectionMarker)
 
         weakerScrolls = getScrolls(maxItemsPerSubcategory, lesserScrollLevel)
         strongerScrolls = getScrolls(maxItemsPerSubcategory, greaterScrollLevel)
@@ -163,12 +172,17 @@ def getVistaniItems():
             itemList.append(weakerScrolls[j])
             itemList.append(strongerScrolls[j])
 
+    itemList.append(endTableMarker)
+
     for i in range(len(materialTypes) // 2):
         firstType = i * 2
         secondType = firstType + 1
 
         itemList.append(materialTypes[firstType])
         itemList.append(materialTypes[secondType])
+        itemList.append(sectionMarker)
+        itemList.append(sectionMarker)
+
         firstMaterial = getMaterials(materialTypes[firstType])
         secondMaterial = getMaterials(materialTypes[secondType])
 
@@ -184,21 +198,13 @@ def getVistaniItems():
 
 
 def makeSnakeboxItems():
-    TableList = ["Potions", "Scrolls", "SpellGems", "Items", "SpecialMaterials"]
-    printList = ["Potions", "Items", "SpecialMaterials"]
-    repetitions = 3
-
-    tableResults = []
-    for i in range(len(printList)):
-        tableResults.append(getItems(printList[i]))
+    tableResults = getVistaniItems()
 
     tableInput = ""
-    for category in tableResults:
-        for item in range(len(category)):
-            line = str(category[item][0]) + '\n' + str(category[item][1])
-            tableInput = tableInput + line
-            if item < (len(category) - 1):
-                tableInput = tableInput + '\n'
+    for i in range(len(tableResults)):
+        tableInput = tableInput + str(tableResults[i])
+        if i < (len(tableResults) - 1):
+            tableInput = tableInput + '\n'
 
     filename = "snakeboxString.txt"
     try:

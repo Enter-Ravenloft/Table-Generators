@@ -190,3 +190,6 @@ for item in newList:
 newList = getVistaniItems()
 for i in newList:
     print(i)
+
+print('\n\n')
+print(makeSnakeboxItems())
