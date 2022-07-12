@@ -870,8 +870,6 @@ def main():
         if IsCustomTables:
             prompt = "(Enter 'x' for default '%d') Enter number of tables to be made: " % NUM_TABLES_DEFAULT
             numTables = int(getInputOrDefault(prompt, str(NUM_TABLES_DEFAULT)))
-        else:
-            print("__**Vistani Market**__\n")
 
         tableTitles = []
         for i in range(numTables):
@@ -906,7 +904,7 @@ def main():
                 marketTable.printUnicodeTable()
 
         else:
-            print("**%s**" % tableTitles[i])
+            print("__**%s**__" % tableTitles[i])
             marketTable = Table(unprocessedTableInput, TextWrapping, desiredWidth)
             marketTable.printUnicodeTable()
 
