@@ -192,4 +192,29 @@ for i in newList:
     print(i)
 
 print('\n\n')
-print(makeSnakeboxItems())
+import numpy as np
+# Importing Necessary Modules
+import requests  # to get image from the web
+from time import *
+
+# Set up the image URL and filename
+REQUEST_URL = "https://www.random.org/integers/?num=1&min=1&max=9001&col=1&base=10&format=plain&rnd=new"
+
+headers = {'User-Agent': 'Chrome/83.0.4103.116'}
+s = requests.Session()
+s.get('https://www.random.org', headers=headers)
+r = s.get(REQUEST_URL, headers=headers)
+
+# Check if the image was retrieved successfully
+if r.status_code == 200:
+    seed = int(r.text)
+
+else:
+    seed(time_ns())
+
+print("Seed: %d" % seed)
+
+rng = np.random.default_rng(seed)
+
+rints = rng.integers(low=0, high=20)
+print(rints)
