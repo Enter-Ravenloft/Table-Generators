@@ -1,9 +1,9 @@
-Potion of Growth	|	300 gp
+Potion of Waterbreathing	|	400 gp
 Potion of Fire Breath	|	350 gp
-Oil of Slipperiness	|	250 gp
-Medallion of Thoughts	|	300 gp
-Periapt of Health	|	250 gp
-Spies' Murmur	|	475 gp
-Obsidian 	|	500 gp
-Ignium 	|	100 gp
-Orichalcum 	|	650 gp
+Potion of Resistance	|	500 gp
+Mithral Armor (medium or heavy, but not hide)	|	+450
+Adamantine Armor (medium or heavy, but not hide)	|	+500
+Arcane Whip Tip - Cold	|	50 gp
+Stellar Iron	|	850 gp
+Ignium	|	100 gp
+Coral	|	100 gp

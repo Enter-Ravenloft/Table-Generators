@@ -2,6 +2,7 @@ from marketTables import *
 from math import *
 from statistics import *
 from ItemsMasterList import *
+from RandItems_OLDFORMAT import *
 
 """'# BEGINING TESTING
 def miniTest(input):
@@ -135,6 +136,8 @@ def compareWraps(tests):
 
 
 sentence = "Dan's Item with a Really Long Ass Name, then he kept goin and goin without any end in sight"
+
+"""
 maximum = 24
 print(longestWord(sentence))
 print(loosestWrap(sentence, maximum))
@@ -142,6 +145,8 @@ print(evenWrap(sentence, maximum))
 print(simpleWrap(sentence, maximum))
 print(shortestWrap(sentence, maximum))
 print('\n\n')
+"""
+
 """compareWraps(annoyingItemNames)
 
 print("Spell List Compare:")
@@ -165,3 +170,23 @@ test = wrap(sentence, maximum, initial_indent='', subsequent_indent='', expand_t
 print(test)
 """
 
+"""
+typesOfMaterials = ["Cloth", "Organic", "Metal", "Mineral"]
+newList = []
+for i in range(len(typesOfMaterials)):
+    newList.append([])
+for material in SpecialMaterials:
+    if material["type"] in typesOfMaterials:
+        order = typesOfMaterials.index(material["type"])
+        newList[order].append(material)
+
+for item in newList:
+    print(typesOfMaterials[newList.index(item)])
+    for subitem in item:
+        print(subitem)
+    print('\n')
+"""
+
+newList = getVistaniItems()
+for i in newList:
+    print(i)

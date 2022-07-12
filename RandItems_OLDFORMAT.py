@@ -3,6 +3,7 @@
 from random import*
 from ItemsMasterList import*
 
+
 def getScrolls(num_scrolls=1, max_level=1, min_level=-1):
     if min_level > max_level:
         min_level = max_level
@@ -14,17 +15,45 @@ def getScrolls(num_scrolls=1, max_level=1, min_level=-1):
         while True:
             attempts = attempts + 1
             level = randint(min_level, max_level)
-            randNum = randint(0, len(MasterList[level]))
+            randNum = randint(0, len(AllSpells[level]) - 1)
             newScroll = AllSpells[level][randNum]
             if newScroll not in scrolls:
                 break
             elif attempts > 100:
                 # TESTING STATEMENT
-                scrolls.append(["Exceeded maximum attempts for this scroll", str(attempts)])
+                scrolls.append(["Exceeded maximum attempts for this item", str(attempts)])
                 break
         scrolls.append(newScroll)
 
     return scrolls
+
+
+def getMaterials(requested_type, num_materials=1):
+    typesOfMaterials = ["Cloth", "Organic", "Metal", "Mineral"]
+    key_name = "name"
+    key_price = "price"
+
+    materialType = typesOfMaterials.index(requested_type)
+
+
+    materials = []
+    for i in range(num_materials):
+        attempts = 0
+        while True:
+            attempts = attempts + 1
+
+            randNum = randint(0, len(SpecialMaterials[materialType]) - 1)
+            newScroll = [SpecialMaterials[materialType][randNum][key_name], SpecialMaterials[materialType][randNum][key_price]]
+            if newScroll not in materials:
+                break
+            elif attempts > 100:
+                # TESTING STATEMENT
+                materials.append(["Exceeded maximum attempts for this item", str(attempts)])
+                break
+        materials.append(newScroll[0])
+        materials.append(newScroll[1])
+
+    return materials
 
 
 def getItems(tableName="Items", numItems=1, rarity="Uncommon"):
@@ -41,16 +70,20 @@ def getItems(tableName="Items", numItems=1, rarity="Uncommon"):
         if numItems < len(MasterList[table]):
             for i in range(numItems):
                 attempts = 0
-                while True:
+                searchComplete = False
+                while not searchComplete:
                     attempts = attempts + 1
-                    randNum = randint(0, len(MasterList[table]))
-                    pricedItem = [MasterList[table][randNum][key_name], MasterList[table][randNum][key_price]]
+                    randNum = randint(0, len(MasterList[table]) - 1)
+                    left = MasterList[table][randNum][key_name]
+                    right = MasterList[table][randNum][key_price]
+                    pricedItem = [left, right]
                     if (pricedItem not in results) and (rarity == MasterList[table][randNum][key_rarity]):
-                        break
+                        searchComplete = True
+                        results.append(left)
+                        results.append(right)
                     elif attempts > 100:
+                        searchComplete = True
                         results.append(["Exceeded maximum attempts for this item", str(attempts)])
-                        break
-                results.append(pricedItem)
         else:
             results.append(["Number of items requested too high.", str(numItems)])
     else:
@@ -71,6 +104,7 @@ def OLD_FORMAT_TEST():
         print(availableItems[item][0], availableItems[item][1])
 
 
+"""
 def makeFileOLD_FORMAT():
     printList = ["Potions", "Items", "SpecialMaterials"]
     repetitions = 3
@@ -98,18 +132,23 @@ def makeFileOLD_FORMAT():
 
     else:
         print("Unable to open file")
+"""
+
 
 def getVistaniItems():
-    marketList = ["Items", "Scrolls", "SpecialMaterials"]
+    marketList = ["Items"]
     spellLevelAndCost = ["Cantrip: 15gp", "1st: 25gp", "2nd: 150gp", "3rd: 400gp"]
     raritiesList = ["Common", "Uncommon", "Rare"]
+    materialTypes = ["Cloth", "Organic", "Metal", "Mineral"]
 
     itemList = []
     maxItemsPerSubcategory = 3
     for i in range(len(raritiesList)):
         itemList.append(raritiesList[i])
         for j in range(maxItemsPerSubcategory - i):
-            itemList.append(getItems(marketList[0], 1, raritiesList[i]))
+            newItem = getItems(marketList[0], 1, raritiesList[i])
+            itemList.append(newItem[0])
+            itemList.append(newItem[1])
 
     for i in range(len(spellLevelAndCost) // 2):
         lesserScrollLevel = i * 2
@@ -124,6 +163,23 @@ def getVistaniItems():
             itemList.append(weakerScrolls[j])
             itemList.append(strongerScrolls[j])
 
+    for i in range(len(materialTypes) // 2):
+        firstType = i * 2
+        secondType = firstType + 1
+
+        itemList.append(materialTypes[firstType])
+        itemList.append(materialTypes[secondType])
+        firstMaterial = getMaterials(materialTypes[firstType])
+        secondMaterial = getMaterials(materialTypes[secondType])
+
+        # append names
+        itemList.append(firstMaterial[0])
+        itemList.append(secondMaterial[0])
+
+        # append prices
+        itemList.append(firstMaterial[1])
+        itemList.append(secondMaterial[1])
+
     return itemList
 
 
@@ -134,7 +190,7 @@ def makeSnakeboxItems():
 
     tableResults = []
     for i in range(len(printList)):
-        tableResults.append(getItems(printList[i], repetitions))
+        tableResults.append(getItems(printList[i]))
 
     tableInput = ""
     for category in tableResults:
@@ -163,5 +219,3 @@ def makeSnakeboxItems():
     return tableInput
 
 
-makeFileOLD_FORMAT()
-makeSnakeboxItems()
