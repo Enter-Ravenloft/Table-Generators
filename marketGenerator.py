@@ -14,7 +14,8 @@ from time import *
 
 
 seed(time_ns() * random() + thread_time_ns() * int(token_hex(), 16) * process_time_ns() + int(token_hex(), 16))
-seedList = sample(range(randint(9001, int(1000000 * random()))), 9000)
+seedList = sample(range(randint(9001, int(1000000 * (100 * random())
+                                          ))), 9000)
 shuffle(seedList)
 seed(seedList[(randint(0, len(seedList)))])
 
@@ -30,7 +31,7 @@ fourthLevel = ["Arcane Eye", "Aura of Life", "Aura of Purity", "Banishment", "Bl
 fifthLevel = ["Animate Objects", "Antilife Shell", "Awaken", "Banishing Smite", "Bigby's Hand", "Circle of Power", "Cloudkill", "Commune", "Commune with Nature", "Cone of Cold", "Conjure Elemental", "Conjure Volley", "Contact Other Plane", "Contagion", "Control Winds", "Creation", "Danse Macabre", "Dawn", "Destructive Wave", "Dispel Evil and Good", "Dominate Person", "Dream", "Enervation", "Far Step", "Flame Strike", "Geas", "Greater Restoration", "Hallow", "Hold Monster", "Holy Weapon", "Immolation", "Infernal Calling", "Insect Plague", "Legend Lore", "Maelstrom", "Mass Cure Wounds", "Mislead", "Modify Memory", "Negative Energy Flood", "Passwall", "Planar Binding", "Raise Dead", "Rary's Telepathic Bond", "Reincarnate", "Scrying", "Seeming", "Skill Empowerment", "Steel Wind Strike", "Swift Quiver", "Synaptic Static", "Telekinesis", "Teleportation Circle", "Transmute Rock", "Tree Stride", "Wall of Force", "Wall of Light", "Wall of Stone", "Wrath of Nature"]
 sixthLevel = ["Arcane Gate", "Blade Barrier", "Bones of the Earth", "Chain Lightning", "Circle of Death", "Conjure Fey", "Contingency", "Create Homunculus", "Create Undead", "Disintegrate", "Drawmij's Instant Summons", "Druid Grove", "Eyebite", "Find the Path", "Flesh to Stone", "Forbiddance", "Globe of Invulnerability", "Guards and Wards", "Harm", "Heal", "Heroes' Feast", "Investiture of Flame", "Investiture of Ice", "Investiture of Stone", "Investiture of Wind", "Magic Jar", "Mass Suggestion", "Mental Prison", "Move Earth", "Otiluke's Freezing Sphere", "Otto's Irresistible Dance", "Planar Ally", "Primordial Ward", "Primordial Ward", "Programmed Illusion", "Scatter", "Soul Cage", "Sunbeam", "Tenser's Transformation", "Transport via Plants", "True Seeing", "Wall of Ice", "Wall of Thorns", "Wind Walk", "Word of Recall"]
 seventhLevel = ["Conjure Celestial", "Crown of Stars", "Delayed Blast Fireball", "Divine Word", "Etherealness", "Finger of Death", "Fire Storm", "Forcecage", "Mirage Arcane", "Mordenkainen's Magnificent Mansion", "Mordenkainen's Sword", "Plane Shift", "Power Word Pain", "Prismatic Spray", "Project Image", "Regenerate", "Resurrection", "Reverse Gravity", "Sequester", "Simulacrum", "Symbol", "Teleport", "Temple of the Gods", "Whirlwind"]
-eighthLevel = ["Abi-Dalzim's Horrid Wilting", "Animal Shapes", "Antimagic Field", "Antipathy/Sympathy", "Clone", "Control Weather", "Demiplane", "Dominate Monster", "Earthquake", "Feeblemind", "Glibness", "Holy Aura", "Illusory Dragon", "Incendiary Cloud", "Maddening Darkness", "Maze", "Mighty Fortress", "Mind Blank", "Power Word Stun", "Sunburst", "Telepathy", "Trap the Soul", "Tsunami"]
+eighthLevel = ["Abi-Dalzim's Horrid Wilting", "Animal Shapes", "Antimagic Field", "Antipathy/ Sympathy", "Clone", "Control Weather", "Demiplane", "Dominate Monster", "Earthquake", "Feeblemind", "Glibness", "Holy Aura", "Illusory Dragon", "Incendiary Cloud", "Maddening Darkness", "Maze", "Mighty Fortress", "Mind Blank", "Power Word Stun", "Sunburst", "Telepathy", "Trap the Soul", "Tsunami"]
 
 AllSpells = [zerothLevel, firstLevel, secondLevel, thirdLevel, fourthLevel, fifthLevel, sixthLevel, seventhLevel, eighthLevel]
 
@@ -152,12 +153,13 @@ def getVistaniItems():
     for i in range(len(raritiesList)):
         itemList.append(raritiesList[i])
         itemList.append(mergeMarker)
-        itemList.append(sectionMarker)
-        itemList.append(sectionMarker)
         for j in range(maxItemsPerSubcategory - i):
             newItem = getItems(marketList[0], 1, raritiesList[i])
             itemList.append(newItem[0])
             itemList.append(newItem[1])
+        if i < (len(raritiesList) - 1):
+            itemList.append(sectionMarker)
+            itemList.append(sectionMarker)
     itemList.append(endTableMarker)
 
     for i in range(len(spellLevelAndCost) // 2):
@@ -165,8 +167,6 @@ def getVistaniItems():
         greaterScrollLevel = lesserScrollLevel + 1
         itemList.append(spellLevelAndCost[lesserScrollLevel])
         itemList.append(spellLevelAndCost[greaterScrollLevel])
-        itemList.append(sectionMarker)
-        itemList.append(sectionMarker)
 
         weakerScrolls = getScrolls(maxItemsPerSubcategory, lesserScrollLevel)
         strongerScrolls = getScrolls(maxItemsPerSubcategory, greaterScrollLevel)
@@ -174,6 +174,10 @@ def getVistaniItems():
         for j in range(maxItemsPerSubcategory):
             itemList.append(weakerScrolls[j])
             itemList.append(strongerScrolls[j])
+
+        if i < ((len(spellLevelAndCost) // 2) - 1):
+            itemList.append(sectionMarker)
+            itemList.append(sectionMarker)
 
     itemList.append(endTableMarker)
 
@@ -183,8 +187,6 @@ def getVistaniItems():
 
         itemList.append(materialTypes[firstType])
         itemList.append(materialTypes[secondType])
-        itemList.append(sectionMarker)
-        itemList.append(sectionMarker)
 
         firstMaterial = getMaterials(materialTypes[firstType])
         secondMaterial = getMaterials(materialTypes[secondType])
@@ -196,6 +198,10 @@ def getVistaniItems():
         # append prices
         itemList.append(firstMaterial[1])
         itemList.append(secondMaterial[1])
+
+        if i < ((len(materialTypes) // 2) - 1):
+            itemList.append(sectionMarker)
+            itemList.append(sectionMarker)
 
     return itemList
 
@@ -612,7 +618,7 @@ class Table:
             while self.RowInfo[previousPrintableRow][noPrint] and (previousPrintableRow > -1):
                 previousPrintableRow -= 1
 
-            if previousPrintableRow == 0 or self.RowInfo[previousPrintableRow][self.SECTION_MARKER]:
+            if previousPrintableRow == -1 or self.RowInfo[previousPrintableRow][self.SECTION_MARKER]:
                 traits[sectionHead] = True
 
             # Process information for next printable rows
@@ -768,7 +774,7 @@ def main():
     IsCustomTables = True
     TextWrapping = True
     WRAP_WIDTH_DEFAULT = 29
-    MARKET_CYCLE_START_POSIX = 1654387200  # June 5th at 12am UTC
+    MARKET_CYCLE_START_POSIX = 1654387200  # June 5th at 12am UTC aka ISO 2022-06-05 00:00:00 UTC
     POSTING_HOUR_DEFAULT = 23  # Vistani Market posting time
     DAYS_IN_CYCLE_DEFAULT = 3  # Vistani Market market cycle length
     DAYS_TO_ADD_DEFAULT = 3  # Number of days in the future for discord time code
