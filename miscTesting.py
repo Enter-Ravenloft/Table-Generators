@@ -210,7 +210,7 @@ if r.status_code == 200:
     seed = int(r.text)
 
 else:
-    seed(time_ns())
+    seed = (time_ns())
 
 print("Seed: %d" % seed)
 

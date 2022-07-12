@@ -1,8 +1,27 @@
-# TODO: Implement random.org http get
-
-from random import*
 from ItemsMasterList import*
+import numpy as np
+# Importing Necessary Modules
+import requests  # to get image from the web
+from time import *
 
+# Set up the image URL and filename
+REQUEST_URL = "https://www.random.org/integers/?num=1&min=1&max=9001&col=1&base=10&format=plain&rnd=new"
+
+headers = {'User-Agent': 'Chrome/83.0.4103.116'}
+s = requests.Session()
+s.get('https://www.random.org', headers=headers)
+r = s.get(REQUEST_URL, headers=headers)
+
+# Check if the image was retrieved successfully
+if r.status_code == 200:
+    seed = int(r.text)
+
+else:
+    seed = (time_ns())
+
+print("Seed: %d" % seed)
+
+rng = np.random.default_rng(seed)
 
 def getScrolls(num_scrolls=1, max_level=1, min_level=-1):
     if min_level > max_level:
@@ -14,8 +33,8 @@ def getScrolls(num_scrolls=1, max_level=1, min_level=-1):
         attempts = 0
         while True:
             attempts = attempts + 1
-            level = randint(min_level, max_level)
-            randNum = randint(0, len(AllSpells[level]) - 1)
+            level = rng.integers(low=min_level, high=max_level)
+            randNum = rng.integers(low=0, high=len(AllSpells[level]) - 1)
             newScroll = AllSpells[level][randNum]
             if newScroll not in scrolls:
                 break
@@ -42,7 +61,7 @@ def getMaterials(requested_type, num_materials=1):
         while True:
             attempts = attempts + 1
 
-            randNum = randint(0, len(SpecialMaterials[materialType]) - 1)
+            randNum = rng.integers(low=0, high=len(SpecialMaterials[materialType]) - 1)
             newScroll = [SpecialMaterials[materialType][randNum][key_name], SpecialMaterials[materialType][randNum][key_price]]
             if newScroll not in materials:
                 break
@@ -73,7 +92,7 @@ def getItems(tableName="Items", numItems=1, rarity="Uncommon"):
                 searchComplete = False
                 while not searchComplete:
                     attempts = attempts + 1
-                    randNum = randint(0, len(MasterList[table]) - 1)
+                    randNum = rng.integers(low=0, high=len(MasterList[table]) - 1)
                     left = MasterList[table][randNum][key_name]
                     right = MasterList[table][randNum][key_price]
                     pricedItem = [left, right]
@@ -90,49 +109,6 @@ def getItems(tableName="Items", numItems=1, rarity="Uncommon"):
         results.append(["Table or rarity not in initial list.", tableName])
 
     return results
-
-
-def OLD_FORMAT_TEST():
-    requestTable = "Items"
-    tableSize = 3
-
-    availableItems = getItems(requestTable, tableSize)
-    print(availableItems)
-    print()
-
-    for item in range(tableSize):
-        print(availableItems[item][0], availableItems[item][1])
-
-
-"""
-def makeFileOLD_FORMAT():
-    printList = ["Potions", "Items", "SpecialMaterials"]
-    repetitions = 3
-
-    tableResults = []
-    for i in range(len(printList)):
-        tableResults.append(getItems(printList[i], repetitions))
-
-    filename = "oldie.txt"
-    try:
-        outputFile = open(filename, 'w')
-        isFileOpen = True
-    except OSError:
-        print("\nError: No input file uploaded.")
-        isFileOpen = False
-
-    if outputFile.writable():
-        for category in tableResults:
-            for item in range(len(category)):
-                line = str(category[item][0]) + "\t|\t" + str(category[item][1]) + '\n'
-                outputFile.write(line)
-
-        outputFile.close()
-        print("File written successfully")
-
-    else:
-        print("Unable to open file")
-"""
 
 
 def getVistaniItems():
@@ -195,33 +171,3 @@ def getVistaniItems():
         itemList.append(secondMaterial[1])
 
     return itemList
-
-
-def makeSnakeboxItems():
-    tableResults = getVistaniItems()
-
-    tableInput = ""
-    for i in range(len(tableResults)):
-        tableInput = tableInput + str(tableResults[i])
-        if i < (len(tableResults) - 1):
-            tableInput = tableInput + '\n'
-
-    filename = "snakeboxString.txt"
-    try:
-        outputFile = open(filename, 'w')
-        isFileOpen = True
-    except OSError:
-        print("\nError: No input file uploaded.")
-        isFileOpen = False
-
-    if outputFile.writable():
-        outputFile.write(tableInput)
-        outputFile.close()
-        print("File written successfully")
-
-    else:
-        print("Unable to open file")
-
-    return tableInput
-
-
