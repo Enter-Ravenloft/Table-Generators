@@ -5,28 +5,46 @@
 from math import *
 from textwrap import wrap
 from time import *
-import numpy as np
-import requests  # to get truly random seed from random.org
+from numpy import *
+from requests import * # to get truly random seed from random.org
 from time import *
 
 # Set up the image URL and filename
 REQUEST_URL = "https://www.random.org/integers/?num=1&min=1&max=9001&col=1&base=10&format=plain&rnd=new"
-
+QUOTA_URL = "https://www.random.org/quota/?format=plain"
 headers = {'User-Agent': 'Chrome/83.0.4103.116'}
-s = requests.Session()
+
+s = Session()
 s.get('https://www.random.org', headers=headers)
 r = s.get(REQUEST_URL, headers=headers)
 
-# Check if the image was retrieved successfully
+# Check Quota from random.org
+# If the
 if r.status_code == 200:
-    seed = int(r.text)
+    allowance = int(r.text)
+    if allowance < 1:
+        print("random.org API quota has been reached. Current allowance: %d\nPlease refrain from running the program "
+              "again for at least 10 minutes." % allowance, end="\n\n")
+    else:
+        print("Unless the following number is very small, ignore and erase this. %d" % allowance, end="\n\n")
+else:
+    allowance = 0
 
+if allowance > 0:
+    s = Session()
+    s.get('https://www.random.org', headers=headers)
+    r = s.get(REQUEST_URL, headers=headers)
+
+    # Check if the image was retrieved successfully
+    if r.status_code == 200:
+        seed = int(r.text)
+
+    else:
+        seed = (time_ns())
 else:
     seed = (time_ns())
 
-print("Seed: %d" % seed)
-
-rng = np.random.default_rng(seed)
+rng = random.default_rng(seed)
 
 
 Potions = [{"name": "Perfume of Bewitching", "price": "75 gp", "page": "XGE 138", "rarity": "Common"}, {"name": "Potion of Climbing", "price": "30 gp", "page": "DMG 187", "rarity": "Common"}, {"name": "Potion of Healing (Common)", "price": "50 gp", "page": "DMG 187-188", "rarity": "Common"}, {"name": "Bottled Breath", "price": "350 gp", "page": "PA 222", "rarity": "Uncommon"}, {"name": "Oil of Slipperiness", "price": "250 gp", "page": "DMG 184", "rarity": "Uncommon"}, {"name": "Philter of Love", "price": "150 gp", "page": "DMG 184", "rarity": "Uncommon"}, {"name": "Potion of Animal Friendship", "price": "200 gp", "page": "DMG 187", "rarity": "Uncommon"}, {"name": "Potion of Fire Breath", "price": "350 gp", "page": "DMG 187", "rarity": "Uncommon"}, {"name": "Potion of Advantage", "price": "300 gp", "page": "TWBtW 212", "rarity": "Uncommon"}, {"name": "Potion of Giant Strength (Hill)", "price": "350 gp", "page": "DMG 187", "rarity": "Uncommon"}, {"name": "Potion of Growth", "price": "300 gp", "page": "DMG 187", "rarity": "Uncommon"}, {"name": "Potion of Healing (Uncommon)", "price": "300 gp", "page": "DMG 187-188", "rarity": "Uncommon"}, {"name": "Potion of Poison", "price": "500 gp", "page": "DMG 188", "rarity": "Uncommon"}, {"name": "Potion of Resistance", "price": "500 gp", "page": "DMG 188", "rarity": "Uncommon"}, {"name": "Potion of Waterbreathing", "price": "400 gp", "page": "DMG 188", "rarity": "Uncommon"}, {"name": "Elixir of Health", "price": "2,000 gp", "page": "DMG 168", "rarity": "Rare"}, {"name": "Oil of Etherealness", "price": "2,000 gp", "page": "DMG 183", "rarity": "Rare"}, {"name": "Potion of Aqueous Form", "price": "1,000 gp", "page": "MOT 197", "rarity": "Rare"}, {"name": "Potion of Clairvoyance", "price": "900 gp", "page": "DMG 187", "rarity": "Rare"}, {"name": "Potion of Diminution", "price": "500 gp", "page": "DMG 187", "rarity": "Rare"}, {"name": "Potion of Gaseous Form", "price": "1,500 gp", "page": "DMG 187", "rarity": "Rare"}, {"name": "Potion of Giant Strength (Frost/Stone)", "price": "650 gp", "page": "DMG 187", "rarity": "Rare"}, {"name": "Potion of Giant Strength (Fire)", "price": "1,200 gp", "page": "DMG 187", "rarity": "Rare"}, {"name": "Potion of Healing (Rare)", "price": "750 gp", "page": "DMG 187-188", "rarity": "Rare"}, {"name": "Potion of Heroism", "price": "800 gp", "page": "DMG 188", "rarity": "Rare"}, {"name": "Potion of Invulnerability", "price": "1,500 gp", "page": "DMG 188", "rarity": "Rare"}, {"name": "Potion of Maximum Power", "price": "2,000 gp", "page": "EGW 268", "rarity": "Rare"}, {"name": "Potion of Mind Control (beast)", "price": "1,600 gp", "page": "TYP 229", "rarity": "Rare"}, {"name": "Potion of Mind Control (humanoid)", "price": "2,500 gp", "page": "TYP 229", "rarity": "Rare"}, {"name": "Potion of Mind Reading", "price": "1,100 gp", "page": "DMG 188", "rarity": "Rare"}, {"name": "Oil of Sharpness", "price": "2,200 gp*", "page": "DMG 184", "rarity": "Very Rare"}, {"name": "Potion of Flying", "price": "2,500 gp", "page": "DMG 187", "rarity": "Very Rare"}, {"name": "Potion of Giant Strength (Cloud)", "price": "1,800 gp*", "page": "DMG 187", "rarity": "Very Rare"}, {"name": "Potion of Healing (Very Rare)", "price": "1,500 gp*", "page": "DMG 187-188", "rarity": "Very Rare"}, {"name": "Potion of Invisibility", "price": "2,000 gp*", "page": "DMG 188", "rarity": "Very Rare"}, {"name": "Potion of Longevity", "price": "3,000 gp", "page": "DMG 188", "rarity": "Very Rare"}, {"name": "Potion of Mind Control (monster)", "price": "6,000 gp", "page": "TYP 229", "rarity": "Very Rare"}, {"name": "Potion of Possibility", "price": "1,900 gp*", "page": "EGW 268", "rarity": "Very Rare"}, {"name": "Potion of Speed", "price": "2,000 gp*", "page": "DMG 188", "rarity": "Very Rare"}, {"name": "Potion of Vitality", "price": "1,800 gp*", "page": "DMG 188", "rarity": "Very Rare"}, {"name": "Potion of Giant Size", "price": "11,000 gp*", "page": "SKT 236", "rarity": "Legendary"}, {"name": "Potion of Giant Strength (Storm)", "price": "8,000 gp*", "page": "DMG 187", "rarity": "Legendary"}]
@@ -63,7 +81,6 @@ MasterList = [Potions, AllSpells, SpellGems, Items, SpecialMaterials]
 def getScrolls(num_scrolls=1, max_level=1, min_level=-1):
     if min_level > max_level:
         min_level = max_level
-    # TODO add checks for valid arguments
 
     scrolls = []
     for i in range(num_scrolls):
@@ -784,9 +801,6 @@ def main():
     DAYS_TO_ADD_DEFAULT = 3  # Number of days in the future for discord time code
     FILENAME_DEFAULT = 'Shop Sheet.txt'  # Must be UTF-8 text
 
-    print("Please read the instructions to the left before typing.\n")
-
-    unprocessedUserInput = MANUAL_INPUT
     userInput = 'y'
     if userInput != 'n':
         IsCustomTables = False
@@ -802,14 +816,6 @@ def main():
     if IsCustomTables:
         desiredWidth = int(getInputOrDefault("Enter how wide you want the tables to be in number of characters."
                                              "Enter x for the default: ", WRAP_WIDTH_DEFAULT))
-
-    # Open file and save contents in a list
-    """try:
-        inputFile = open(userFile)
-        isFileOpen = True
-    except OSError:
-        print("\nError: No input file uploaded.")
-        isFileOpen = False"""
 
     if True:
 
@@ -843,7 +849,6 @@ def main():
             prompt = "(Enter 'x' for default '%d') Enter number of tables to be made: " % NUM_TABLES_DEFAULT
             numTables = int(getInputOrDefault(prompt, str(NUM_TABLES_DEFAULT)))
         else:
-            print("\n\n")
             print("__**Vistani Market**__\n")
 
         tableTitles = []
@@ -884,11 +889,6 @@ def main():
             marketTable.printUnicodeTable()
 
         print(closingPlayersTag)
-
-    else:
-        print("\n\nPlease upload the file and run again. See instructions to the left for further detail.")
-
-    print("\n\nTables Complete.")
 
 
 main()
