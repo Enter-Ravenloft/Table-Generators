@@ -33,6 +33,7 @@ seventhLevel = ["Conjure Celestial", "Crown of Stars", "Delayed Blast Fireball",
 eighthLevel = ["Abi-Dalzim's Horrid Wilting", "Animal Shapes", "Antimagic Field", "Antipathy/ Sympathy", "Clone", "Control Weather", "Demiplane", "Dominate Monster", "Earthquake", "Feeblemind", "Glibness", "Holy Aura", "Illusory Dragon", "Incendiary Cloud", "Maddening Darkness", "Maze", "Mighty Fortress", "Mind Blank", "Power Word Stun", "Sunburst", "Telepathy", "Trap the Soul", "Tsunami"]
 
 AllSpells = [zerothLevel, firstLevel, secondLevel, thirdLevel, fourthLevel, fifthLevel, sixthLevel, seventhLevel, eighthLevel]
+AllowedSpells = AllSpells[0:4]
 
 SpellGems = [{"name": "Spell Gem (Cantrip)", "price": "150 gp", "page": "OA 223", "rarity": "Uncommon"}, {"name": "Spell Gem (1st Level)", "price": "350 gp", "page": "OA 223", "rarity": "Uncommon"}, {"name": "Spell Gem (2nd Level)", "price": "1,500 gp", "page": "OA 223", "rarity": "Rare"}, {"name": "Spell Gem (3rd Level)", "price": "4,000 gp", "page": "OA 223", "rarity": "Rare"}, {"name": "Spell Gem (4th Level)", "price": "8,000 gp", "page": "OA 223", "rarity": "Very Rare"}, {"name": "Spell Gem (5th Level)", "price": "15,000 gp", "page": "OA 223", "rarity": "Very Rare"}, {"name": "Spell Gem (6th Level)", "price": "20,000 gp", "page": "OA 223", "rarity": "Very Rare"}, {"name": "Spell Gem (7th Level)", "price": "35,000 gp", "page": "OA 223", "rarity": "Legendary"}, {"name": "Spell Gem (8th Level)", "price": "51,000 gp", "page": "OA 223", "rarity": "Legendary"}, {"name": "Spell Gem (9th Level)", "price": "78,000 gp", "page": "OA 223", "rarity": "Legendary"}]
 
@@ -51,7 +52,7 @@ MasterList = [Potions, AllSpells, SpellGems, Items, SpecialMaterials]
 
 
 def getScrolls(num_scrolls=1, max_level=1, min_level=-1):
-    if min_level > max_level:
+    if min_level > max_level or min_level < 0:
         min_level = max_level
 
     scrolls = []
@@ -59,9 +60,12 @@ def getScrolls(num_scrolls=1, max_level=1, min_level=-1):
         attempts = 0
         while True:
             attempts = attempts + 1
-            level = randint(min_level, max_level)
-            randNum = randint(0, len(AllSpells[level]) - 1)
-            newScroll = AllSpells[level][randNum]
+            if min_level != max_level:
+                level = randint(min_level, max_level)
+            else:
+                level = max_level
+            randNum = randint(0, len(AllowedSpells[level]) - 1)
+            newScroll = AllowedSpells[level][randNum]
             if newScroll not in scrolls:
                 break
             elif attempts > 100:
