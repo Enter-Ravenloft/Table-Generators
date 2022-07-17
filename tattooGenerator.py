@@ -33,7 +33,7 @@ seventhLevel = ["Conjure Celestial", "Crown of Stars", "Delayed Blast Fireball",
 eighthLevel = ["Abi-Dalzim's Horrid Wilting", "Animal Shapes", "Antimagic Field", "Antipathy/ Sympathy", "Clone", "Control Weather", "Demiplane", "Dominate Monster", "Earthquake", "Feeblemind", "Glibness", "Holy Aura", "Illusory Dragon", "Incendiary Cloud", "Maddening Darkness", "Maze", "Mighty Fortress", "Mind Blank", "Power Word Stun", "Sunburst", "Telepathy", "Trap the Soul", "Tsunami"]
 
 AllSpells = [zerothLevel, firstLevel, secondLevel, thirdLevel, fourthLevel, fifthLevel, sixthLevel, seventhLevel, eighthLevel]
-
+AllowedSpells = AllSpells[0:4]
 
 SpellGems = [{"name": "Spell Gem (Cantrip)", "price": "150 gp", "page": "OA 223", "rarity": "Uncommon"}, {"name": "Spell Gem (1st Level)", "price": "350 gp", "page": "OA 223", "rarity": "Uncommon"}, {"name": "Spell Gem (2nd Level)", "price": "1,500 gp", "page": "OA 223", "rarity": "Rare"}, {"name": "Spell Gem (3rd Level)", "price": "4,000 gp", "page": "OA 223", "rarity": "Rare"}, {"name": "Spell Gem (4th Level)", "price": "8,000 gp", "page": "OA 223", "rarity": "Very Rare"}, {"name": "Spell Gem (5th Level)", "price": "15,000 gp", "page": "OA 223", "rarity": "Very Rare"}, {"name": "Spell Gem (6th Level)", "price": "20,000 gp", "page": "OA 223", "rarity": "Very Rare"}, {"name": "Spell Gem (7th Level)", "price": "35,000 gp", "page": "OA 223", "rarity": "Legendary"}, {"name": "Spell Gem (8th Level)", "price": "51,000 gp", "page": "OA 223", "rarity": "Legendary"}, {"name": "Spell Gem (9th Level)", "price": "78,000 gp", "page": "OA 223", "rarity": "Legendary"}]
 
@@ -48,11 +48,11 @@ Mineral = [{'name': 'Aerocrystal', 'price': '750 gp', 'page': 'Special Materials
 
 SpecialMaterials = [Cloth, Organic, Metal, Mineral]
 
-MasterList = [Potions, AllSpells, SpellGems, Items, SpecialMaterials, Tattoos]
+MasterList = [Potions, AllSpells, SpellGems, Items, SpecialMaterials]
 
 
 def getScrolls(num_scrolls=1, max_level=1, min_level=-1):
-    if min_level > max_level:
+    if min_level > max_level or min_level < 0:
         min_level = max_level
 
     scrolls = []
@@ -60,9 +60,12 @@ def getScrolls(num_scrolls=1, max_level=1, min_level=-1):
         attempts = 0
         while True:
             attempts = attempts + 1
-            level = randint(min_level, max_level)
-            randNum = randint(0, len(AllSpells[level]) - 1)
-            newScroll = AllSpells[level][randNum]
+            if min_level != max_level:
+                level = randint(min_level, max_level)
+            else:
+                level = max_level
+            randNum = randint(0, len(AllowedSpells[level]) - 1)
+            newScroll = AllowedSpells[level][randNum]
             if newScroll not in scrolls:
                 break
             elif attempts > 100:
@@ -102,18 +105,16 @@ def getMaterials(requested_type, num_materials=1):
     return materials
 
 
-def getItems(tableName="Items", numItems=1, max_rarity="Uncommon", min_rarity=""):
-    TableList = ["Potions", "Scrolls", "SpellGems", "Items", "SpecialMaterials", "Tattoos"]
+def getItems(tableName="Items", numItems=1, rarity="Uncommon"):
+    TableList = ["Tattoos"]
     RaritiesList = ["Common", "Uncommon", "Rare", "Very Rare", "Legendary"]
     results = []
 
-    if tableName in TableList or max_rarity not in RaritiesList:
+    if (tableName in TableList) and (rarity in RaritiesList):
         table = TableList.index(tableName)
         key_name = "name"
         key_price = "price"
         key_rarity = "rarity"
-        if min_rarity not in RaritiesList:
-            min_rarity = max_rarity
 
         if numItems < len(MasterList[table]):
             for i in range(numItems):
@@ -125,10 +126,7 @@ def getItems(tableName="Items", numItems=1, max_rarity="Uncommon", min_rarity=""
                     left = MasterList[table][randNum][key_name]
                     right = MasterList[table][randNum][key_price]
                     pricedItem = [left, right]
-                    rarityIndex = RaritiesList.index(MasterList[table][randNum][key_rarity])
-                    withinRairityRange = ((RaritiesList.index(min_rarity) <= rarityIndex) and
-                                          (RaritiesList.index(max_rarity) >= rarityIndex))
-                    if (pricedItem not in results) and withinRairityRange:
+                    if (pricedItem not in results) and (rarity == MasterList[table][randNum][key_rarity]):
                         searchComplete = True
                         results.append(left)
                         results.append(right)
@@ -143,75 +141,9 @@ def getItems(tableName="Items", numItems=1, max_rarity="Uncommon", min_rarity=""
     return results
 
 
-def getVistaniItems():
-    marketList = ["Items"]
-    spellLevelAndCost = ["Cantrip: 15gp", "1st: 25gp", "2nd: 150gp", "3rd: 400gp"]
-    raritiesList = ["Common", "Uncommon", "Rare"]
-    materialTypes = ["Cloth", "Organic", "Metal", "Mineral"]
-    endTableMarker = "ENDTABLE"
-    sectionMarker = "ENDSECTION"
-    mergeMarker = "MERGE"
-
-    itemList = []
-    maxItemsPerSubcategory = 3
-    for i in range(len(raritiesList)):
-        itemList.append(raritiesList[i])
-        itemList.append(mergeMarker)
-        for j in range(maxItemsPerSubcategory - i):
-            newItem = getItems(marketList[0], 1, raritiesList[i])
-            itemList.append(newItem[0])
-            itemList.append(newItem[1])
-        if i < (len(raritiesList) - 1):
-            itemList.append(sectionMarker)
-            itemList.append(sectionMarker)
-    itemList.append(endTableMarker)
-
-    for i in range(len(spellLevelAndCost) // 2):
-        lesserScrollLevel = i * 2
-        greaterScrollLevel = lesserScrollLevel + 1
-        itemList.append(spellLevelAndCost[lesserScrollLevel])
-        itemList.append(spellLevelAndCost[greaterScrollLevel])
-
-        weakerScrolls = getScrolls(maxItemsPerSubcategory, lesserScrollLevel)
-        strongerScrolls = getScrolls(maxItemsPerSubcategory, greaterScrollLevel)
-
-        for j in range(maxItemsPerSubcategory):
-            itemList.append(weakerScrolls[j])
-            itemList.append(strongerScrolls[j])
-
-        if i < ((len(spellLevelAndCost) // 2) - 1):
-            itemList.append(sectionMarker)
-            itemList.append(sectionMarker)
-
-    itemList.append(endTableMarker)
-
-    for i in range(len(materialTypes) // 2):
-        firstType = i * 2
-        secondType = firstType + 1
-
-        itemList.append(materialTypes[firstType])
-        itemList.append(materialTypes[secondType])
-
-        firstMaterial = getMaterials(materialTypes[firstType])
-        secondMaterial = getMaterials(materialTypes[secondType])
-
-        # append names
-        itemList.append(firstMaterial[0])
-        itemList.append(secondMaterial[0])
-
-        # append prices
-        itemList.append(firstMaterial[1])
-        itemList.append(secondMaterial[1])
-
-        if i < ((len(materialTypes) // 2) - 1):
-            itemList.append(sectionMarker)
-            itemList.append(sectionMarker)
-
-    return itemList
-
-
 def getTattooItems():
     sections = ["Spellwrought Tattoos", "Permanent (As Listed)"]
+    RaritiesList = ["Common", "Uncommon", "Rare", "Very Rare", "Legendary"]
     spellwroughts = ["Cantrip 150gp", "1st Level 250gp", "2nd Level 1000gp", "3rd Level 3000gp"]
     sectionMarker = "ENDSECTION"
     mergeMarker = "MERGE"
@@ -238,7 +170,8 @@ def getTattooItems():
     tattooList.append(sections[1])
     tattooList.append(mergeMarker)
 
-    tattooList.append(getItems("Tattoos", 1, "Rare", "Common")[0])
+    # newItem = getItems(marketList[0], 1, raritiesList[i])
+    tattooList.append(getItems("Tattoos", 1, RaritiesList[randint(0, 2)])[0])
     tattooList.append(mergeMarker)
 
     return tattooList
