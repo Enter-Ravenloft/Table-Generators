@@ -174,7 +174,8 @@ def getTattoo(max_rarity="Common", min_rarity=""):
 def getTattooItems():
     sections = ["Spellwrought Tattoos", "Permanent (As Listed)"]
     RaritiesList = ["Common", "Uncommon", "Rare", "Very Rare", "Legendary"]
-    spellwroughts = ["Cantrip 150gp", "1st Level 250gp", "2nd Level 1000gp", "3rd Level 3000gp"]
+    spellwroughtsSpellLevel = ["Cantrip", "1st Level", "2nd Level", "3rd Level"]
+    spellwroughtsPrice = ["150gp", "250gp", "1000gp", "3000gp"]
     sectionMarker = "ENDSECTION"
     mergeMarker = "MERGE"
     sameLineMarker = "SAMELINE"
@@ -183,11 +184,17 @@ def getTattooItems():
     tattooList.append(sections[0])
     tattooList.append(mergeMarker)
 
-    for i in range(len(spellwroughts) // 2):
+    for i in range(len(spellwroughtsSpellLevel) // 2):
         lesserScrollLevel = i * 2
         greaterScrollLevel = lesserScrollLevel + 1
-        tattooList.append(spellwroughts[lesserScrollLevel])
-        tattooList.append(spellwroughts[greaterScrollLevel])
+        tattooList.append(spellwroughtsSpellLevel[lesserScrollLevel])
+        tattooList.append(spellwroughtsSpellLevel[greaterScrollLevel])
+
+        tattooList.append(sameLineMarker)
+        tattooList.append(sameLineMarker)
+
+        tattooList.append(spellwroughtsPrice[lesserScrollLevel])
+        tattooList.append(spellwroughtsPrice[greaterScrollLevel])
 
         weakerScrolls = getScrolls(1, lesserScrollLevel)
         strongerScrolls = getScrolls(1, greaterScrollLevel)
@@ -201,7 +208,6 @@ def getTattooItems():
     tattooList.append(sections[1])
     tattooList.append(mergeMarker)
 
-    # newItem = getItems(marketList[0], 1, raritiesList[i])
     permanentTattoo = getTattoo(RaritiesList[0], RaritiesList[2])
     tattooList.append(permanentTattoo["name"])
     tattooList.append(mergeMarker)
