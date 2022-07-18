@@ -140,6 +140,36 @@ def getItems(tableName="Items", numItems=1, rarity="Uncommon"):
 
     return results
 
+def getTattoo(max_rarity="Common", min_rarity=""):
+    TableList = ["Tattoos"]
+    RaritiesList = ["Common", "Uncommon", "Rare", "Very Rare", "Legendary"]
+    tattoo = {"name": "Tattoo Not Found", "price": "Not Found"}
+
+    if len(min_rarity) == 0:
+        min_rarity = max_rarity
+
+    if (min_rarity in RaritiesList) and (max_rarity in RaritiesList):
+        if min_rarity == max_rarity:
+            rarity = RaritiesList.index(max_rarity)
+
+        else:
+            if (RaritiesList.index(min_rarity) > RaritiesList.index(max_rarity)):
+                temp = min_rarity
+                min_rarity = max_rarity
+                max_rarity = temp
+
+            rarity = randint(RaritiesList.index(min_rarity), RaritiesList.index(max_rarity))
+
+        attempts = 0
+        searchComplete = False
+        while (not searchComplete) and (attempts < 100):
+            attempts = attempts + 1
+            randomTattoo = Tattoos[randint(0, len(Tattoos) - 1)]
+            if randomTattoo["rarity"] == RaritiesList[rarity]:
+                searchComplete = True
+                tattoo = randomTattoo
+
+    return tattoo
 
 def getTattooItems():
     sections = ["Spellwrought Tattoos", "Permanent (As Listed)"]
@@ -147,6 +177,7 @@ def getTattooItems():
     spellwroughts = ["Cantrip 150gp", "1st Level 250gp", "2nd Level 1000gp", "3rd Level 3000gp"]
     sectionMarker = "ENDSECTION"
     mergeMarker = "MERGE"
+    sameLineMarker = "SAMELINE"
 
     tattooList = []
     tattooList.append(sections[0])
@@ -171,7 +202,12 @@ def getTattooItems():
     tattooList.append(mergeMarker)
 
     # newItem = getItems(marketList[0], 1, raritiesList[i])
-    tattooList.append(getItems("Tattoos", 1, RaritiesList[randint(0, 2)])[0])
+    permanentTattoo = getTattoo(RaritiesList[0], RaritiesList[2])
+    tattooList.append(permanentTattoo["name"])
+    tattooList.append(mergeMarker)
+    tattooList.append(sameLineMarker)
+    tattooList.append(sameLineMarker)
+    tattooList.append(permanentTattoo["price"])
     tattooList.append(mergeMarker)
 
     return tattooList
