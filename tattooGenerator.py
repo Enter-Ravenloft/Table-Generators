@@ -816,7 +816,7 @@ def main():
 
     if True:
 
-        closingPlayersTag = "@Players the market closes <t:"
+        closingPlayersTag = "@Players Saoirse's Parlour closes <t:"
         endOfCLosingPlayersTag = ":R>."
 
         if IsCustomTables:
