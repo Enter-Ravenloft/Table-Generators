@@ -43,7 +43,8 @@ def main():
     DELIMITER_STRING = 'ENDTABLE\n'
     IsCustomTables = True
     TextWrapping = True
-    WRAP_WIDTH_DEFAULT = 29
+    DesiredWidth = 28
+
     MARKET_CYCLE_START_POSIX = 1654387200  # June 5th at 12am UTC
     POSTING_HOUR_DEFAULT = 23  # Vistani Market posting time
     DAYS_IN_CYCLE_DEFAULT = 3  # Vistani Market market cycle length
@@ -141,12 +142,16 @@ def main():
                     tableItems = unprocessedTableInput
 
                 print("**%s**" % tableTitles[i])
-                marketTable = Table(tableItems, TextWrapping, desiredWidth)
+
+                marketTable = Table(tableItems, TextWrapping, DesiredWidth)
+
                 marketTable.printUnicodeTable()
 
         else:
             print("**%s**" % tableTitles[i])
-            marketTable = Table(unprocessedTableInput, TextWrapping, desiredWidth)
+
+            marketTable = Table(unprocessedTableInput, TextWrapping, DesiredWidth)
+
             marketTable.printUnicodeTable()
 
 
@@ -155,4 +160,6 @@ def main():
     else:
         print("\n\nPlease upload the file and run again. See instructions to the left for further detail.")
 
+
     print("\n\nTables Complete.")
+

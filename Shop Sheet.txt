@@ -1,60 +1,56 @@
 Common Items
 MERGE
-Cleansing Stone
-50 gp
-Wand Sheath
-75 gp
-Wand Sheath
-75 gp
+Cloak of Many Fashions
+90 gp
+Shiftweave
+100 gp
+Wand of Conducting
+90 gp
 ENDSECTION
 ENDSECTION
 Uncommon Items
 MERGE
-Dust of Sneezing and Choking
-150 gp
-Alchemy Jug
-100 gp
+Slumbering Dragon Vessel
+"2,750 gp"
+Keoghtom's Ointment (5 doses)
+1250 gp
 ENDSECTION
 ENDSECTION
 Rare  Items
 MERGE
-Ring of Free Action
-"4,500 gp"
+Needle of Mending (dagger)
+"1,400 gp"
 ENDTABLE
-Cantrip - 15gp
-1st - 25gp
-Sacred Flame
+Cantrip: 15gp
+1st: 25gp
+Shillelagh
+Hex
+Shape Water
 Wrathful Smite
-Message
-Illusory Script
-Produce Flame
-Tenser's Floating Disk
+Thorn Whip
+Bane
 ENDSECTION
 ENDSECTION
-2nd - 150gp
-3rd - 400gp
-Web
-Enemies abound
-Enthrall
-Clairvoyance
-Branding Smite
-Thunder Step
+2nd: 150gp
+3rd: 400gp
+Barkskin
+Gaseous Form
+Ray of Enfeeblement
+Wind Wall
+Ray of Enfeeblement
+Feign Death
 ENDTABLE
 Cloth
 Organic
 Infernal Leather 
-Plague Wood 
-SAMELINE
-SAMELINE
+Asmoroch Wood
 750gp
-250gp
+500gp
 ENDSECTION
 ENDSECTION
 Metal
 Mineral
-Orichalcum 
-Eternal Ice 
-SAMELINE
-SAMELINE
-650gp
+Osmodium 
+Eternal Ice
+750gp
 600gp
