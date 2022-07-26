@@ -140,7 +140,9 @@ class Table:
             lesserColumn = left_column
             GreaterIsLeftmost = False
 
+
         if len(lesserColumn) == 0 or lesserColumn[0] == self.MERGE_MARKER:
+
             filler = self.MERGE_MARKER
         else:
             filler = " "
@@ -202,7 +204,9 @@ class Table:
                     else:
                         newRows = self.columZipper(secondaryCells, primaryCells)
 
+
                     self.addWraps(self.getWrapItemNumber(row), len(newRows))
+
 
                     self.Cell.pop(row)
                     for i in range(len(newRows)):

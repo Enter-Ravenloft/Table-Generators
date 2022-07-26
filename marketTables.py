@@ -3,7 +3,6 @@
 #  Lotsa Spaghetti
 from Table import *
 from time import *
-from math import *
 
 def addDaysToPOSIX(add_days=1, to_hour=-1, day_cycle=-1, cycle_start=0, start_day=-1):
     NANOSECONDS_PER_SECOND = 1000000000
@@ -45,6 +44,7 @@ def main():
     IsCustomTables = True
     TextWrapping = True
     DesiredWidth = 28
+
     MARKET_CYCLE_START_POSIX = 1654387200  # June 5th at 12am UTC
     POSTING_HOUR_DEFAULT = 23  # Vistani Market posting time
     DAYS_IN_CYCLE_DEFAULT = 3  # Vistani Market market cycle length
@@ -64,6 +64,11 @@ def main():
         prompt = prompt + "(Enter 'x' for default '%s') Enter file name: " % FILENAME_DEFAULT
         userFile = getInputOrDefault(prompt, FILENAME_DEFAULT)
 
+    desiredWidth = WRAP_WIDTH_DEFAULT
+    if IsCustomTables:
+        desiredWidth = int(getInputOrDefault("Enter how wide you want the tables to be in number of characters."
+                                               "Enter x for the default: ", WRAP_WIDTH_DEFAULT))
+
     # Open file and save contents in a list
     try:
         inputFile = open(userFile)
@@ -81,7 +86,7 @@ def main():
 
         if IsCustomTables:
 
-            unixTimeToAdjust = int(getInputOrDefault("Enter unix time stamp. Enter 0 for automatic calculation: ",
+            unixTimeToAdjust = int(getInputOrDefault("Enter unix time stamp. Enter x for automatic calculation: ",
                                                      str(-1)))
             daysOpen = int(getInputOrDefault("Enter the number of days until the market will close. "
                                                "Enter x for the default: ", DAYS_TO_ADD_DEFAULT))
@@ -137,12 +142,16 @@ def main():
                     tableItems = unprocessedTableInput
 
                 print("**%s**" % tableTitles[i])
+
                 marketTable = Table(tableItems, TextWrapping, DesiredWidth)
+
                 marketTable.printUnicodeTable()
 
         else:
             print("**%s**" % tableTitles[i])
+
             marketTable = Table(unprocessedTableInput, TextWrapping, DesiredWidth)
+
             marketTable.printUnicodeTable()
 
 
@@ -151,4 +160,6 @@ def main():
     else:
         print("\n\nPlease upload the file and run again. See instructions to the left for further detail.")
 
+
     print("\n\nTables Complete.")
+
