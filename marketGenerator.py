@@ -198,6 +198,10 @@ def getVistaniItems():
         itemList.append(firstMaterial[0])
         itemList.append(secondMaterial[0])
 
+        # append same line so price and name are in same box
+        itemList.append("SAMELINE")
+        itemList.append("SAMELINE")
+
         # append prices
         itemList.append(firstMaterial[1])
         itemList.append(secondMaterial[1])
