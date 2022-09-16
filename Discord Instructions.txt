@@ -1,8 +1,10 @@
+These are just the templates. Replace the parts in all caps with the relevant information
+
 __**Updating the Vistani Market**__
 
-**1.** If you have already downloaded the ``marketGenarator.py`` file from the update on <t:1663289639> (<t:1663289639:R>), skip to step 3 using that file.
+**1.** If you have already downloaded the ``marketGenarator.py`` file from the update on <t:DISCORD_TIME> (<t:DISCORD_TIME:R>), skip to step 3 using that file.
 **2.** Download the latest market generator file from the attachment of the discord message linked below
-https://discord.com/channels/905604470644285460/908163294395777084/1020134112545230889
+MESSAGE_LINK
 **3.** In #helpers or #dm-botspam , post ``?eval`` as a message with that file attached. You will get a response from @Snakeboxed#6932.
 **4.** Copy __the text__ of the output file attachment of @Snakeboxed#6932's reply. If Snakeboxed isn't working, use the backup method below the last step of the instructions then go to step 5. 
 **5.** Paste the copied text in #📜》vistani-market-list. You may need to break it up into multiple posts to avoid discord's character limit.
@@ -10,14 +12,14 @@ https://discord.com/channels/905604470644285460/908163294395777084/1020134112545
 
 __Backup method__: If Snakeboxed is broken go to https://trinket.io/python3/21592589ee?showInstructions=true. If you know how, you can instead run the python file locally and copy the output.
 
-Linked to discord message last updated: <t:1663289639> (<t:1663289639:R>)
+Linked to discord message last updated: <t:DISCORD_TIME> (<t:DISCORD_TIME:R>)
 
 
 __**Updating the Tattoo Parlour**__
 
-**1.**If you have already downloaded the ``tattooGenarator.py`` file from the update on <t:1660701438> (<t:1660701438:R>), skip to step 3 using that file.
+**1.**If you have already downloaded the ``tattooGenarator.py`` file from the update on <t:DISCORD_TIME> (<t:DISCORD_TIME:R>), skip to step 3 using that file.
 **2.** Download the latest tattoo generator file from the attachment of the discord message linked below
-https://discord.com/channels/905604470644285460/908163294395777084/1009270490843590727
+MESSAGE_LINK
 **3.** In #helpers or #dm-botspam , post ``?eval`` as a message with that file attached. You will get a response from @Snakeboxed#6932.
 **4.** Copy __the text__ of the output file attachment of @Snakeboxed#6932's reply. If Snakeboxed isn't working, use the backup method below the last step of the instructions then go to step 5. 
 **5.** Copy __the text__ of the output file attachment of @Snakeboxed#6932's reply. Paste the copied text in #📜》hana-den-tattoo-lists.
@@ -25,4 +27,4 @@ https://discord.com/channels/905604470644285460/908163294395777084/1009270490843
 
 __Backup method__: If Snakeboxed is broken go to https://trinket.io/python3/f4a8e54bae?showInstructions=true. If you know how, you can run the python file locally.
 
-Linked to discord message last updated: <t:1660701438> (<t:1660701438:R>)
+Linked to discord message last updated: <t:DISCORD_TIME> (<t:DISCORD_TIME:R>)
