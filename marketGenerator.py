@@ -154,10 +154,10 @@ def getVistaniItems():
     for i in range(len(raritiesList)):
         itemList.append(raritiesList[i])
         itemList.append(mergeMarker)
-        for j in range(maxItemsPerSubcategory - i):
-            newItem = getItems(marketList[0], 1, raritiesList[i])
-            itemList.append(newItem[0])
-            itemList.append(newItem[1])
+        newItems = getItems(marketList[0], maxItemsPerSubcategory - i, raritiesList[i])
+        for j in range(len(newItems) // 2):
+            itemList.append(newItems[2 * j ])
+            itemList.append(newItems[(2 * j) + 1])
         if i < (len(raritiesList) - 1):
             itemList.append(sectionMarker)
             itemList.append(sectionMarker)
