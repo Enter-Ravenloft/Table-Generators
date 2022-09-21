@@ -1,7 +1,6 @@
 #  https://github.com/ItsQc/Ravenloft-Tables
 #  If you have issue with this, ping Quincy on Discord
 #  Lotsa Spaghetti
-#  See the below split into multiple files by visisting the archive branch
 
 
 from math import *
