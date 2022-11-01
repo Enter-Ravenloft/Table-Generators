@@ -123,8 +123,7 @@ def getItems(tableName="Items", numItems=1, rarity="Uncommon"):
                     randNum = randint(0, len(MasterList[table]) - 1)
                     left = MasterList[table][randNum][key_name]
                     right = MasterList[table][randNum][key_price]
-                    pricedItem = [left, right]
-                    if (pricedItem not in results) and (rarity == MasterList[table][randNum][key_rarity]):
+                    if (left not in results) and (rarity == MasterList[table][randNum][key_rarity]):
                         searchComplete = True
                         results.append(left)
                         results.append(right)
