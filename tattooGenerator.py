@@ -790,8 +790,9 @@ def main():
     IsCustomTables = True
     TextWrapping = True
     WRAP_WIDTH_DEFAULT = 29
-    MARKET_CYCLE_START_POSIX = 1654387200  # June 5th at 12am UTC aka ISO 2022-06-05 00:00:00 UTC
-    POSTING_HOUR_DEFAULT = 23  # Hana Den posting time
+    POSIX_DAY_IN_SECONDS = 60 * 60 * 24
+    MARKET_CYCLE_START_POSIX = 4 * POSIX_DAY_IN_SECONDS  # Days offset from epoch
+    POSTING_HOUR_DEFAULT = 0  # Hana Den posting time
     DAYS_IN_CYCLE_DEFAULT = 7  # Hana Den market cycle length
     DAYS_TO_ADD_DEFAULT = 7  # Number of days in the future for discord time code
     FILENAME_DEFAULT = 'Shop Sheet.txt'  # Must be UTF-8 text
