@@ -233,7 +233,10 @@ def longestWord(text):
 
 
 def simpleWrap(text, width, whole_words=False):
-    return wrap(text, width, break_long_words=whole_words)
+    if (len(text) > 0) and (width > 0):
+        return wrap(text, width, break_long_words=whole_words)
+    else:
+        return [text]
 
 
 def loosestWrap(text, width):
@@ -448,7 +451,7 @@ class Table:
                     isLargerLeftmost = False
 
                 if self.Cell[row][largerCell] != self.MERGE_MARKER:
-                    primaryLengthConstraint = max_length - len(self.Cell[row][smallerCell])
+                    primaryLengthConstraint = abs(max_length - len(self.Cell[row][smallerCell]))
                     primaryCells = shortestWrap(self.Cell[row][largerCell], primaryLengthConstraint)
 
                     secondaryLengthConstraint = 0
