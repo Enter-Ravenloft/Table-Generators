@@ -444,7 +444,7 @@ class Table:
                     isLargerLeftmost = False
 
                 if self.Cell[row][largerCell] != self.MERGE_MARKER:
-                    primaryLengthConstraint = max(max_length - len(self.Cell[row][smallerCell]), max_length - len(self.Cell[row][smallerCell]))
+                    primaryLengthConstraint = abs(max_length - len(self.Cell[row][smallerCell]))
                     primaryCells = shortestWrap(self.Cell[row][largerCell], primaryLengthConstraint)
 
                     secondaryLengthConstraint = 0
