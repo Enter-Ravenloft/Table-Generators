@@ -146,7 +146,7 @@ def getItems(tableName="Items", numItems=1, rarity="Uncommon"):
 def getVistaniItems():
     marketList = ["Items"]
     spellLevelAndCost = ["Cantrip: 15gp", "1st: 25gp", "2nd: 150gp", "3rd: 400gp"]
-    raritiesList = ["Common", "Uncommon", "Rare", "Very Rare"]
+    raritiesList = ["Common", "Uncommon", "Rare"]
     materialTypes = ["Cloth", "Organic", "Metal", "Mineral"]
     endTableMarker = "ENDTABLE"
     sectionMarker = "ENDSECTION"
