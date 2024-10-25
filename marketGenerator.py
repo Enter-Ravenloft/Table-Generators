@@ -955,7 +955,7 @@ def getInputOrDefault(prompt="Enter input: ", stored_value="DEFAULT", code_for_d
 
 def nicePrint(table=[]):
     for market in table:
-        print("## " + market["title"])
+        print("## __" + market["title"] + "__")
         for section in market["sections"]:
             print("### " + section["title"])
             for bullet in section["bullets"]:
