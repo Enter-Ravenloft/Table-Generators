@@ -10,7 +10,6 @@ from random import *
 from secrets import *
 from time import *
 
-
 VERY_RARE_COST = "9 Arc Tokens"
 
 seed(time_ns() * random() + thread_time_ns() * int(token_hex(), 16) * process_time_ns() + int(token_hex(), 16))
@@ -18,32 +17,770 @@ seedList = sample(range(randint(9001, int(1000000 * (100 * random())))), 9000)
 shuffle(seedList)
 seed(seedList[(randint(0, len(seedList)))])
 
+Potions = [{"name": "Perfume of Bewitching", "price": "75 gp", "page": "XGE 138", "rarity": "Common"},
+           {"name": "Potion of Climbing", "price": "30 gp", "page": "DMG 187", "rarity": "Common"},
+           {"name": "Potion of Healing (Common)", "price": "50 gp", "page": "DMG 187-188", "rarity": "Common"},
+           {"name": "Bottled Breath", "price": "350 gp", "page": "PA 222", "rarity": "Uncommon"},
+           {"name": "Oil of Slipperiness", "price": "250 gp", "page": "DMG 184", "rarity": "Uncommon"},
+           {"name": "Philter of Love", "price": "150 gp", "page": "DMG 184", "rarity": "Uncommon"},
+           {"name": "Potion of Animal Friendship", "price": "200 gp", "page": "DMG 187", "rarity": "Uncommon"},
+           {"name": "Potion of Fire Breath", "price": "350 gp", "page": "DMG 187", "rarity": "Uncommon"},
+           {"name": "Potion of Advantage", "price": "300 gp", "page": "TWBtW 212", "rarity": "Uncommon"},
+           {"name": "Potion of Giant Strength (Hill)", "price": "350 gp", "page": "DMG 187", "rarity": "Uncommon"},
+           {"name": "Potion of Growth", "price": "300 gp", "page": "DMG 187", "rarity": "Uncommon"},
+           {"name": "Potion of Healing (Uncommon)", "price": "300 gp", "page": "DMG 187-188", "rarity": "Uncommon"},
+           {"name": "Potion of Poison", "price": "500 gp", "page": "DMG 188", "rarity": "Uncommon"},
+           {"name": "Potion of Resistance", "price": "500 gp", "page": "DMG 188", "rarity": "Uncommon"},
+           {"name": "Potion of Waterbreathing", "price": "400 gp", "page": "DMG 188", "rarity": "Uncommon"},
+           {"name": "Elixir of Health", "price": "2,000 gp", "page": "DMG 168", "rarity": "Rare"},
+           {"name": "Oil of Etherealness", "price": "2,000 gp", "page": "DMG 183", "rarity": "Rare"},
+           {"name": "Potion of Aqueous Form", "price": "1,000 gp", "page": "MOT 197", "rarity": "Rare"},
+           {"name": "Potion of Clairvoyance", "price": "900 gp", "page": "DMG 187", "rarity": "Rare"},
+           {"name": "Potion of Diminution", "price": "500 gp", "page": "DMG 187", "rarity": "Rare"},
+           {"name": "Potion of Gaseous Form", "price": "1,500 gp", "page": "DMG 187", "rarity": "Rare"},
+           {"name": "Potion of Giant Strength (Frost/Stone)", "price": "650 gp", "page": "DMG 187", "rarity": "Rare"},
+           {"name": "Potion of Giant Strength (Fire)", "price": "1,200 gp", "page": "DMG 187", "rarity": "Rare"},
+           {"name": "Potion of Healing (Rare)", "price": "750 gp", "page": "DMG 187-188", "rarity": "Rare"},
+           {"name": "Potion of Heroism", "price": "800 gp", "page": "DMG 188", "rarity": "Rare"},
+           {"name": "Potion of Invulnerability", "price": "1,500 gp", "page": "DMG 188", "rarity": "Rare"},
+           {"name": "Potion of Maximum Power", "price": "2,000 gp", "page": "EGW 268", "rarity": "Rare"},
+           {"name": "Potion of Mind Control (beast)", "price": "1,600 gp", "page": "TYP 229", "rarity": "Rare"},
+           {"name": "Potion of Mind Control (humanoid)", "price": "2,500 gp", "page": "TYP 229", "rarity": "Rare"},
+           {"name": "Potion of Mind Reading", "price": "1,100 gp", "page": "DMG 188", "rarity": "Rare"},
+           {"name": "Oil of Sharpness", "price": "2,200 gp*", "page": "DMG 184", "rarity": "Very Rare"},
+           {"name": "Potion of Flying", "price": "2,500 gp", "page": "DMG 187", "rarity": "Very Rare"},
+           {"name": "Potion of Giant Strength (Cloud)", "price": "1,800 gp*", "page": "DMG 187", "rarity": "Very Rare"},
+           {"name": "Potion of Healing (Very Rare)", "price": "1,500 gp*", "page": "DMG 187-188",
+            "rarity": "Very Rare"},
+           {"name": "Potion of Invisibility", "price": "2,000 gp*", "page": "DMG 188", "rarity": "Very Rare"},
+           {"name": "Potion of Longevity", "price": "3,000 gp", "page": "DMG 188", "rarity": "Very Rare"},
+           {"name": "Potion of Mind Control (monster)", "price": "6,000 gp", "page": "TYP 229", "rarity": "Very Rare"},
+           {"name": "Potion of Possibility", "price": "1,900 gp*", "page": "EGW 268", "rarity": "Very Rare"},
+           {"name": "Potion of Speed", "price": "2,000 gp*", "page": "DMG 188", "rarity": "Very Rare"},
+           {"name": "Potion of Vitality", "price": "1,800 gp*", "page": "DMG 188", "rarity": "Very Rare"},
+           {"name": "Potion of Giant Size", "price": "11,000 gp*", "page": "SKT 236", "rarity": "Legendary"},
+           {"name": "Potion of Giant Strength (Storm)", "price": "8,000 gp*", "page": "DMG 187", "rarity": "Legendary"}]
+OldScrolls = [
+    {"name": "Spell Scroll or Tattoo (Cantrip)", "price": "15 gp", "page": "DMG 200; TCE 135", "rarity": "Common"},
+    {"name": "Spell Scroll or Tattoo (1st Level)", "price": "25 gp", "page": "DMG 200; TCE 135", "rarity": "Common"},
+    {"name": "Spell Scroll or Tattoo (2nd Level)", "price": "150 gp", "page": "DMG 200; TCE 135", "rarity": "Uncommon"},
+    {"name": "Spell Scroll or Tattoo (3rd Level)", "price": "400 gp", "page": "DMG 200; TCE 135", "rarity": "Uncommon"},
+    {"name": "Spell Scroll or Tattoo (4th Level)", "price": "800 gp", "page": "DMG 200; TCE 135", "rarity": "Rare"},
+    {"name": "Spell Scroll or Tattoo (5th Level)", "price": "1,500 gp", "page": "DMG 200; TCE 135", "rarity": "Rare"},
+    {"name": "Scroll of Protection", "price": "3,500 gp", "page": "DMG 199", "rarity": "Rare"},
+    {"name": "Spell Scroll (6th Level)", "price": "2,000 gp*", "page": "DMG 200", "rarity": "Very Rare"},
+    {"name": "Spell Scroll (7th Level)", "price": "3,500 gp", "page": "DMG 200", "rarity": "Very Rare"},
+    {"name": "Spell Scroll (8th Level)", "price": "5,000 gp", "page": "DMG 200", "rarity": "Very Rare"},
+    {"name": "Spell Scroll (9th Level)", "price": "20,000 gp*", "page": "DMG 200", "rarity": "Legendary"},
+    {"name": "Scroll of Tarrasque Summoning", "price": "150,000 gp", "page": "IDRF 315", "rarity": "Legendary"},
+    {"name": "Scroll of the Comet", "price": "250,000 gp", "page": "IDRF 315-316", "rarity": "Legendary"}]
 
-Potions = [{"name": "Perfume of Bewitching", "price": "75 gp", "page": "XGE 138", "rarity": "Common"}, {"name": "Potion of Climbing", "price": "30 gp", "page": "DMG 187", "rarity": "Common"}, {"name": "Potion of Healing (Common)", "price": "50 gp", "page": "DMG 187-188", "rarity": "Common"}, {"name": "Bottled Breath", "price": "350 gp", "page": "PA 222", "rarity": "Uncommon"}, {"name": "Oil of Slipperiness", "price": "250 gp", "page": "DMG 184", "rarity": "Uncommon"}, {"name": "Philter of Love", "price": "150 gp", "page": "DMG 184", "rarity": "Uncommon"}, {"name": "Potion of Animal Friendship", "price": "200 gp", "page": "DMG 187", "rarity": "Uncommon"}, {"name": "Potion of Fire Breath", "price": "350 gp", "page": "DMG 187", "rarity": "Uncommon"}, {"name": "Potion of Advantage", "price": "300 gp", "page": "TWBtW 212", "rarity": "Uncommon"}, {"name": "Potion of Giant Strength (Hill)", "price": "350 gp", "page": "DMG 187", "rarity": "Uncommon"}, {"name": "Potion of Growth", "price": "300 gp", "page": "DMG 187", "rarity": "Uncommon"}, {"name": "Potion of Healing (Uncommon)", "price": "300 gp", "page": "DMG 187-188", "rarity": "Uncommon"}, {"name": "Potion of Poison", "price": "500 gp", "page": "DMG 188", "rarity": "Uncommon"}, {"name": "Potion of Resistance", "price": "500 gp", "page": "DMG 188", "rarity": "Uncommon"}, {"name": "Potion of Waterbreathing", "price": "400 gp", "page": "DMG 188", "rarity": "Uncommon"}, {"name": "Elixir of Health", "price": "2,000 gp", "page": "DMG 168", "rarity": "Rare"}, {"name": "Oil of Etherealness", "price": "2,000 gp", "page": "DMG 183", "rarity": "Rare"}, {"name": "Potion of Aqueous Form", "price": "1,000 gp", "page": "MOT 197", "rarity": "Rare"}, {"name": "Potion of Clairvoyance", "price": "900 gp", "page": "DMG 187", "rarity": "Rare"}, {"name": "Potion of Diminution", "price": "500 gp", "page": "DMG 187", "rarity": "Rare"}, {"name": "Potion of Gaseous Form", "price": "1,500 gp", "page": "DMG 187", "rarity": "Rare"}, {"name": "Potion of Giant Strength (Frost/Stone)", "price": "650 gp", "page": "DMG 187", "rarity": "Rare"}, {"name": "Potion of Giant Strength (Fire)", "price": "1,200 gp", "page": "DMG 187", "rarity": "Rare"}, {"name": "Potion of Healing (Rare)", "price": "750 gp", "page": "DMG 187-188", "rarity": "Rare"}, {"name": "Potion of Heroism", "price": "800 gp", "page": "DMG 188", "rarity": "Rare"}, {"name": "Potion of Invulnerability", "price": "1,500 gp", "page": "DMG 188", "rarity": "Rare"}, {"name": "Potion of Maximum Power", "price": "2,000 gp", "page": "EGW 268", "rarity": "Rare"}, {"name": "Potion of Mind Control (beast)", "price": "1,600 gp", "page": "TYP 229", "rarity": "Rare"}, {"name": "Potion of Mind Control (humanoid)", "price": "2,500 gp", "page": "TYP 229", "rarity": "Rare"}, {"name": "Potion of Mind Reading", "price": "1,100 gp", "page": "DMG 188", "rarity": "Rare"}, {"name": "Oil of Sharpness", "price": "2,200 gp*", "page": "DMG 184", "rarity": "Very Rare"}, {"name": "Potion of Flying", "price": "2,500 gp", "page": "DMG 187", "rarity": "Very Rare"}, {"name": "Potion of Giant Strength (Cloud)", "price": "1,800 gp*", "page": "DMG 187", "rarity": "Very Rare"}, {"name": "Potion of Healing (Very Rare)", "price": "1,500 gp*", "page": "DMG 187-188", "rarity": "Very Rare"}, {"name": "Potion of Invisibility", "price": "2,000 gp*", "page": "DMG 188", "rarity": "Very Rare"}, {"name": "Potion of Longevity", "price": "3,000 gp", "page": "DMG 188", "rarity": "Very Rare"}, {"name": "Potion of Mind Control (monster)", "price": "6,000 gp", "page": "TYP 229", "rarity": "Very Rare"}, {"name": "Potion of Possibility", "price": "1,900 gp*", "page": "EGW 268", "rarity": "Very Rare"}, {"name": "Potion of Speed", "price": "2,000 gp*", "page": "DMG 188", "rarity": "Very Rare"}, {"name": "Potion of Vitality", "price": "1,800 gp*", "page": "DMG 188", "rarity": "Very Rare"}, {"name": "Potion of Giant Size", "price": "11,000 gp*", "page": "SKT 236", "rarity": "Legendary"}, {"name": "Potion of Giant Strength (Storm)", "price": "8,000 gp*", "page": "DMG 187", "rarity": "Legendary"}]
-OldScrolls = [{"name": "Spell Scroll or Tattoo (Cantrip)", "price": "15 gp", "page": "DMG 200; TCE 135", "rarity": "Common"}, {"name": "Spell Scroll or Tattoo (1st Level)", "price": "25 gp", "page": "DMG 200; TCE 135", "rarity": "Common"}, {"name": "Spell Scroll or Tattoo (2nd Level)", "price": "150 gp", "page": "DMG 200; TCE 135", "rarity": "Uncommon"}, {"name": "Spell Scroll or Tattoo (3rd Level)", "price": "400 gp", "page": "DMG 200; TCE 135", "rarity": "Uncommon"}, {"name": "Spell Scroll or Tattoo (4th Level)", "price": "800 gp", "page": "DMG 200; TCE 135", "rarity": "Rare"}, {"name": "Spell Scroll or Tattoo (5th Level)", "price": "1,500 gp", "page": "DMG 200; TCE 135", "rarity": "Rare"}, {"name": "Scroll of Protection", "price": "3,500 gp", "page": "DMG 199", "rarity": "Rare"}, {"name": "Spell Scroll (6th Level)", "price": "2,000 gp*", "page": "DMG 200", "rarity": "Very Rare"}, {"name": "Spell Scroll (7th Level)", "price": "3,500 gp", "page": "DMG 200", "rarity": "Very Rare"}, {"name": "Spell Scroll (8th Level)", "price": "5,000 gp", "page": "DMG 200", "rarity": "Very Rare"}, {"name": "Spell Scroll (9th Level)", "price": "20,000 gp*", "page": "DMG 200", "rarity": "Legendary"}, {"name": "Scroll of Tarrasque Summoning", "price": "150,000 gp", "page": "IDRF 315", "rarity": "Legendary"}, {"name": "Scroll of the Comet", "price": "250,000 gp", "page": "IDRF 315-316", "rarity": "Legendary"}]
+zerothLevel = ["Acid Splash", "Blade Ward", "Booming Blade", "Chill Touch", "Control Flames", "Create Bonfire",
+               "Dancing Lights", "Druidcraft", "Eldritch Blast", "Fire Bolt", "Friends", "Frostbite",
+               "Green-Flame Blade", "Guidance", "Gust", "Infestation", "Light", "Lightning Lure", "Mage Hand",
+               "Magic Stone", "Mending", "Message", "Minor Illusion", "Mold earth", "Poison Spray", "Prestidigitation",
+               "Primal Savagery", "Produce Flame", "Ray of Frost", "Resistance", "Sacred Flame", "Shape Water",
+               "Shillelagh", "Shocking Grasp", "Spare the Dying", "Sword Burst", "Thaumaturgy", "Thorn Whip",
+               "Thunderclap", "Toll the Dead", "True Strike", "Vicious Mockery", "Word of Radiance"]
+firstLevel = ["Absorb Elements", "Alarm", "Animal Friendship", "Armor of Agathys", "Arms of Hadar", "Bane",
+              "Beast Bond", "Bless", "Burning Hands", "Catapult", "Cause Fear", "Ceremony +25 gp", "Chaos Bolt",
+              "Charm Person", "Chromatic Orb +50gp", "Color Spray", "Command", "Compelled Duel", "Comprehend Languages",
+              "Create or Destroy Water", "Cure Wounds", "Detect Evil and Good", "Detect Magic",
+              "Detect Poison and Disease", "Disguise Self", "Dissonant Whispers", "Divine Favor", "Earth Tremor",
+              "Ensnaring Strike", "Entangle", "Expeditious Retreat", "Faerie Fire", "False Life", "Feather Fall",
+              "Find Familiar +10gp", "Fog Cloud", "Goodberry", "Grease", "Guiding Bolt", "Hail of Thorns",
+              "Healing Word", "Hellish Rebuke", "Heroism", "Hex", "Hunter's Mark", "Ice Knife", "Identify +100gp",
+              "Illusory Script +10gp", "Inflict Wounds", "Jump", "Longstrider", "Mage Armor", "Magic Missile",
+              "Protection from Evil and Good", "Purify Food and Drink", "Ray of Sickness", "Sanctuary", "Searing Smite",
+              "Shield", "Shield of Faith", "Silent Image", "Sleep", "Snare", "Speak with Animals",
+              "Tasha's Hideous Laughter", "Tenser's Floating Disk", "Thunderous Smite", "Thunderwave", "Unseen Servant",
+              "Witch Bolt", "Wrathful Smite", "Zephyr Strike"]
+secondLevel = ["Aganazzar's Scorcher", "Aid", "Alter Self", "Animal Messenger", "Arcane Lock +25gp", "Augury +25gp",
+               "Barkskin", "Beast Sense", "Blindness/Deafness", "Blur", "Branding Smite", "Calm Emotions",
+               "Cloud of Daggers", "Continual Flame +50gp", "Cordon of Arrows", "Crown of Madness", "Darkness",
+               "Darkvision", "Detect Thoughts", "Dragon's Breath", "Dust Devil", "Earthbind", "Enhance Ability",
+               "Enlarge/Reduce", "Enthrall", "Find Steed", "Find Traps", "Flame Blade", "Flaming Sphere",
+               "Gentle Repose", "Gust of Wind", "Healing Spirit", "Heat Metal", "Hold Person", "Invisibility", "Knock",
+               "Lesser Restoration", "Levitate", "Locate Animals or Plants", "Locate Object", "Magic Mouth +10gp",
+               "Magic Weapon", "Maximilian's Earthen Grasp", "Melf's Acid Arrow", "Mind Spike", "Mirror Image",
+               "Misty Step", "Moonbeam", "Nystul's Magic Aura", "Pass Without Trace", "Phantasmal Force",
+               "Prayer of Healing", "Protection from Poison", "Pyrotechnics", "Ray of Enfeeblement", "Rope Trick",
+               "Scorching Ray", "See invisibility", "Shadow Blade", "Shatter", "Silence", "Skywrite",
+               "Snilloc's Snowball Swarm", "Spider Climb", "Spike Growth", "Spiritual Weapon", "Suggestion",
+               "Warding Bond +100gp", "Warding Wind", "Web", "Zone of Truth"]
+thirdLevel = ["Animate Dead", "Aura of Vitality", "Beacon of Hope", "Bestow Curse", "Blinding Smite", "Blink",
+              "Call Lightning", "Catnap", "Clairvoyance +100gp", "Conjure Animals", "Conjure Barrage", "Counterspell",
+              "Create Food and Water", "Crusader's Mantle", "Daylight", "Dispel Magic", "Elemental Weapon",
+              "Enemies abound", "Erupting Earth", "Fear", "Feign Death", "Fireball", "Flame Arrows", "Fly",
+              "Gaseous Form", "Glyph of Warding +200gp", "Haste", "Hunger of Hadar", "Hypnotic Pattern",
+              "Leomund's Tiny Hut", "Life Transference", "Lightning Arrow", "Lightning Bolt", "Magic Circle +100gp",
+              "Major Image", "Mass Healing Word", "Meld into Stone", "Melf's Minute Meteors", "Nondetection",
+              "Phantom Steed", "Plant Growth", "Protection from Energy", "Remove Curse", "Revivify +300gp", "Sending",
+              "Sleet Storm", "Slow", "Speak with Dead", "Speak with Plants", "Spirit Guardians", "Stinking Cloud",
+              "Summon Lesser Demons", "Thunder Step", "Tidal Wave", "Tiny Servant", "Tongues", "Vampiric Touch",
+              "Wall of Sand", "Wall of Water", "Water Breathing", "Water Walk", "Wind Wall"]
+fourthLevel = ["Arcane Eye", "Aura of Life", "Aura of Purity", "Banishment", "Blight", "Charm Monster", "Compulsion",
+               "Confusion", "Conjure Minor Elementals", "Conjure Woodland Beings", "Control Water", "Death Ward",
+               "Dimension Door", "Divination", "Dominate Beast", "Elemental Bane", "Evard's Black Tentacles",
+               "Fabricate", "Find Greater Steed", "Fire Shield", "Freedom of Movement", "Giant Insect", "Grasping Vine",
+               "Greater Invisibility", "Guardian of Faith", "Guardian of Nature", "Hallucinatory Terrain", "Ice Storm",
+               "Leomund's Secret Chest", "Locate Creature", "Mordenkainen's Faithful Hound",
+               "Mordenkainen's Private Sanctum", "Otiluke's Resilient Sphere", "Phantasmal Killer", "Polymorph",
+               "Shadow of Moil", "Sickening Radiance", "Staggering Smite", "Stone Shape", "Stoneskin", "Storm Sphere",
+               "Summon Greater Demon", "Vitriolic Sphere", "Wall of Fire", "Watery Sphere"]
+fifthLevel = ["Animate Objects", "Antilife Shell", "Awaken", "Banishing Smite", "Bigby's Hand", "Circle of Power",
+              "Cloudkill", "Commune", "Commune with Nature", "Cone of Cold", "Conjure Elemental", "Conjure Volley",
+              "Contact Other Plane", "Contagion", "Control Winds", "Creation", "Danse Macabre", "Dawn",
+              "Destructive Wave", "Dispel Evil and Good", "Dominate Person", "Dream", "Enervation", "Far Step",
+              "Flame Strike", "Geas", "Greater Restoration", "Hallow", "Hold Monster", "Holy Weapon", "Immolation",
+              "Infernal Calling", "Insect Plague", "Legend Lore", "Maelstrom", "Mass Cure Wounds", "Mislead",
+              "Modify Memory", "Negative Energy Flood", "Passwall", "Planar Binding", "Raise Dead",
+              "Rary's Telepathic Bond", "Reincarnate", "Scrying", "Seeming", "Skill Empowerment", "Steel Wind Strike",
+              "Swift Quiver", "Synaptic Static", "Telekinesis", "Teleportation Circle", "Transmute Rock", "Tree Stride",
+              "Wall of Force", "Wall of Light", "Wall of Stone", "Wrath of Nature"]
+sixthLevel = ["Arcane Gate", "Blade Barrier", "Bones of the Earth", "Chain Lightning", "Circle of Death", "Conjure Fey",
+              "Contingency", "Create Homunculus", "Create Undead", "Disintegrate", "Drawmij's Instant Summons",
+              "Druid Grove", "Eyebite", "Find the Path", "Flesh to Stone", "Forbiddance", "Globe of Invulnerability",
+              "Guards and Wards", "Harm", "Heal", "Heroes' Feast", "Investiture of Flame", "Investiture of Ice",
+              "Investiture of Stone", "Investiture of Wind", "Magic Jar", "Mass Suggestion", "Mental Prison",
+              "Move Earth", "Otiluke's Freezing Sphere", "Otto's Irresistible Dance", "Planar Ally", "Primordial Ward",
+              "Primordial Ward", "Programmed Illusion", "Scatter", "Soul Cage", "Sunbeam", "Tenser's Transformation",
+              "Transport via Plants", "True Seeing", "Wall of Ice", "Wall of Thorns", "Wind Walk", "Word of Recall"]
+seventhLevel = ["Conjure Celestial", "Crown of Stars", "Delayed Blast Fireball", "Divine Word", "Etherealness",
+                "Finger of Death", "Fire Storm", "Forcecage", "Mirage Arcane", "Mordenkainen's Magnificent Mansion",
+                "Mordenkainen's Sword", "Plane Shift", "Power Word Pain", "Prismatic Spray", "Project Image",
+                "Regenerate", "Resurrection", "Reverse Gravity", "Sequester", "Simulacrum", "Symbol", "Teleport",
+                "Temple of the Gods", "Whirlwind"]
+eighthLevel = ["Abi-Dalzim's Horrid Wilting", "Animal Shapes", "Antimagic Field", "Antipathy/ Sympathy", "Clone",
+               "Control Weather", "Demiplane", "Dominate Monster", "Earthquake", "Feeblemind", "Glibness", "Holy Aura",
+               "Illusory Dragon", "Incendiary Cloud", "Maddening Darkness", "Maze", "Mighty Fortress", "Mind Blank",
+               "Power Word Stun", "Sunburst", "Telepathy", "Trap the Soul", "Tsunami"]
 
-zerothLevel = ["Acid Splash", "Blade Ward", "Booming Blade", "Chill Touch", "Control Flames", "Create Bonfire", "Dancing Lights", "Druidcraft", "Eldritch Blast", "Fire Bolt", "Friends", "Frostbite", "Green-Flame Blade", "Guidance", "Gust", "Infestation", "Light", "Lightning Lure", "Mage Hand", "Magic Stone", "Mending", "Message", "Minor Illusion", "Mold earth", "Poison Spray", "Prestidigitation", "Primal Savagery", "Produce Flame", "Ray of Frost", "Resistance", "Sacred Flame", "Shape Water", "Shillelagh", "Shocking Grasp", "Spare the Dying", "Sword Burst", "Thaumaturgy", "Thorn Whip", "Thunderclap", "Toll the Dead", "True Strike", "Vicious Mockery", "Word of Radiance"]
-firstLevel = ["Absorb Elements", "Alarm", "Animal Friendship", "Armor of Agathys", "Arms of Hadar", "Bane", "Beast Bond", "Bless", "Burning Hands", "Catapult", "Cause Fear", "Ceremony +25 gp", "Chaos Bolt", "Charm Person", "Chromatic Orb +50gp", "Color Spray", "Command", "Compelled Duel", "Comprehend Languages", "Create or Destroy Water", "Cure Wounds", "Detect Evil and Good", "Detect Magic", "Detect Poison and Disease", "Disguise Self", "Dissonant Whispers", "Divine Favor", "Earth Tremor", "Ensnaring Strike", "Entangle", "Expeditious Retreat", "Faerie Fire", "False Life", "Feather Fall", "Find Familiar +10gp", "Fog Cloud", "Goodberry", "Grease", "Guiding Bolt", "Hail of Thorns", "Healing Word", "Hellish Rebuke", "Heroism", "Hex", "Hunter's Mark", "Ice Knife", "Identify +100gp", "Illusory Script +10gp", "Inflict Wounds", "Jump", "Longstrider", "Mage Armor", "Magic Missile", "Protection from Evil and Good", "Purify Food and Drink", "Ray of Sickness", "Sanctuary", "Searing Smite", "Shield", "Shield of Faith", "Silent Image", "Sleep", "Snare", "Speak with Animals", "Tasha's Hideous Laughter", "Tenser's Floating Disk", "Thunderous Smite", "Thunderwave", "Unseen Servant", "Witch Bolt", "Wrathful Smite", "Zephyr Strike"]
-secondLevel = ["Aganazzar's Scorcher", "Aid", "Alter Self", "Animal Messenger", "Arcane Lock +25gp", "Augury +25gp", "Barkskin", "Beast Sense", "Blindness/Deafness", "Blur", "Branding Smite", "Calm Emotions", "Cloud of Daggers", "Continual Flame +50gp", "Cordon of Arrows", "Crown of Madness", "Darkness", "Darkvision", "Detect Thoughts", "Dragon's Breath", "Dust Devil", "Earthbind", "Enhance Ability", "Enlarge/Reduce", "Enthrall", "Find Steed", "Find Traps", "Flame Blade", "Flaming Sphere", "Gentle Repose", "Gust of Wind", "Healing Spirit", "Heat Metal", "Hold Person", "Invisibility", "Knock", "Lesser Restoration", "Levitate", "Locate Animals or Plants", "Locate Object", "Magic Mouth +10gp", "Magic Weapon", "Maximilian's Earthen Grasp", "Melf's Acid Arrow", "Mind Spike", "Mirror Image", "Misty Step", "Moonbeam", "Nystul's Magic Aura", "Pass Without Trace", "Phantasmal Force", "Prayer of Healing", "Protection from Poison", "Pyrotechnics", "Ray of Enfeeblement", "Rope Trick", "Scorching Ray", "See invisibility", "Shadow Blade", "Shatter", "Silence", "Skywrite", "Snilloc's Snowball Swarm", "Spider Climb", "Spike Growth", "Spiritual Weapon", "Suggestion", "Warding Bond +100gp", "Warding Wind", "Web", "Zone of Truth"]
-thirdLevel = ["Animate Dead", "Aura of Vitality", "Beacon of Hope", "Bestow Curse", "Blinding Smite", "Blink", "Call Lightning", "Catnap", "Clairvoyance +100gp", "Conjure Animals", "Conjure Barrage", "Counterspell", "Create Food and Water", "Crusader's Mantle", "Daylight", "Dispel Magic", "Elemental Weapon", "Enemies abound", "Erupting Earth", "Fear", "Feign Death", "Fireball", "Flame Arrows", "Fly", "Gaseous Form", "Glyph of Warding +200gp", "Haste", "Hunger of Hadar", "Hypnotic Pattern", "Leomund's Tiny Hut", "Life Transference", "Lightning Arrow", "Lightning Bolt", "Magic Circle +100gp", "Major Image", "Mass Healing Word", "Meld into Stone", "Melf's Minute Meteors", "Nondetection", "Phantom Steed", "Plant Growth", "Protection from Energy", "Remove Curse", "Revivify +300gp", "Sending", "Sleet Storm", "Slow", "Speak with Dead", "Speak with Plants", "Spirit Guardians", "Stinking Cloud", "Summon Lesser Demons", "Thunder Step", "Tidal Wave", "Tiny Servant", "Tongues", "Vampiric Touch", "Wall of Sand", "Wall of Water", "Water Breathing", "Water Walk", "Wind Wall"]
-fourthLevel = ["Arcane Eye", "Aura of Life", "Aura of Purity", "Banishment", "Blight", "Charm Monster", "Compulsion", "Confusion", "Conjure Minor Elementals", "Conjure Woodland Beings", "Control Water", "Death Ward", "Dimension Door", "Divination", "Dominate Beast", "Elemental Bane", "Evard's Black Tentacles", "Fabricate", "Find Greater Steed", "Fire Shield", "Freedom of Movement", "Giant Insect", "Grasping Vine", "Greater Invisibility", "Guardian of Faith", "Guardian of Nature", "Hallucinatory Terrain", "Ice Storm", "Leomund's Secret Chest", "Locate Creature", "Mordenkainen's Faithful Hound", "Mordenkainen's Private Sanctum", "Otiluke's Resilient Sphere", "Phantasmal Killer", "Polymorph", "Shadow of Moil", "Sickening Radiance", "Staggering Smite", "Stone Shape", "Stoneskin", "Storm Sphere", "Summon Greater Demon", "Vitriolic Sphere", "Wall of Fire", "Watery Sphere"]
-fifthLevel = ["Animate Objects", "Antilife Shell", "Awaken", "Banishing Smite", "Bigby's Hand", "Circle of Power", "Cloudkill", "Commune", "Commune with Nature", "Cone of Cold", "Conjure Elemental", "Conjure Volley", "Contact Other Plane", "Contagion", "Control Winds", "Creation", "Danse Macabre", "Dawn", "Destructive Wave", "Dispel Evil and Good", "Dominate Person", "Dream", "Enervation", "Far Step", "Flame Strike", "Geas", "Greater Restoration", "Hallow", "Hold Monster", "Holy Weapon", "Immolation", "Infernal Calling", "Insect Plague", "Legend Lore", "Maelstrom", "Mass Cure Wounds", "Mislead", "Modify Memory", "Negative Energy Flood", "Passwall", "Planar Binding", "Raise Dead", "Rary's Telepathic Bond", "Reincarnate", "Scrying", "Seeming", "Skill Empowerment", "Steel Wind Strike", "Swift Quiver", "Synaptic Static", "Telekinesis", "Teleportation Circle", "Transmute Rock", "Tree Stride", "Wall of Force", "Wall of Light", "Wall of Stone", "Wrath of Nature"]
-sixthLevel = ["Arcane Gate", "Blade Barrier", "Bones of the Earth", "Chain Lightning", "Circle of Death", "Conjure Fey", "Contingency", "Create Homunculus", "Create Undead", "Disintegrate", "Drawmij's Instant Summons", "Druid Grove", "Eyebite", "Find the Path", "Flesh to Stone", "Forbiddance", "Globe of Invulnerability", "Guards and Wards", "Harm", "Heal", "Heroes' Feast", "Investiture of Flame", "Investiture of Ice", "Investiture of Stone", "Investiture of Wind", "Magic Jar", "Mass Suggestion", "Mental Prison", "Move Earth", "Otiluke's Freezing Sphere", "Otto's Irresistible Dance", "Planar Ally", "Primordial Ward", "Primordial Ward", "Programmed Illusion", "Scatter", "Soul Cage", "Sunbeam", "Tenser's Transformation", "Transport via Plants", "True Seeing", "Wall of Ice", "Wall of Thorns", "Wind Walk", "Word of Recall"]
-seventhLevel = ["Conjure Celestial", "Crown of Stars", "Delayed Blast Fireball", "Divine Word", "Etherealness", "Finger of Death", "Fire Storm", "Forcecage", "Mirage Arcane", "Mordenkainen's Magnificent Mansion", "Mordenkainen's Sword", "Plane Shift", "Power Word Pain", "Prismatic Spray", "Project Image", "Regenerate", "Resurrection", "Reverse Gravity", "Sequester", "Simulacrum", "Symbol", "Teleport", "Temple of the Gods", "Whirlwind"]
-eighthLevel = ["Abi-Dalzim's Horrid Wilting", "Animal Shapes", "Antimagic Field", "Antipathy/ Sympathy", "Clone", "Control Weather", "Demiplane", "Dominate Monster", "Earthquake", "Feeblemind", "Glibness", "Holy Aura", "Illusory Dragon", "Incendiary Cloud", "Maddening Darkness", "Maze", "Mighty Fortress", "Mind Blank", "Power Word Stun", "Sunburst", "Telepathy", "Trap the Soul", "Tsunami"]
-
-AllSpells = [zerothLevel, firstLevel, secondLevel, thirdLevel, fourthLevel, fifthLevel, sixthLevel, seventhLevel, eighthLevel]
+AllSpells = [zerothLevel, firstLevel, secondLevel, thirdLevel, fourthLevel, fifthLevel, sixthLevel, seventhLevel,
+             eighthLevel]
 AllowedSpells = AllSpells[0:4]
 
-SpellGems = [{"name": "Spell Gem (Cantrip)", "price": "150 gp", "page": "OA 223", "rarity": "Uncommon"}, {"name": "Spell Gem (1st Level)", "price": "350 gp", "page": "OA 223", "rarity": "Uncommon"}, {"name": "Spell Gem (2nd Level)", "price": "1,500 gp", "page": "OA 223", "rarity": "Rare"}, {"name": "Spell Gem (3rd Level)", "price": "4,000 gp", "page": "OA 223", "rarity": "Rare"}, {"name": "Spell Gem (4th Level)", "price": "8,000 gp", "page": "OA 223", "rarity": "Very Rare"}, {"name": "Spell Gem (5th Level)", "price": "15,000 gp", "page": "OA 223", "rarity": "Very Rare"}, {"name": "Spell Gem (6th Level)", "price": "20,000 gp", "page": "OA 223", "rarity": "Very Rare"}, {"name": "Spell Gem (7th Level)", "price": "35,000 gp", "page": "OA 223", "rarity": "Legendary"}, {"name": "Spell Gem (8th Level)", "price": "51,000 gp", "page": "OA 223", "rarity": "Legendary"}, {"name": "Spell Gem (9th Level)", "price": "78,000 gp", "page": "OA 223", "rarity": "Legendary"}]
+SpellGems = [{"name": "Spell Gem (Cantrip)", "price": "150 gp", "page": "OA 223", "rarity": "Uncommon"},
+             {"name": "Spell Gem (1st Level)", "price": "350 gp", "page": "OA 223", "rarity": "Uncommon"},
+             {"name": "Spell Gem (2nd Level)", "price": "1,500 gp", "page": "OA 223", "rarity": "Rare"},
+             {"name": "Spell Gem (3rd Level)", "price": "4,000 gp", "page": "OA 223", "rarity": "Rare"},
+             {"name": "Spell Gem (4th Level)", "price": "8,000 gp", "page": "OA 223", "rarity": "Very Rare"},
+             {"name": "Spell Gem (5th Level)", "price": "15,000 gp", "page": "OA 223", "rarity": "Very Rare"},
+             {"name": "Spell Gem (6th Level)", "price": "20,000 gp", "page": "OA 223", "rarity": "Very Rare"},
+             {"name": "Spell Gem (7th Level)", "price": "35,000 gp", "page": "OA 223", "rarity": "Legendary"},
+             {"name": "Spell Gem (8th Level)", "price": "51,000 gp", "page": "OA 223", "rarity": "Legendary"},
+             {"name": "Spell Gem (9th Level)", "price": "78,000 gp", "page": "OA 223", "rarity": "Legendary"}]
 
-
-Items = [{"name": "Acheron Blade (any sword)","price": "Weapon Price + 900 gp","page":"EGW","rarity":"Rare"},{"name": "Adamantine Armor (medium or heavy, but not hide)","price": "Armor Price + 1,000 gp","page":"DMG","rarity":"Uncommon"},{"name": "Alchemical Compendium","price": "3,000 gp","page":"TCE","rarity":"Rare"},{"name": "Alchemist's Potion Belt","price": "350 gp ","page":"Griffon's Saddlebag","rarity":"Uncommon"},{"name": "Alchemy Jug","price": "100 gp","page":"DMG","rarity":"Uncommon"},{"name": "All Purpose Tool, +3","price": "9 Arc Tokens","page":"TCE","rarity":"Very Rare"},{"name": "All-Purpose Tool, +1","price": "1,500 gp*","page":"TCE","rarity":"Uncommon"},{"name": "All-Purpose Tool, +2","price": "4,500 gp","page":"TCE","rarity":"Rare"},{"name": "Ambitious Medic's Box","price": "500 gp","page":"Griffon's Saddlebag","rarity":"Uncommon"},{"name": "Ammunition, +1","price": "100 gp","page":"DMG","rarity":"Uncommon"},{"name": "Ammunition, +2","price": "500 gp","page":"DMG","rarity":"Rare"},{"name": "Amulet of Health","price": "4,000 gp","page":"DMG","rarity":"Rare"},{"name": "Amulet of Proof Against Detection and Location","price": "400 gp","page":"DMG","rarity":"Uncommon"},{"name": "Amulet of Protection from Turning","price": "3,600 gp","page":"TftYP","rarity":"Rare"},{"name": "Amulet of the Devout, +1","price": "425 gp","page":"TCE","rarity":"Uncommon"},{"name": "Amulet of the Devout, +2","price": "4,250 gp","page":"TCE","rarity":"Rare"},{"name": "Amulet of the Devout, +3","price": "9 Arc Tokens","page":"TCE","rarity":"Very Rare"},{"name": "Amulet of the Drunkard","price": "500 gp","page":"EGW","rarity":"Uncommon"},{"name": "Animated Shield","price": "9 Arc Tokens","page":"DMG","rarity":"Very Rare"},{"name": "Arcane Grimoire, +1","price": "425 gp","page":"TCE","rarity":"Uncommon"},{"name": "Arcane Grimoire, +2","price": "4,250 gp","page":"TCE","rarity":"Rare"},{"name": "Arcane Grimoire, +3","price": "9 Arc Tokens","page":"TCE","rarity":"Very Rare"},{"name": "Arcane Whip Tip - Acid","price": "100 gp","page":"Whips, Revised","rarity":"Rare"},{"name": "Arcane Whip Tip - Cold","price": "50 gp","page":"Whips, Revised","rarity":"Uncommon"},{"name": "Arcane Whip Tip - Fire","price": "50 gp","page":"Whips, Revised","rarity":"Uncommon"},{"name": "Arcane Whip Tip - Lightning","price": "100 gp","page":"Whips, Revised","rarity":"Rare"},{"name": "Arcane Whip Tip - Poison","price": "50 gp","page":"Whips, Revised","rarity":"Uncommon"},{"name": "Arcane Whip Tip - Thunder","price": "100 gp","page":"Whips, Revised","rarity":"Rare"},{"name": "Armblade (any one-handed melee weapon)","price": "Weapon Price + 100 gp","page":"ERLW","rarity":"Common"},{"name": "Armor (light, medium, or heavy), +1","price": "Armor Price + 3,500 gp","page":"DMG","rarity":"Rare"},{"name": "Armor of Fungal Spores","price": "Armor Price + 600","page":"TBoMT","rarity":"Uncommon"},{"name": "Armor of Gleaming (any medium or heavy)","price": "Armor Price + 150 gp","page":"XGE","rarity":"Common"},{"name": "Armor of Resistance (light, medium, or heavy)","price": "Armor Price + 3,000 gp","page":"DMG","rarity":"Rare"},{"name": "Armor of the Fallen","price": "Armor Price + 1,000 gp","page":"TBoMT","rarity":"Uncommon"},{"name": "Armor of Vulnerability (plate)","price": "1,500 gp","page":"DMG","rarity":"Rare"},{"name": "Armor of Weightlessness","price": "Armor Price + 1,000 gp","page":"TBoMT","rarity":"Uncommon"},{"name": "Arrow-Catching Shield","price": "4,500 gp","page":"DMG","rarity":"Rare"},{"name": "Astral Shard","price": "4,200 gp","page":"TCE","rarity":"Rare"},{"name": "Astromancy Archive","price": "3,300 gp","page":"TCE","rarity":"Rare"},{"name": "Atlas of Endless Horizons","price": "3,750 gp","page":"TCE","rarity":"Rare"},{"name": "Bag of Beans","price": "4,200 gp","page":"DMG","rarity":"Rare"},{"name": "Bag of Holding","price": "500 gp","page":"DMG","rarity":"Uncommon"},{"name": "Bag of Tricks","price": "350 gp","page":"DMG","rarity":"Uncommon"},{"name": "Balance of Harmony","price": "200 gp","page":"TftYP","rarity":"Uncommon"},{"name": "Balloon Pack","price": "275 gp","page":"PotA","rarity":"Uncommon"},{"name": "Banner of the Krig Rune","price": "4,400 gp","page":"SKT","rarity":"Rare"},{"name": "Bath Potion","price": "10 gp","page":"Griffon's Saddlebag","rarity":"Common"},{"name": "Battering Shield","price": "850 gp","page":"EGW","rarity":"Rare"},{"name": "Bead of Force","price": "6,750 gp (8 beads)","page":"DMG","rarity":"Rare"},{"name": "Bead of Nourishment","price": "25 gp","page":"XGE","rarity":"Common"},{"name": "Bead of Refreshment","price": "25 gp","page":"XGE","rarity":"Common"},{"name": "Bell Branch","price": "750 gp","page":"TCE","rarity":"Rare"},{"name": "Belt of Dwarvenkind","price": "5,000 gp","page":"DMG","rarity":"Rare"},{"name": "Belt of Giant Strength (Hill)","price": "4,000 gp","page":"DMG","rarity":"Rare"},{"name": "Berserker Axe (cursed)","price": "2,000 gp","page":"DMG","rarity":"Rare"},{"name": "Blade of the Medusa","price": "9 Arc Tokens","page":"LKK","rarity":"Very Rare"},{"name": "Blade-Catching Sickle","price": "25 gp","page":"Enter Ravenloft","rarity":"Common"},{"name": "Blade-Catching War Pick","price": "50 gp","page":"Enter Ravenloft","rarity":"Common"},{"name": "Blast Scepter","price": "9 Arc Tokens","page":"WDMM","rarity":"Very Rare"},{"name": "Blasted Goggles","price": "300 gp","page":"TBoMT","rarity":"Uncommon"},{"name": "Bleeding Crossbow, Light","price": "100 gp","page":"Enter Ravenloft","rarity":"Common"},{"name": "Bleeding Morningstar","price": "70 gp","page":"Enter Ravenloft","rarity":"Common"},{"name": "Blod Stone","price": "6,500 gp","page":"SKT","rarity":"Rare"},{"name": "Bloodaxe","price": "9 Arc Tokens","page":"EGW","rarity":"Very Rare"},{"name": "Bloodrage Greataxe","price": "525 gp","page":"TBoMT","rarity":"Uncommon"},{"name": "Bloodseeker Ammunition","price": "9 Arc Tokens","page":"BMT","rarity":"Very Rare"},{"name": "Bloodwell Vial, +1","price": "425 gp","page":"TCE","rarity":"Uncommon"},{"name": "Bloodwell Vial, +2","price": "4,250 gp","page":"TCE","rarity":"Rare"},{"name": "Bloodwell Vial, +3","price": "9 Arc Tokens","page":"TCE","rarity":"Very Rare"},{"name": "Boomerang Bandolier","price": "500 gp","page":"Enter Ravenloft","rarity":"Uncommon"},{"name": "Boomerang Shield","price": "500 gp","page":"TBoMT","rarity":"Uncommon"},{"name": "Boots of Elvenkind","price": "400 gp","page":"DMG","rarity":"Uncommon"},{"name": "Boots of False Tracks","price": "60 gp","page":"XGE","rarity":"Common"},{"name": "Boots of Levitation","price": "4,500 gp","page":"DMG","rarity":"Rare"},{"name": "Boots of Speed","price": "3,000 gp","page":"DMG","rarity":"Rare"},{"name": "Boots of Striding and Springing","price": "200 gp","page":"DMG","rarity":"Uncommon"},{"name": "Boots of the Winterlands","price": "300 gp","page":"DMG","rarity":"Uncommon"},{"name": "Bow of Conflagration","price": "Weapon Price + 1,500 gp","page":"TBoMT","rarity":"Rare"},{"name": "Bow of Melodies","price": "9 Arc Tokens","page":"BMT","rarity":"Very Rare"},{"name": "Bowl of Commanding Water Elementals","price": "4,700 gp","page":"DMG","rarity":"Rare"},{"name": "Bracer of Flying Daggers","price": "1,000 gp","page":"WDH","rarity":"Rare"},{"name": "Bracers of Archery","price": "350 gp","page":"DMG","rarity":"Uncommon"},{"name": "Bracers of Celerity","price": "3,000 gp","page":"PaBTSO","rarity":"Rare"},{"name": "Bracers of Defense","price": "4,000 gp","page":"DMG","rarity":"Rare"},{"name": "Brazier of Commanding Fire Elementals","price": "4,700 gp","page":"DMG","rarity":"Rare"},{"name": "Breastplate of Balance","price": "3,400 gp","page":"TBoMT","rarity":"Rare"},{"name": "Breathing Bubble","price": "50 gp","page":"EGW","rarity":"Common"},{"name": "Brooch of Living Essence","price": "250 gp","page":"EGW","rarity":"Uncommon"},{"name": "Brooch of Shielding","price": "375 gp","page":"DMG","rarity":"Uncommon"},{"name": "Broom of Flying","price": "4,500 gp*","page":"DMG","rarity":"Uncommon"},{"name": "Bull's-Eye Sling","price": "10 gp","page":"Enter Ravenloft","rarity":"Common"},{"name": "Butcher's Bib","price": "2,750 gp","page":"EGW","rarity":"Rare"},{"name": "Camper's Respite","price": "200 gp","page":"Griffon's Saddlebag","rarity":"Uncommon"},{"name": "Candle of the Deep","price": "50 gp","page":"XGE","rarity":"Common"},{"name": "Cap of Water Breathing","price": "450 gp","page":"DMG","rarity":"Uncommon"},{"name": "Cape of the Mountebank","price": "3,900 gp","page":"DMG","rarity":"Rare"},{"name": "Card's Sharp's Deck","price": "250 gp","page":"TBoMT","rarity":"Uncommon"},{"name": "Carpet of Flying","price": "9 Arc Tokens","page":"DMG","rarity":"Very Rare"},{"name": "Cast-Off Armor (light, medium, or heavy)","price": "Armor Price + 100 gp","page":"XGE","rarity":"Common"},{"name": "Cauldron of Plenty","price": "3,500 gp","page":"IDRotF","rarity":"Rare"},{"name": "Censer of Controlling Air Elementals","price": "4,700 gp","page":"DMG","rarity":"Rare"},{"name": "Charlatan's Die","price": "80 gp","page":"XGE","rarity":"Common"},{"name": "Charm of Plant Command","price": "1,500 gp","page":"GoS","rarity":"Rare"},{"name": "Chest of Preserving","price": "100 gp","page":"WDMM","rarity":"Common"},{"name": "Chime of Opening","price": "3,000 gp","page":"DMG","rarity":"Rare"},{"name": "Chromatic Rose","price": "3,000 gp","page":"WBtW","rarity":"Rare"},{"name": "Circlet of Blasting","price": "350 gp","page":"DMG","rarity":"Uncommon"},{"name": "Circlet of Human Perfection","price": "450 gp","page":"WDMM","rarity":"Uncommon"},{"name": "Claw of the Wyrm Rune","price": "4,400 gp","page":"SKT","rarity":"Rare"},{"name": "Claws of the Umber Hulk","price": "4,300 gp","page":"PotA","rarity":"Rare"},{"name": "Cleaning Cube","price": "50 gp","page":"Griffon's Saddlebag","rarity":"Common"},{"name": "Cleansing Stone","price": "50 gp","page":"ERLW","rarity":"Common"},{"name": "Cleaving Greataxe","price": "120 gp","page":"Enter Ravenloft","rarity":"Common"},{"name": "Cloak of Arachnida","price": "9 Arc Tokens","page":"DMG","rarity":"Very Rare"},{"name": "Cloak of Billowing","price": "100 gp","page":"XGE","rarity":"Common"},{"name": "Cloak of Displacement","price": "3,600 gp","page":"DMG","rarity":"Rare"},{"name": "Cloak of Elvenkind","price": "250 gp","page":"DMG","rarity":"Uncommon"},{"name": "Cloak of Many Fashions","price": "90 gp","page":"XGE","rarity":"Common"},{"name": "Cloak of Protection","price": "400 gp","page":"DMG","rarity":"Uncommon"},{"name": "Cloak of the Bat","price": "4,600 gp","page":"DMG","rarity":"Rare"},{"name": "Cloak of the Manta Ray","price": "350 gp","page":"DMG","rarity":"Uncommon"},{"name": "Clockwork Amulet","price": "100 gp","page":"XGE","rarity":"Common"},{"name": "Clockwork Armor","price": "9 Arc Tokens","page":"BMT","rarity":"Very Rare"},{"name": "Clothes of Mending","price": "50 gp","page":"XGE","rarity":"Common"},{"name": "Coin of Delving","price": "50 gp","page":"EGW","rarity":"Common"},{"name": "Companion's Band","price": "50 gp","page":"Griffon's Saddlebag","rarity":"Common"},{"name": "Composite Longbow","price": "150 gp","page":"Enter Ravenloft","rarity":"Common"},{"name": "Corpse Slayer (any weapon)","price": "Weapon Price + 1,300 gp","page":"EGW","rarity":"Rare"},{"name": "Crippling Club","price": "10 gp","page":"Enter Ravenloft","rarity":"Common"},{"name": "Crown of the Wrath Bringer","price": "4,000 gp","page":"BGG","rarity":"Rare"},{"name": "Crown of Whirling Comets","price": "9 Arc Tokens","page":"BMT","rarity":"Very Rare"},{"name": "Crystal Ball","price": "9 Arc Tokens","page":"DMG","rarity":"Very Rare"},{"name": "Crystal Blade","price": "3,000 gp","page":"FTD","rarity":"Rare"},{"name": "Cube of Force","price": "5,000 gp","page":"DMG","rarity":"Rare"},{"name": "Cursed Luckstone","price": "250 gp","page":"GoS","rarity":"Uncommon"},{"name": "Daern's Instant Fortress (Instant Fortress)","price": "5,000 gp","page":"DMG","rarity":"Rare"},{"name": "Dagger of Blindsight","price": "4,250 gp","page":"WDMM","rarity":"Rare"},{"name": "Dagger of the Ogre Mage","price": "3,500 gp","page":"Griffon's Saddlebag","rarity":"Rare"},{"name": "Dagger of Venom","price": "1,500 gp","page":"DMG","rarity":"Rare"},{"name": "Dark Shard Amulet","price": "75 gp","page":"XGE","rarity":"Common"},{"name": "Deafening Maul","price": "60 gp","page":"Enter Ravenloft","rarity":"Common"},{"name": "Debilitating Greatclub","price": "15 gp","page":"Enter Ravenloft","rarity":"Common"},{"name": "Debilitating Greatsword","price": "150 gp","page":"Enter Ravenloft","rarity":"Common"},{"name": "Decanter of Endless Water","price": "300 gp","page":"DMG","rarity":"Uncommon"},{"name": "Deck of Illusions","price": "450 gp","page":"DMG","rarity":"Uncommon"},{"name": "Deck of Miscellany","price": "400 gp","page":"TBoMT","rarity":"Uncommon"},{"name": "Deck of Wild Cards","price": "9 Arc Tokens","page":"BMT","rarity":"Very Rare"},{"name": "Defensive Glaive","price": "80 gp","page":"Enter Ravenloft","rarity":"Common"},{"name": "Delver's Claws","price": "4,000 gp","page":"BGG","rarity":"Rare"},{"name": "Demon Armor","price": "9 Arc Tokens","page":"DMG","rarity":"Very Rare"},{"name": "Devotee's Censer","price": "4,500 gp","page":"TCE","rarity":"Rare"},{"name": "Dimensional Shackles","price": "2,800 gp","page":"DMG","rarity":"Rare"},{"name": "Disarming Whip","price": "30 gp","page":"Enter Ravenloft","rarity":"Common"},{"name": "Dislodging Halberd","price": "80 gp","page":"Enter Ravenloft","rarity":"Common"},{"name": "Disorienting Mace","price": "50 gp","page":"Enter Ravenloft","rarity":"Common"},{"name": "Disorienting Warhammer","price": "70 gp","page":"Enter Ravenloft","rarity":"Common"},{"name": "Distracting Dart","price": "5 gp","page":"Enter Ravenloft","rarity":"Common"},{"name": "Distracting Shortsword","price": "60 gp","page":"Enter Ravenloft","rarity":"Common"},{"name": "Donjon's Sundering Sphere","price": "3500 gp","page":"TBoMT","rarity":"Rare"},{"name": "Doublet of Dramatic Demise","price": "100 gp","page":"TDCSR","rarity":"Common"},{"name": "Dragon Scale Mail","price": "9 Arc Tokens","page":"DMG","rarity":"Very Rare"},{"name": "Dragon Slayer (any sword)","price": "4,800 gp","page":"DMG","rarity":"Rare"},{"name": "Dragon Wing Bow","price": "Weapon Price + 1,500 gp","page":"FTD","rarity":"Rare"},{"name": "Dragonguard","price": "3,550 gp","page":"PaBTSO","rarity":"Rare"},{"name": "Dragonhide Belt, +1","price": "400 gp","page":"FTD","rarity":"Uncommon"},{"name": "Dragonhide Belt, +2","price": "2,250 gp","page":"FTD","rarity":"Rare"},{"name": "Dragonhide Belt, +3","price": "9 Arc Tokens","page":"FTD","rarity":"Very Rare"},{"name": "Dragontooth Dagger","price": "5,000 gp","page":"RoT","rarity":"Rare"},{"name": "Dread Helm","price": "55 gp","page":"XGE","rarity":"Common"},{"name": "Dried Leech","price": "60 gp","page":"TBoMT","rarity":"Uncommon"},{"name": "Duplicitous Manuscript","price": "3,000 gp","page":"TCE","rarity":"Rare"},{"name": "Dust of Deliciousness","price": "150 gp","page":"EGW","rarity":"Uncommon"},{"name": "Dust of Disappearance","price": "200 gp","page":"DMG","rarity":"Uncommon"},{"name": "Dust of Dryness","price": "350 gp (10 uses)","page":"DMG","rarity":"Uncommon"},{"name": "Dwarven Plate","price": "9 Arc Tokens","page":"DMG","rarity":"Very Rare"},{"name": "Dwarven Thrower","price": "9 Arc Tokens","page":"DMG","rarity":"Very Rare"},{"name": "Dyrrn's Tentacle Whip","price": "9 Arc Tokens","page":"DMG","rarity":"Very Rare"},{"name": "Eagle Whistle","price": "3,000 gp","page":"TftYP","rarity":"Rare"},{"name": "Ear Horn of Hearing","price": "75 gp","page":"XGE","rarity":"Common"},{"name": "Earring of Message","price": "150 gp","page":"CotN","rarity":"Common"},{"name": "Earworm","price": "225 gp","page":"ERLW","rarity":"Uncommon"},{"name": "Echo Stone","price": "250 gp","page":"TDCSR","rarity":"Uncommon"},{"name": "Eldritch Staff","price": "9 Arc Tokens","page":"WBtW","rarity":"Very Rare"},{"name": "Elemental Blade","price": "4,000 gp","page":"Enter Ravenloft","rarity":"Rare"},{"name": "Elemental Essence Shard","price": "3,500 gp","page":"TCE","rarity":"Rare"},{"name": "Elemental Gem","price": "2,000 gp","page":"DMG","rarity":"Uncommon"},{"name": "Elven Chain (chain shirt)","price": "4,500 gp","page":"DMG","rarity":"Rare"},{"name": "Elven Thrower","price": "9 Arc Tokens","page":"BGG","rarity":"Very Rare"},{"name": "Emerald Pen","price": "150 gp","page":"FTD","rarity":"Common"},{"name": "Enduring Spellbook","price": "100 gp","page":"XGE","rarity":"Common"},{"name": "Engaging Rapier","price": "100 gp","page":"Enter Ravenloft","rarity":"Common"},{"name": "Engaging Spear","price": "25 gp","page":"Enter Ravenloft","rarity":"Common"},{"name": "Ersatz Eye","price": "75 gp","page":"XGE","rarity":"Common"},{"name": "Everbright Lantern","price": "100 gp","page":"ERLW","rarity":"Common"},{"name": "Eversmoking Bottle","price": "270 gp","page":"DMG","rarity":"Uncommon"},{"name": "Eyes of Charming","price": "300 gp","page":"DMG","rarity":"Uncommon"},{"name": "Eyes of Minute Seeing","price": "150 gp","page":"DMG","rarity":"Uncommon"},{"name": "Eyes of the Eagle","price": "400 gp","page":"DMG","rarity":"Uncommon"},{"name": "Far Realm Shard","price": "2,500 gp","page":"TCE","rarity":"Rare"},{"name": "Fate Cutter Shears","price": "9 Arc Tokens","page":"BMT","rarity":"Very Rare"},{"name": "Fate Dealer's Deck, +1","price": "1500 gp","page":"TBoMT","rarity":"Rare"},{"name": "Fate Dealer's Deck, +2","price": "9 Arc Tokens","page":"BMT","rarity":"Very Rare"},{"name": "Feather of Diatryma Summoning","price": "600 gp","page":"WDH","rarity":"Rare"},{"name": "Feather Token (Feather Fall)","price": "25 gp","page":"ERLW","rarity":"Common"},{"name": "Feywild Shard","price": "250 gp","page":"TCE","rarity":"Uncommon"},{"name": "Feywrought Armor","price": "Armor Price + 2,850 gp","page":"TBoMT","rarity":"Rare"},{"name": "Figurine of Wondrous Power (Bronze Griffon)","price": "3,600 gp","page":"DMG","rarity":"Rare"},{"name": "Figurine of Wondrous Power (Ebony Fly)","price": "3,600 gp","page":"DMG","rarity":"Rare"},{"name": "Figurine of Wondrous Power (Golden Lions)","price": "5,000 gp","page":"DMG","rarity":"Rare"},{"name": "Figurine of Wondrous Power (Ivory Goats)","price": "5,000 gp","page":"DMG","rarity":"Rare"},{"name": "Figurine of Wondrous Power (Marble Elephant)","price": "5,000 gp","page":"DMG","rarity":"Rare"},{"name": "Figurine of Wondrous Power (Obsidian Steed)","price": "9 Arc Tokens","page":"DMG","rarity":"Very Rare"},{"name": "Figurine of Wondrous Power (Onyx Dog)","price": "3,200 gp","page":"DMG","rarity":"Rare"},{"name": "Figurine of Wondrous Power (Serpentine Owl)","price": "3,000 gp","page":"DMG","rarity":"Rare"},{"name": "Figurine of Wondrous Power (Silver Raven)","price": "380 gp","page":"DMG","rarity":"Uncommon"},{"name": "Finder's Goggles","price": "500 gp","page":"ERLW","rarity":"Uncommon"},{"name": "Flame Tongue (any sword)","price": "5,000 gp","page":"DMG","rarity":"Rare"},{"name": "Flayer Slayer","price": "1,750 gp","page":"PaBTSO","rarity":"Rare"},{"name": "Flying Chariot","price": "4,750 gp","page":"MOT","rarity":"Rare"},{"name": "Folding Boat","price": "4,750 gp","page":"DMG","rarity":"Rare"},{"name": "Fool's Blade","price": "9 Arc Tokens","page":"BMT","rarity":"Very Rare"},{"name": "Forcebreaker Weapon","price": "9 Arc Tokens","page":"BMT","rarity":"Very Rare"},{"name": "Foxfire Charm","price": "50 gp","page":"Griffon's Saddlebag","rarity":"Common"},{"name": "Frost Brand","price": "9 Arc Tokens","page":"DMG","rarity":"Very Rare"},{"name": "Fulminating Treatise","price": "4,000 gp","page":"TCE","rarity":"Rare"},{"name": "Gauntlets of Flaming Fury","price": "2,000 gp","page":"BGDIA","rarity":"Rare"},{"name": "Gauntlets of Ogre Power","price": "450 gp","page":"DMG","rarity":"Uncommon"},{"name": "Gavel of the Venn Rune","price": "2,800 gp","page":"SKT","rarity":"Rare"},{"name": "Gelatinous Whip","price": "400 gp","page":"Griffon's Saddlebag","rarity":"Uncommon"},{"name": "Gem of Brightness","price": "250 gp","page":"DMG","rarity":"Uncommon"},{"name": "Gem of Seeing","price": "5,000 gp","page":"DMG","rarity":"Rare"},{"name": "Ghost Lantern","price": "1,750 gp","page":"ToA","rarity":"Rare"},{"name": "Giant Slayer (any axe or sword)","price": "4,600 gp","page":"DMG","rarity":"Rare"},{"name": "Glamerweave (common)","price": "50 gp","page":"ERLW","rarity":"Common"},{"name": "Glamerweave (uncommon)","price": "150 gp","page":"ERLW","rarity":"Uncommon"},{"name": "Glamoured Studded Leather","price": "4,800 gp","page":"DMG","rarity":"Rare"},{"name": "Glimmering Moonbow","price": "Weapon Price + 2,500 gp","page":"TBoMT","rarity":"Rare"},{"name": "Gloomwrought armor","price": "Armor Price + 2,850 gp","page":"TBoMT","rarity":"Rare"},{"name": "Gloves of Missile Snaring","price": "325 gp","page":"DMG","rarity":"Uncommon"},{"name": "Gloves of Swimming and Climbing","price": "250 gp","page":"DMG","rarity":"Uncommon"},{"name": "Gloves of Thievery","price": "300 gp","page":"DMG","rarity":"Uncommon"},{"name": "Glowrune Pigment","price": "3,500 gp (6 uses)","page":"BGG","rarity":"Rare"},{"name": "Goggles of Night","price": "300 gp","page":"DMG","rarity":"Uncommon"},{"name": "Goggles of Object Reading","price": "350 gp","page":"EGW","rarity":"Uncommon"},{"name": "Grasping Whip","price": "1,500 gp","page":"TBoMT","rarity":"Rare"},{"name": "Guardian Emblem","price": "300 gp","page":"TCE","rarity":"Uncommon"},{"name": "Hammer of Runic Focus","price": "9 Arc Tokens","page":"BMT","rarity":"Very Rare"},{"name": "Hat of Disguise","price": "475 gp","page":"DMG","rarity":"Uncommon"},{"name": "Hat of Vermin","price": "65 gp","page":"XGE","rarity":"Common"},{"name": "Hat of Wizardry","price": "75 gp","page":"XGE","rarity":"Common"},{"name": "Hazewalker Plate","price": "9 Arc Tokens","page":"DoDk","rarity":"Very Rare"},{"name": "Headband of Intellect","price": "450 gp","page":"DMG","rarity":"Uncommon"},{"name": "Heart Weaver's Primer","price": "3,000 gp","page":"TCE","rarity":"Rare"},{"name": "Hell Hound Cloak","price": "1,700 gp","page":"TftYP","rarity":"Rare"},{"name": "Helm of Brilliance","price": "9 Arc Tokens","page":"DMG","rarity":"Very Rare"},{"name": "Helm of Comprehending Languages","price": "200 gp","page":"DMG","rarity":"Uncommon"},{"name": "Helm of Telepathy","price": "300 gp","page":"DMG","rarity":"Uncommon"},{"name": "Helm of Teleportation","price": "4,250 gp","page":"DMG","rarity":"Rare"},{"name": "Helm of Underwater Action","price": "500 gp","page":"GoS","rarity":"Uncommon"},{"name": "Hew","price": "500 gp","page":"PaBTSO","rarity":"Uncommon"},{"name": "Heward's Handy Haversack","price": "2,000 gp","page":"DMG","rarity":"Rare"},{"name": "Heward's Handy Spice Pouch","price": "100 gp","page":"XGE","rarity":"Common"},{"name": "Hewward's Hireling Armor","price": "9 Arc Tokens","page":"LLK","rarity":"Very Rare"},{"name": "Hook of Fisher's Delight","price": "550 gp","page":"IDRotF","rarity":"Rare"},{"name": "Hooking Battleaxe","price": "60 gp","page":"Enter Ravenloft","rarity":"Common"},{"name": "Hooking Handaxe","price": "50 gp","page":"Enter Ravenloft","rarity":"Common"},{"name": "Horn of Blasting","price": "2,500 gp","page":"DMG","rarity":"Rare"},{"name": "Horn of Silent Alarm","price": "85 gp","page":"XGE","rarity":"Common"},{"name": "Horn of Valhalla (Silver/Brass)","price": "5,000 gp","page":"DMG","rarity":"Rare"},{"name": "Horseshoes of a Zephyr","price": "9 Arc Tokens","page":"DMG","rarity":"Very Rare"},{"name": "Horseshoes of Speed","price": "3,000 gp","page":"DMG","rarity":"Rare"},{"name": "House of Cards","price": "200 gp","page":"TBoMT","rarity":"Uncommon"},{"name": "Hunter's Coat","price": "9 Arc Tokens","page":"EGW","rarity":"Very Rare"},{"name": "Imbued Wood Focus","price": "75 gp","page":"ERLW","rarity":"Common"},{"name": "Immovable Rod","price": "500 gp","page":"DMG","rarity":"Uncommon"},{"name": "Infernal Plate Armor","price": "9 Arc Tokens","page":"CoA","rarity":"Very Rare"},{"name": "Infernal Puzzle Box","price": "3,500 gp*","page":"BGDIA","rarity":"Uncommon"},{"name": "Instrument of Illusions","price": "100 gp","page":"XGE","rarity":"Common"},{"name": "Instrument of Scribing","price": "80 gp","page":"XGE","rarity":"Common"},{"name": "Instrument of the Bards (Canaith Mandolin)","price": "3,750 gp","page":"DMG","rarity":"Rare"},{"name": "Instrument of the Bards (Cli Lyre)","price": "4,250 gp","page":"DMG","rarity":"Rare"},{"name": "Instrument of the Bards (Doss Lute)","price": "250 gp","page":"DMG","rarity":"Uncommon"},{"name": "Instrument of the Bards (Fochlucan Bandore)","price": "350 gp","page":"DMG","rarity":"Uncommon"},{"name": "Instrument of the Bards (Mac-Fuimidh Cittern)","price": "450 gp","page":"DMG","rarity":"Uncommon"},{"name": "Instrument of the Bards, Ansturth Harp","price": "9 Arc Tokens","page":"DMG","rarity":"Very Rare"},{"name": "Ioun Stone: Absorption","price": "9 Arc Tokens","page":"DMG","rarity":"Very Rare"},{"name": "Ioun Stone: Awareness","price": "4,000 gp","page":"DMG","rarity":"Rare"},{"name": "Ioun Stone: Protection","price": "3,600 gp","page":"DMG","rarity":"Rare"},{"name": "Ioun Stone: Reserve","price": "4,500 gp","page":"DMG","rarity":"Rare"},{"name": "Ioun Stone: Sustenance","price": "3,000 gp","page":"DMG","rarity":"Rare"},{"name": "Iron Bands of Bilarro","price": "2,600 gp","page":"DMG","rarity":"Rare"},{"name": "Javelin of Backbiting","price": "9 Arc Tokens","page":"TFTYP","rarity":"Very Rare"},{"name": "Javelin of Lightning","price": "750 gp","page":"DMG","rarity":"Uncommon"},{"name": "Jousting Lance","price": "60 gp","page":"Enter Ravenloft","rarity":"Common"},{"name": "Kagonesti Forest Shroud","price": "4,000 gp","page":"DSotDQ","rarity":"Rare"},{"name": "Keoghtom's Ointment (Restorative Ointment)","price": "1,250 gp (5 doses)","page":"DMG","rarity":"Uncommon"},{"name": "Keycharm","price": "50 gp","page":"ERLW","rarity":"Common"},{"name": "Knave's Eye Patch","price": "2,000 gp","page":"WDH","rarity":"Rare"},{"name": "Knock-Back Crossbow, Heavy","price": "150 gp","page":"Enter Ravenloft","rarity":"Common"},{"name": "Knock-Back Javelin","price": "20 gp","page":"Enter Ravenloft","rarity":"Common"},{"name": "Lantern of Revealing","price": "500 gp","page":"DMG","rarity":"Uncommon"},{"name": "Lantern of Tracking","price": "75 gp","page":"IDRotF","rarity":"Common"},{"name": "Lash of Immolation","price": "4,000 gp","page":"BGG","rarity":"Rare"},{"name": "Libram of Souls and Flesh","price": "4,200 gp","page":"TCE","rarity":"Rare"},{"name": "Lightbringer","price": "400 gp","page":"PaBTSO","rarity":"Uncommon"},{"name": "Living Gloves","price": "500 gp","page":"ERLW","rarity":"Uncommon"},{"name": "Loadstone","price": "150 gp","page":"TftYP","rarity":"Rare"},{"name": "Lock of Trickery","price": "50 gp","page":"XGE","rarity":"Common"},{"name": "Luminous War Pick","price": "1,200 gp","page":"PaBTSO","rarity":"Rare"},{"name": "Lyre of Building","price": "4,750 gp","page":"TCE","rarity":"Rare"},{"name": "Mace of Disruption","price": "1,750 gp","page":"DMG","rarity":"Rare"},{"name": "Mace of Smiting","price": "2,000 gp","page":"DMG","rarity":"Rare"},{"name": "Mace of Terror","price": "3,500 gp","page":"DMG","rarity":"Rare"},{"name": "Mantle of Spell Resistance","price": "4,200 gp","page":"DMG","rarity":"Rare"},{"name": "Mariner's Armor (light, medium, or heavy)","price": "Armor Price + 400","page":"DMG","rarity":"Uncommon"},{"name": "Mark of the Order, +1","price": "425 gp","page":"Enter Ravenloft","rarity":"Uncommon"},{"name": "Mark of the Order, +2","price": "4,250 gp","page":"Enter Ravenloft","rarity":"Rare"},{"name": "Mark of the Order, +3","price": "9 Arc Tokens","page":"Enter Ravenloft","rarity":"Very Rare"},{"name": "Mask of the Beast","price": "200 gp","page":"ToA","rarity":"Uncommon"},{"name": "Medallion of Thoughts","price": "300 gp","page":"DMG","rarity":"Uncommon"},{"name": "Mirror of the Past","price": "3,800 gp","page":"TftYP","rarity":"Rare"},{"name": "Mirrorlight Stinger","price": "Weapon Price + 1,500 gp","page":"Griffon's Saddlebag","rarity":"Rare"},{"name": "Mistral mantle","price": "9 Arc Tokens","page":"BGG","rarity":"Very Rare"},{"name": "Mithral Armor (medium or heavy, but not hide)","price": "Armor Price + 900 gp","page":"DMG","rarity":"Uncommon"},{"name": "Mizzium Mortar","price": "2,100 gp","page":"GGR","rarity":"Rare"},{"name": "Molten Bronze Skin (breastplate, half plate, or plate)","price": "Armor Price + 1,850 gp","page":"MOT","rarity":"Rare"},{"name": "Moodmark Paint","price": "50 gp","page":"GGR","rarity":"Common"},{"name": "Moon Sickle, +1","price": "1,500 gp*","page":"TCE","rarity":"Uncommon"},{"name": "Moon Sickle, +2","price": "4,000 gp","page":"TCE","rarity":"Rare"},{"name": "Moon Sickle, +3","price": "9 Arc Tokens","page":"TCE","rarity":"Very Rare"},{"name": "Moon-Touched Sword (any sword)","price": "Weapon Price + 75 gp","page":"XGE","rarity":"Common"},{"name": "Mystery Key","price": "50 gp","page":"XGE","rarity":"Common"},{"name": "Nature's Mantle","price": "325 gp","page":"TCE","rarity":"Uncommon"},{"name": "Necklace of Adaptation","price": "450 gp","page":"DMG","rarity":"Uncommon"},{"name": "Necklace of Fireballs","price": "4,350 gp (9 Beads)","page":"DMG","rarity":"Rare"},{"name": "Necklace of Prayer Beads","price": "5,000 gp","page":"DMG","rarity":"Rare"},{"name": "Needle of Mending (dagger)","price": "1,400 gp","page":"EGW","rarity":"Rare"},{"name": "Night Caller","price": "350 gp","page":"TftYP","rarity":"Uncommon"},{"name": "Nimbus Coronet","price": "9 Arc Tokens","page":"BGG","rarity":"Very Rare"},{"name": "Opal of the Ild Rune","price": "3,500 gp","page":"SKT","rarity":"Rare"},{"name": "Orb of Direction","price": "50 gp","page":"XGE","rarity":"Common"},{"name": "Orb of Shielding","price": "80 gp","page":"ERLW","rarity":"Common"},{"name": "Orb of the Stein Rune","price": "2,700 gp","page":"SKT","rarity":"Rare"},{"name": "Orb of Time","price": "50 gp","page":"XGE","rarity":"Common"},{"name": "Outer Essence Shard","price": "2,000 gp","page":"TCE","rarity":"Rare"},{"name": "Paper Bird","price": "450 gp (9 birds)","page":"WDH","rarity":"Uncommon"},{"name": "Pariah's Shield","price": "1,500 gp","page":"GGR","rarity":"Rare"},{"name": "Pearl of Power","price": "400 gp","page":"DMG","rarity":"Uncommon"},{"name": "Periapt of Health","price": "250 gp","page":"DMG","rarity":"Uncommon"},{"name": "Periapt of Proof Against Poison","price": "4,700 gp","page":"DMG","rarity":"Rare"},{"name": "Periapt of Wound Closure","price": "375 gp","page":"DMG","rarity":"Uncommon"},{"name": "Pipe of Remembrance","price": "50 gp","page":"GoS","rarity":"Common"},{"name": "Pipe of Smoke Monsters","price": "50 gp","page":"XGE","rarity":"Common"},{"name": "Pipes of Haunting","price": "300 gp","page":"DMG","rarity":"Uncommon"},{"name": "Pipes of the Sewers","price": "150 gp","page":"DMG","rarity":"Uncommon"},{"name": "Piwafwi (Cloak of Elvenkind)","price": "200 gp","page":"OotA","rarity":"Uncommon"},{"name": "Piwafwi of Fire Resistance","price": "1,400 gp","page":"OotA","rarity":"Rare"},{"name": "Planecaller's Codex","price": "3,500 gp","page":"TCE","rarity":"Rare"},{"name": "Plate of the Knight's Fellowship","price": "2,500 gp","page":"TBoMT","rarity":"Uncommon"},{"name": "Pole of Angling","price": "50 gp","page":"XGE","rarity":"Common"},{"name": "Pole of Collapsing","price": "55 gp","page":"XGE","rarity":"Common"},{"name": "Portable Hole","price": "5,000 gp","page":"DMG","rarity":"Rare"},{"name": "Pot of Awakening","price": "85 gp","page":"XGE","rarity":"Common"},{"name": "Potion of Diminution","price": "500 gp","page":"DMG","rarity":"Rare"},{"name": "Potion of Psionic Fortitude","price": "500 gp","page":"PaBTSO","rarity":"Uncommon"},{"name": "Prehistoric Figurine of Wondrous Power Triceratops","price": "9 Arc Tokens","page":"BGG","rarity":"Very Rare"},{"name": "Prehistoric Figurine of Wondrous Power, Kyanite Pteranodon","price": "3,000 gp","page":"BGG","rarity":"Rare"},{"name": "Prehistoric Figurine of Wondrous Power, Pyrite Plesiosaurus","price": "400 gp","page":"BGG","rarity":"Uncommon"},{"name": "Pressure Capsule","price": "25 gp","page":"GoS","rarity":"Common"},{"name": "Prosthetic Limb","price": "100 gp","page":"TCE","rarity":"Common"},{"name": "Protective Verses","price": "3,500 gp","page":"TCE","rarity":"Rare"},{"name": "Psi Crystal","price": "500 gp","page":"IDRotF","rarity":"Uncommon"},{"name": "Pyroconverger","price": "250 gp","page":"GGR","rarity":"Uncommon"},{"name": "Quaal's Feather Token (Anchor, Bird, Fan, Swan Boat, Tree or Whip)","price": "1,000 gp","page":"DMG","rarity":"Rare"},{"name": "Quick-Draw Shortbow","price": "100 gp","page":"Enter Ravenloft","rarity":"Common"},{"name": "Quiver of Ehlonna (Efficient Quiver)","price": "250 gp","page":"DMG","rarity":"Uncommon"},{"name": "Redirecting Trident","price": "50 gp","page":"Enter Ravenloft","rarity":"Common"},{"name": "Retaliating Dagger","price": "30 gp","page":"Enter Ravenloft","rarity":"Common"},{"name": "Retaliating Scimitar","price": "100 gp","page":"Enter Ravenloft","rarity":"Common"},{"name": "Reveler's Concertina","price": "4,250 gp","page":"TCE","rarity":"Rare"},{"name": "Rhythm-Maker's Drum, +1","price": "425 gp","page":"TCE","rarity":"Uncommon"},{"name": "Rhythm-Maker's Drum, +2","price": "4,250 gp","page":"TCE","rarity":"Rare"},{"name": "Rhythm-Maker's Drum, +3","price": "9 Arc Tokens","page":"TCE","rarity":"Very Rare"},{"name": "Ring of Animal Influence","price": "1,000 gp","page":"DMG","rarity":"Rare"},{"name": "Ring of Evasion","price": "4,900 gp","page":"DMG","rarity":"Rare"},{"name": "Ring of Feather Falling","price": "2,200 gp","page":"DMG","rarity":"Rare"},{"name": "Ring of Free Action","price": "4,500 gp","page":"DMG","rarity":"Rare"},{"name": "Ring of Jumping","price": "250 gp","page":"DMG","rarity":"Uncommon"},{"name": "Ring of Mind Shielding","price": "450 gp","page":"DMG","rarity":"Uncommon"},{"name": "Ring of Obscuring","price": "150 gp","page":"EGW","rarity":"Uncommon"},{"name": "Ring of Protection","price": "3,000 gp","page":"DMG","rarity":"Rare"},{"name": "Ring of Regeneration","price": "9 Arc Tokens","page":"DMG","rarity":"Very Rare"},{"name": "Ring of Resistance","price": "3,500 gp","page":"DMG","rarity":"Rare"},{"name": "Ring of Shooting Stars","price": "9 Arc Tokens","page":"DMG","rarity":"Very Rare"},{"name": "Ring of Spell Storing","price": "3,600 gp","page":"DMG","rarity":"Rare"},{"name": "Ring of Swimming","price": "300 gp","page":"DMG","rarity":"Uncommon"},{"name": "Ring of Telekinesis","price": "9 Arc Tokens","page":"DMG","rarity":"Very Rare"},{"name": "Ring of Temporal Salvation","price": "2,250 gp","page":"EGW","rarity":"Rare"},{"name": "Ring of the Orator","price": "250 gp","page":"PaBTSO","rarity":"Uncommon"}]
-Items = Items + [{"name": "Ring of the Ram","price": "4,000 gp","page":"DMG","rarity":"Rare"},{"name": "Ring of Truth Telling","price": "150 gp","page":"WDH","rarity":"Uncommon"},{"name": "Ring of Warmth","price": "480 gp","page":"DMG","rarity":"Uncommon"},{"name": "Ring of Water Walking","price": "500 gp","page":"DMG","rarity":"Uncommon"},{"name": "Ring of X-Ray Vision","price": "3,500 gp","page":"DMG","rarity":"Rare"},{"name": "Robe of Eyes","price": "5,000 gp","page":"DMG","rarity":"Rare"},{"name": "Robe of Serpents","price": "375 gp","page":"SKT","rarity":"Uncommon"},{"name": "Robe of Stars","price": "9 Arc Tokens","page":"DMG","rarity":"Very Rare"},{"name": "Robe of Summer","price": "2,900 gp","page":"TftYP","rarity":"Rare"},{"name": "Robe of Useful Items","price": "400 gp","page":"DMG","rarity":"Uncommon"},{"name": "Rod of Alertness","price": "9 Arc Tokens","page":"DMG","rarity":"Very Rare"},{"name": "Rod of Hellish Flames","price": "9 Arc Tokens","page":"BMT","rarity":"Very Rare"},{"name": "Rod of Retribution","price": "250 gp","page":"EGW","rarity":"Uncommon"},{"name": "Rod of Rulership","price": "3,600 gp","page":"DMG","rarity":"Rare"},{"name": "Rod of the Pact Keeper, +1","price": "400 gp","page":"DMG","rarity":"Uncommon"},{"name": "Rod of the Pact Keeper, +2","price": "4,000 gp","page":"DMG","rarity":"Rare"},{"name": "Rod of the Pact Keeper, +3","price": "9 Arc Tokens","page":"DMG","rarity":"Very Rare"},{"name": "Rod of the Vonindod","price": "3,400 gp","page":"SKT","rarity":"Rare"},{"name": "Rope Caster","price": "400 gp","page":"Griffon's Saddlebag","rarity":"Uncommon"},{"name": "Rope of Climbing","price": "350 gp","page":"DMG","rarity":"Uncommon"},{"name": "Rope of Entanglement","price": "1,000 gp","page":"DMG","rarity":"Rare"},{"name": "Rope of Mending","price": "50 gp","page":"XGE","rarity":"Common"},{"name": "Ruby of the War Mage","price": "100 gp","page":"XGE","rarity":"Common"},{"name": "Ruinous Flail","price": "3,500 gp","page":"TBoMT","rarity":"Rare"},{"name": "Saddle of the Cavalier","price": "250 gp","page":"DMG","rarity":"Uncommon"},{"name": "Sage's Signet (Bear)","price": "9 Arc Tokens","page":"BMT","rarity":"Very Rare"},{"name": "Sage's Signet (Hart)","price": "9 Arc Tokens","page":"BMT","rarity":"Very Rare"},{"name": "Sage's Signet (Lion)","price": "9 Arc Tokens","page":"BMT","rarity":"Very Rare"},{"name": "Sage's Signet (Serpent)","price": "3600 gp","page":"TBoMT","rarity":"Rare"},{"name": "Sage's Signet (Songbird)","price": "3600 gp","page":"TBoMT","rarity":"Rare"},{"name": "Sage's Signet (Wolf)","price": "9 Arc Tokens","page":"BMT","rarity":"Very Rare"},{"name": "Saphire Buckler","price": "9 Arc Tokens","page":"FTD","rarity":"Very Rare"},{"name": "Sapping Longsword","price": "70 gp","page":"Enter Ravenloft","rarity":"Common"},{"name": "Scimitar of Speed","price": "9 Arc Tokens","page":"DMG","rarity":"Very Rare"},{"name": "Scorpion Armor (plate)","price": "3,600 gp","page":"ToA","rarity":"Rare"},{"name": "Scribe's Pen","price": "60 gp","page":"ERLW","rarity":"Common"},{"name": "Scroll of Protection","price": "3,500 gp","page":"DMG","rarity":"Rare"},{"name": "Seeker Dart","price": "100 gp","page":"PotA","rarity":"Uncommon"},{"name": "Sekolahian Worshipping Statuette","price": "50 gp","page":"GoS","rarity":"Common"},{"name": "Sending Stones","price": "500 gp","page":"DMG","rarity":"Uncommon"},{"name": "Sentinel Shield","price": "300 gp","page":"DMG","rarity":"Uncommon"},{"name": "Serpent Scale Armor","price": "3,500 gp","page":"CM","rarity":"Uncommon"},{"name": "Shadowfell Shard","price": "600 gp","page":"TCE","rarity":"Rare"},{"name": "Shatterspike (longsword)","price": "550 gp","page":"TftYP","rarity":"Uncommon"},{"name": "Shield Arbalest","price": "250 gp","page":"Enter Ravenloft","rarity":"Uncommon"},{"name": "Shield of Expression","price": "60 gp","page":"XGE","rarity":"Common"},{"name": "Shield of Missile Attraction","price": "1,000 gp","page":"DMG","rarity":"Rare"},{"name": "Shield of the Tortoise","price": "160 gp","page":"TBoMT","rarity":"Uncommon"},{"name": "Shield, +1","price": "450 gp","page":"DMG","rarity":"Uncommon"},{"name": "Shield, +2","price": "4,000 gp","page":"DMG","rarity":"Rare"},{"name": "Shifter's Shine (Common)","price": "150 gp","page":"Griffon's Saddlebag","rarity":"Common"},{"name": "Shiftweave","price": "100 gp","page":"ERLW","rarity":"Common"},{"name": "Shrieking Greaves","price": "1500 gp","page":"TBoMT","rarity":"Rare"},{"name": "Silent Blowgun","price": "60 gp","page":"Enter Ravenloft","rarity":"Common"},{"name": "Siren Song Lyre","price": "650 gp","page":"MOT","rarity":"Rare"},{"name": "Skyblinder Staff","price": "375 gp","page":"GGR","rarity":"Uncommon"},{"name": "Sling of Giant Felling","price": "350 gp","page":"TBoMT","rarity":"Uncommon"},{"name": "Slippers of Spider Climbing","price": "500 gp","page":"DMG","rarity":"Uncommon"},{"name": "Slumbering Dragon Vessel","price": "2,750 gp","page":"FTD","rarity":"Uncommon"},{"name": "Slumbering Dragon's Wrath Weapon","price": "Weapon Price + 400 gp","page":"FTD","rarity":"Uncommon"},{"name": "Slumbering Dragon-Touched Focus","price": "400 gp","page":"FTD","rarity":"Uncommon"},{"name": "Slumbering Scaled Ornament","price": "400 gp","page":"FTD","rarity":"Uncommon"},{"name": "Smokepowder","price": "325 gp","page":"WDH","rarity":"Uncommon"},{"name": "Smoldering Armor (light, medium, or heavy)","price": "Armor Price + 150 gp","page":"XGE","rarity":"Common"},{"name": "Spear of Backbiting","price": "9 Arc Tokens","page":"TFTYP","rarity":"Very Rare"},{"name": "Spellguard Shield","price": "9 Arc Tokens","page":"DMG","rarity":"Very Rare"},{"name": "Spellshard","price": "100 gp","page":"ERLW","rarity":"Common"},{"name": "Spider Staff","price": "1,750 gp","page":"LMoP","rarity":"Rare"},{"name": "Spider Staff (replaces legacy)","price": "1,750 gp","page":"PaBTSO","rarity":"Rare"},{"name": "Spies' Murmur","price": "475 gp","page":"GGR","rarity":"Uncommon"},{"name": "Staff of Adornment","price": "50 gp","page":"XGE","rarity":"Common"},{"name": "Staff of Birdcalls","price": "70 gp","page":"XGE","rarity":"Common"},{"name": "Staff of Charming","price": "3,750 gp","page":"DMG","rarity":"Rare"},{"name": "Staff of Defense","price": "3,400 gp","page":"LMoP","rarity":"Rare"},{"name": "Staff of Defense (replaces legacy)","price": "3,400 gp","page":"PaBTSO","rarity":"Rare"},{"name": "Staff of Fire","price": "9 Arc Tokens","page":"DMG","rarity":"Very Rare"},{"name": "Staff of Flowers","price": "50 gp","page":"XGE","rarity":"Common"},{"name": "Staff of Frost","price": "9 Arc Tokens","page":"DMG","rarity":"Very Rare"},{"name": "Staff of Healing","price": "4,800 gp","page":"DMG","rarity":"Rare"},{"name": "Staff of Striking","price": "9 Arc Tokens","page":"DMG","rarity":"Very Rare"},{"name": "Staff of Swarming Insects","price": "4,500 gp","page":"DMG","rarity":"Rare"},{"name": "Staff of the Adder","price": "350 gp","page":"DMG","rarity":"Uncommon"},{"name": "Staff of the Ivory Claw","price": "1,000 gp","page":"EGW","rarity":"Rare"},{"name": "Staff of the Python","price": "1,000 gp","page":"DMG","rarity":"Uncommon"},{"name": "Staff of the Woodlands","price": "4,500 gp","page":"DMG","rarity":"Rare"},{"name": "Staff of Thunder and Lightning","price": "9 Arc Tokens","page":"DMG","rarity":"Very Rare"},{"name": "Staff of Withering","price": "2,100 gp","page":"DMG","rarity":"Rare"},{"name": "Starshot Crossbow","price": "Weapon Price + 1,500 gp","page":"TBoMT","rarity":"Rare"},{"name": "Stirring Dragon Vessel","price": "5,500 gp","page":"FTD","rarity":"Rare"},{"name": "Stirring Dragon's Wrath Weapon, +1","price": "Weapon Price + 2,500 gp","page":"FTD","rarity":"Rare"},{"name": "Stirring Dragon-Touched Focus","price": "2,500 gp","page":"FTD","rarity":"Rare"},{"name": "Stirring Scaled Ornament","price": "3,000 gp","page":"FTD","rarity":"Rare"},{"name": "Stone of Controlling Earth Elementals","price": "4,700 gp","page":"DMG","rarity":"Rare"},{"name": "Stone of Good Luck","price": "400 gp","page":"DMG","rarity":"Uncommon"},{"name": "Stone of Ill Luck","price": "400 gp","page":"TftYP","rarity":"Uncommon"},{"name": "Stonemaker's War Pick","price": "9 Arc Tokens","page":"BMT","rarity":"Very Rare"},{"name": "Stonespeaker Crystal","price": "4,600 gp","page":"OotA","rarity":"Rare"},{"name": "Storm Boomerang","price": "150 gp","page":"PotA","rarity":"Uncommon"},{"name": "Subtle Crossbow, Hand","price": "200 gp","page":"Enter Ravenloft","rarity":"Common"},{"name": "Sunforger (warhammer)","price": "4,600 gp","page":"GGR","rarity":"Rare"},{"name": "Sword of Life Stealing (any sword)","price": "2,200 gp","page":"DMG","rarity":"Rare"},{"name": "Sword of the Paruns","price": "9 Arc Tokens","page":"GGR","rarity":"Very Rare"},{"name": "Sword of Vengeance (any sword)","price": "Weapon Price + 400 gp","page":"DMG","rarity":"Uncommon"},{"name": "Sword of Wounding (any sword)","price": "Weapon Price + 1,200 gp","page":"DMG","rarity":"Rare"},{"name": "Talking Doll","price": "75 gp","page":"XGE","rarity":"Common"},{"name": "Tankard of Sobriety","price": "80 gp","page":"XGE","rarity":"Common"},{"name": "Tentacle Rod","price": "2,000 gp","page":"DMG","rarity":"Rare"},{"name": "Thermal Cube","price": "50 gp","page":"IDRotF","rarity":"Common"},{"name": "Thrusting Pike","price": "50 gp","page":"Enter Ravenloft","rarity":"Common"},{"name": "Thundercrack Whip","price": "400 gp","page":"Whips, Revised","rarity":"Uncommon"},{"name": "Tidecaller Trident","price": "9 Arc Tokens","page":"BMT","rarity":"Very Rare"},{"name": "Toppling Flail","price": "60 gp","page":"Enter Ravenloft","rarity":"Common"},{"name": "Toppling Light Hammer","price": "30 gp","page":"Enter Ravenloft","rarity":"Common"},{"name": "Trapping Net","price": "25 gp","page":"Enter Ravenloft","rarity":"Common"},{"name": "Trident of Fish Command","price": "300 gp","page":"DMG","rarity":"Uncommon"},{"name": "Two-Birds Sling","price": "4,000 gp","page":"MOT","rarity":"Rare"},{"name": "Vaulting Quarterstaff","price": "15 gp","page":"Enter Ravenloft","rarity":"Common"},{"name": "Ventilating Lungs","price": "1,000 gp","page":"ERLW","rarity":"Rare"},{"name": "Veteran's Cane","price": "50 gp","page":"XGE","rarity":"Common"},{"name": "Vicious Weapon (any weapon)","price": "Weapon Price + 4,000 gp","page":"DMG","rarity":"Rare"},{"name": "Vox Seeker","price": "100 gp","page":"EGW","rarity":"Common"},{"name": "Voyager Staff","price": "9 Arc Tokens","page":"GGR","rarity":"Very Rare"},{"name": "Wakened Dragon Vessel","price": "9 Arc Tokens","page":"FTD","rarity":"Very Rare"},{"name": "Wakened Dragon-Touched Focus","price": "9 Arc Tokens","page":"FTD","rarity":"Very Rare"},{"name": "Walloping Ammunition","price": "60 gp","page":"XGE","rarity":"Common"},{"name": "Wand of Binding","price": "2,500 gp","page":"DMG","rarity":"Rare"},{"name": "Wand of Conducting","price": "90 gp","page":"XGE","rarity":"Common"},{"name": "Wand of Enemy Detection","price": "3,750 gp","page":"DMG","rarity":"Rare"},{"name": "Wand of Entangle","price": "250 gp","page":"TftYP","rarity":"Uncommon"},{"name": "Wand of Fear","price": "3,250 gp","page":"DMG","rarity":"Rare"},{"name": "Wand of Fireballs","price": "4,800 gp","page":"DMG","rarity":"Rare"},{"name": "Wand of Lightning Bolts","price": "4,800 gp","page":"DMG","rarity":"Rare"},{"name": "Wand of Magic Detection","price": "150 gp","page":"DMG","rarity":"Uncommon"},{"name": "Wand of Magic Missiles","price": "300 gp","page":"DMG","rarity":"Uncommon"},{"name": "Wand of Paralysis","price": "4,250 gp","page":"DMG","rarity":"Rare"},{"name": "Wand of Pyrotechnics","price": "65 gp","page":"XGE","rarity":"Common"},{"name": "Wand of Scowls","price": "60 gp","page":"XGE","rarity":"Common"},{"name": "Wand of Secrets","price": "125 gp","page":"DMG","rarity":"Uncommon"},{"name": "Wand of Smiles","price": "60 gp","page":"XGE","rarity":"Common"},{"name": "Wand of the War Mage, +1","price": "400 gp","page":"DMG","rarity":"Uncommon"},{"name": "Wand of the War Mage, +2","price": "4,000 gp","page":"DMG","rarity":"Rare"},{"name": "Wand of the War Mage, +3","price": "9 Arc Tokens","page":"DMG","rarity":"Very Rare"},{"name": "Wand of Web","price": "300 gp","page":"DMG","rarity":"Uncommon"},{"name": "Wand of Winter","price": "4,100 gp","page":"HotDQ","rarity":"Rare"},{"name": "Wand of Wonder","price": "2,250 gp","page":"DMG","rarity":"Rare"},{"name": "Wand Sheath","price": "75 gp","page":"ERLW","rarity":"Common"},{"name": "Warrior's Passkey","price": "3000 gp","page":"TBoMT","rarity":"Rare"},{"name": "Wayfarer's Boots","price": "2,500 gp","page":"BGG","rarity":"Rare"},{"name": "Weapon (any), +1","price": "Weapon Price + 500 gp","page":"DMG","rarity":"Uncommon"},{"name": "Weapon (any), +2","price": "Weapon Price + 2,500 gp","page":"DMG","rarity":"Rare"},{"name": "Weapon of Certain Death (any weapon)","price": "Weapon Price + 1,500 gp","page":"EGW","rarity":"Rare"},{"name": "Weapon of Throne's Command","price": "9 Arc Tokens","page":"BMT","rarity":"Very Rare"},{"name": "Weapon of Warning","price": "Weapon Price + 400 gp","page":"DMG","rarity":"Uncommon"},{"name": "Wind Fan","price": "150 gp","page":"DMG","rarity":"Uncommon"},{"name": "Winged Boots","price": "5,000 gp*","page":"DMG","rarity":"Uncommon"},{"name": "Wings of Flying","price": "3,600 gp","page":"DMG","rarity":"Rare"},{"name": "Wingwear","price": "300 gp","page":"PotA","rarity":"Uncommon"},{"name": "Wispy Sour (Rare)","price": "800 gp","page":"Griffon's Saddlebag","rarity":"Rare"},{"name": "Wispy Sour (Uncommon)","price": "350 gp","page":"Griffon's Saddlebag","rarity":"Uncommon"},{"name": "Wraps of Unarmed Prowess, +1","price": "600 gp","page":"TBoMT","rarity":"Uncommon"},{"name": "Wraps of Unarmed Prowess, +2","price": "3000 gp","page":"TBoMT","rarity":"Rare"},{"name": "Wraps of Unarmed Prowess,+3","price": "9 Arc Tokens","page":"BMT","rarity":"Very Rare"},{"name": "Zephyr Armor","price": "4,500 gp","page":"BGG","rarity":"Rare"}]
-Cloth = [{'name': 'Infernal Leather', 'price': '750 gp', 'page': 'Special Materials', 'rarity': 'Uncommon', 'type': 'Cloth'}, {'name': 'Shadowfell Linen', 'price': '750 gp', 'page': 'Special Materials', 'rarity': 'Uncommon', 'type': 'Cloth'}]
-Organic = [{'name': 'Asmorch Wood', 'price': '500 gp', 'page': 'Special Materials', 'rarity': 'Uncommon', 'type': 'Organic'}, {'name': 'Coral', 'price': '100 gp', 'page': 'Special Materials', 'rarity': 'Uncommon', 'type': 'Organic'}, {'name': 'Plague wood', 'price': '250 gp', 'page': 'Special Materials', 'rarity': 'Uncommon', 'type': 'Organic'}, {'name': 'Spiritual Wood', 'price': '800 gp', 'page': 'Special Materials', 'rarity': 'Uncommon', 'type': 'Organic'}]
-Metal = [{'name': 'Cold Iron', 'price': '100 gp', 'page': 'Special Materials', 'rarity': 'Uncommon', 'type': 'Metal'}, {'name': 'Darksteel', 'price': '600 gp', 'page': 'Special Materials', 'rarity': 'Uncommon', 'type': 'Metal'}, {'name': 'Flametouched Iron', 'price': '500 gp', 'page': 'Special Materials', 'rarity': 'Uncommon', 'type': 'Metal'}, {'name': 'Orichalcum', 'price': '650 gp', 'page': 'Special Materials', 'rarity': 'Uncommon', 'type': 'Metal'}, {'name': 'Infernal Steel', 'price': '750 gp', 'page': 'Special Materials', 'rarity': 'Uncommon', 'type': 'Metal'}, {'name': 'Osmodium', 'price': '750 gp', 'page': 'Special Materials', 'rarity': 'Uncommon', 'type': 'Metal'}, {'name': 'Stellar Iron', 'price': '850 gp', 'page': 'Special Materials', 'rarity': 'Uncommon', 'type': 'Metal'}]
-Mineral = [{'name': 'Aerocrystal', 'price': '750 gp', 'page': 'Special Materials', 'rarity': 'Uncommon', 'type': 'Mineral'}, {'name': 'Dwarvenstone', 'price': '300 gp', 'page': 'Special Materials', 'rarity': 'Uncommon', 'type': 'Mineral'}, {'name': 'Eternal Ice', 'price': '600 gp', 'page': 'Special Materials', 'rarity': 'Uncommon', 'type': 'Mineral'}, {'name': 'Obsidian', 'price': '500 gp', 'page': 'Special Materials', 'rarity': 'Uncommon', 'type': 'Mineral'}]
+Items = [{"name": "Acheron Blade (any sword)", "price": "Weapon Price + 900 gp", "page": "EGW", "rarity": "Rare"},
+         {"name": "Adamantine Armor (medium or heavy, but not hide)", "price": "Armor Price + 1,000 gp", "page": "DMG",
+          "rarity": "Uncommon"},
+         {"name": "Alchemical Compendium", "price": "3,000 gp", "page": "TCE", "rarity": "Rare"},
+         {"name": "Alchemist's Potion Belt", "price": "350 gp ", "page": "Griffon's Saddlebag", "rarity": "Uncommon"},
+         {"name": "Alchemy Jug", "price": "100 gp", "page": "DMG", "rarity": "Uncommon"},
+         {"name": "All Purpose Tool, +3", "price": "9 Arc Tokens", "page": "TCE", "rarity": "Very Rare"},
+         {"name": "All-Purpose Tool, +1", "price": "1,500 gp*", "page": "TCE", "rarity": "Uncommon"},
+         {"name": "All-Purpose Tool, +2", "price": "4,500 gp", "page": "TCE", "rarity": "Rare"},
+         {"name": "Ambitious Medic's Box", "price": "500 gp", "page": "Griffon's Saddlebag", "rarity": "Uncommon"},
+         {"name": "Ammunition, +1", "price": "100 gp", "page": "DMG", "rarity": "Uncommon"},
+         {"name": "Ammunition, +2", "price": "500 gp", "page": "DMG", "rarity": "Rare"},
+         {"name": "Amulet of Health", "price": "4,000 gp", "page": "DMG", "rarity": "Rare"},
+         {"name": "Amulet of Proof Against Detection and Location", "price": "400 gp", "page": "DMG",
+          "rarity": "Uncommon"},
+         {"name": "Amulet of Protection from Turning", "price": "3,600 gp", "page": "TftYP", "rarity": "Rare"},
+         {"name": "Amulet of the Devout, +1", "price": "425 gp", "page": "TCE", "rarity": "Uncommon"},
+         {"name": "Amulet of the Devout, +2", "price": "4,250 gp", "page": "TCE", "rarity": "Rare"},
+         {"name": "Amulet of the Devout, +3", "price": "9 Arc Tokens", "page": "TCE", "rarity": "Very Rare"},
+         {"name": "Amulet of the Drunkard", "price": "500 gp", "page": "EGW", "rarity": "Uncommon"},
+         {"name": "Animated Shield", "price": "9 Arc Tokens", "page": "DMG", "rarity": "Very Rare"},
+         {"name": "Arcane Grimoire, +1", "price": "425 gp", "page": "TCE", "rarity": "Uncommon"},
+         {"name": "Arcane Grimoire, +2", "price": "4,250 gp", "page": "TCE", "rarity": "Rare"},
+         {"name": "Arcane Grimoire, +3", "price": "9 Arc Tokens", "page": "TCE", "rarity": "Very Rare"},
+         {"name": "Arcane Whip Tip - Acid", "price": "100 gp", "page": "Whips, Revised", "rarity": "Rare"},
+         {"name": "Arcane Whip Tip - Cold", "price": "50 gp", "page": "Whips, Revised", "rarity": "Uncommon"},
+         {"name": "Arcane Whip Tip - Fire", "price": "50 gp", "page": "Whips, Revised", "rarity": "Uncommon"},
+         {"name": "Arcane Whip Tip - Lightning", "price": "100 gp", "page": "Whips, Revised", "rarity": "Rare"},
+         {"name": "Arcane Whip Tip - Poison", "price": "50 gp", "page": "Whips, Revised", "rarity": "Uncommon"},
+         {"name": "Arcane Whip Tip - Thunder", "price": "100 gp", "page": "Whips, Revised", "rarity": "Rare"},
+         {"name": "Armblade (any one-handed melee weapon)", "price": "Weapon Price + 100 gp", "page": "ERLW",
+          "rarity": "Common"},
+         {"name": "Armor (light, medium, or heavy), +1", "price": "Armor Price + 3,500 gp", "page": "DMG",
+          "rarity": "Rare"},
+         {"name": "Armor of Fungal Spores", "price": "Armor Price + 600", "page": "TBoMT", "rarity": "Uncommon"},
+         {"name": "Armor of Gleaming (any medium or heavy)", "price": "Armor Price + 150 gp", "page": "XGE",
+          "rarity": "Common"},
+         {"name": "Armor of Resistance (light, medium, or heavy)", "price": "Armor Price + 3,000 gp", "page": "DMG",
+          "rarity": "Rare"},
+         {"name": "Armor of the Fallen", "price": "Armor Price + 1,000 gp", "page": "TBoMT", "rarity": "Uncommon"},
+         {"name": "Armor of Vulnerability (plate)", "price": "1,500 gp", "page": "DMG", "rarity": "Rare"},
+         {"name": "Armor of Weightlessness", "price": "Armor Price + 1,000 gp", "page": "TBoMT", "rarity": "Uncommon"},
+         {"name": "Arrow-Catching Shield", "price": "4,500 gp", "page": "DMG", "rarity": "Rare"},
+         {"name": "Astral Shard", "price": "4,200 gp", "page": "TCE", "rarity": "Rare"},
+         {"name": "Astromancy Archive", "price": "3,300 gp", "page": "TCE", "rarity": "Rare"},
+         {"name": "Atlas of Endless Horizons", "price": "3,750 gp", "page": "TCE", "rarity": "Rare"},
+         {"name": "Bag of Beans", "price": "4,200 gp", "page": "DMG", "rarity": "Rare"},
+         {"name": "Bag of Holding", "price": "500 gp", "page": "DMG", "rarity": "Uncommon"},
+         {"name": "Bag of Tricks", "price": "350 gp", "page": "DMG", "rarity": "Uncommon"},
+         {"name": "Balance of Harmony", "price": "200 gp", "page": "TftYP", "rarity": "Uncommon"},
+         {"name": "Balloon Pack", "price": "275 gp", "page": "PotA", "rarity": "Uncommon"},
+         {"name": "Banner of the Krig Rune", "price": "4,400 gp", "page": "SKT", "rarity": "Rare"},
+         {"name": "Bath Potion", "price": "10 gp", "page": "Griffon's Saddlebag", "rarity": "Common"},
+         {"name": "Battering Shield", "price": "850 gp", "page": "EGW", "rarity": "Rare"},
+         {"name": "Bead of Force", "price": "6,750 gp (8 beads)", "page": "DMG", "rarity": "Rare"},
+         {"name": "Bead of Nourishment", "price": "25 gp", "page": "XGE", "rarity": "Common"},
+         {"name": "Bead of Refreshment", "price": "25 gp", "page": "XGE", "rarity": "Common"},
+         {"name": "Bell Branch", "price": "750 gp", "page": "TCE", "rarity": "Rare"},
+         {"name": "Belt of Dwarvenkind", "price": "5,000 gp", "page": "DMG", "rarity": "Rare"},
+         {"name": "Belt of Giant Strength (Hill)", "price": "4,000 gp", "page": "DMG", "rarity": "Rare"},
+         {"name": "Berserker Axe (cursed)", "price": "2,000 gp", "page": "DMG", "rarity": "Rare"},
+         {"name": "Blade of the Medusa", "price": "9 Arc Tokens", "page": "LKK", "rarity": "Very Rare"},
+         {"name": "Blade-Catching Sickle", "price": "25 gp", "page": "Enter Ravenloft", "rarity": "Common"},
+         {"name": "Blade-Catching War Pick", "price": "50 gp", "page": "Enter Ravenloft", "rarity": "Common"},
+         {"name": "Blast Scepter", "price": "9 Arc Tokens", "page": "WDMM", "rarity": "Very Rare"},
+         {"name": "Blasted Goggles", "price": "300 gp", "page": "TBoMT", "rarity": "Uncommon"},
+         {"name": "Bleeding Crossbow, Light", "price": "100 gp", "page": "Enter Ravenloft", "rarity": "Common"},
+         {"name": "Bleeding Morningstar", "price": "70 gp", "page": "Enter Ravenloft", "rarity": "Common"},
+         {"name": "Blod Stone", "price": "6,500 gp", "page": "SKT", "rarity": "Rare"},
+         {"name": "Bloodaxe", "price": "9 Arc Tokens", "page": "EGW", "rarity": "Very Rare"},
+         {"name": "Bloodrage Greataxe", "price": "525 gp", "page": "TBoMT", "rarity": "Uncommon"},
+         {"name": "Bloodseeker Ammunition", "price": "9 Arc Tokens", "page": "BMT", "rarity": "Very Rare"},
+         {"name": "Bloodwell Vial, +1", "price": "425 gp", "page": "TCE", "rarity": "Uncommon"},
+         {"name": "Bloodwell Vial, +2", "price": "4,250 gp", "page": "TCE", "rarity": "Rare"},
+         {"name": "Bloodwell Vial, +3", "price": "9 Arc Tokens", "page": "TCE", "rarity": "Very Rare"},
+         {"name": "Boomerang Bandolier", "price": "500 gp", "page": "Enter Ravenloft", "rarity": "Uncommon"},
+         {"name": "Boomerang Shield", "price": "500 gp", "page": "TBoMT", "rarity": "Uncommon"},
+         {"name": "Boots of Elvenkind", "price": "400 gp", "page": "DMG", "rarity": "Uncommon"},
+         {"name": "Boots of False Tracks", "price": "60 gp", "page": "XGE", "rarity": "Common"},
+         {"name": "Boots of Levitation", "price": "4,500 gp", "page": "DMG", "rarity": "Rare"},
+         {"name": "Boots of Speed", "price": "3,000 gp", "page": "DMG", "rarity": "Rare"},
+         {"name": "Boots of Striding and Springing", "price": "200 gp", "page": "DMG", "rarity": "Uncommon"},
+         {"name": "Boots of the Winterlands", "price": "300 gp", "page": "DMG", "rarity": "Uncommon"},
+         {"name": "Bow of Conflagration", "price": "Weapon Price + 1,500 gp", "page": "TBoMT", "rarity": "Rare"},
+         {"name": "Bow of Melodies", "price": "9 Arc Tokens", "page": "BMT", "rarity": "Very Rare"},
+         {"name": "Bowl of Commanding Water Elementals", "price": "4,700 gp", "page": "DMG", "rarity": "Rare"},
+         {"name": "Bracer of Flying Daggers", "price": "1,000 gp", "page": "WDH", "rarity": "Rare"},
+         {"name": "Bracers of Archery", "price": "350 gp", "page": "DMG", "rarity": "Uncommon"},
+         {"name": "Bracers of Celerity", "price": "3,000 gp", "page": "PaBTSO", "rarity": "Rare"},
+         {"name": "Bracers of Defense", "price": "4,000 gp", "page": "DMG", "rarity": "Rare"},
+         {"name": "Brazier of Commanding Fire Elementals", "price": "4,700 gp", "page": "DMG", "rarity": "Rare"},
+         {"name": "Breastplate of Balance", "price": "3,400 gp", "page": "TBoMT", "rarity": "Rare"},
+         {"name": "Breathing Bubble", "price": "50 gp", "page": "EGW", "rarity": "Common"},
+         {"name": "Brooch of Living Essence", "price": "250 gp", "page": "EGW", "rarity": "Uncommon"},
+         {"name": "Brooch of Shielding", "price": "375 gp", "page": "DMG", "rarity": "Uncommon"},
+         {"name": "Broom of Flying", "price": "4,500 gp*", "page": "DMG", "rarity": "Uncommon"},
+         {"name": "Bull's-Eye Sling", "price": "10 gp", "page": "Enter Ravenloft", "rarity": "Common"},
+         {"name": "Butcher's Bib", "price": "2,750 gp", "page": "EGW", "rarity": "Rare"},
+         {"name": "Camper's Respite", "price": "200 gp", "page": "Griffon's Saddlebag", "rarity": "Uncommon"},
+         {"name": "Candle of the Deep", "price": "50 gp", "page": "XGE", "rarity": "Common"},
+         {"name": "Cap of Water Breathing", "price": "450 gp", "page": "DMG", "rarity": "Uncommon"},
+         {"name": "Cape of the Mountebank", "price": "3,900 gp", "page": "DMG", "rarity": "Rare"},
+         {"name": "Card's Sharp's Deck", "price": "250 gp", "page": "TBoMT", "rarity": "Uncommon"},
+         {"name": "Carpet of Flying", "price": "9 Arc Tokens", "page": "DMG", "rarity": "Very Rare"},
+         {"name": "Cast-Off Armor (light, medium, or heavy)", "price": "Armor Price + 100 gp", "page": "XGE",
+          "rarity": "Common"}, {"name": "Cauldron of Plenty", "price": "3,500 gp", "page": "IDRotF", "rarity": "Rare"},
+         {"name": "Censer of Controlling Air Elementals", "price": "4,700 gp", "page": "DMG", "rarity": "Rare"},
+         {"name": "Charlatan's Die", "price": "80 gp", "page": "XGE", "rarity": "Common"},
+         {"name": "Charm of Plant Command", "price": "1,500 gp", "page": "GoS", "rarity": "Rare"},
+         {"name": "Chest of Preserving", "price": "100 gp", "page": "WDMM", "rarity": "Common"},
+         {"name": "Chime of Opening", "price": "3,000 gp", "page": "DMG", "rarity": "Rare"},
+         {"name": "Chromatic Rose", "price": "3,000 gp", "page": "WBtW", "rarity": "Rare"},
+         {"name": "Circlet of Blasting", "price": "350 gp", "page": "DMG", "rarity": "Uncommon"},
+         {"name": "Circlet of Human Perfection", "price": "450 gp", "page": "WDMM", "rarity": "Uncommon"},
+         {"name": "Claw of the Wyrm Rune", "price": "4,400 gp", "page": "SKT", "rarity": "Rare"},
+         {"name": "Claws of the Umber Hulk", "price": "4,300 gp", "page": "PotA", "rarity": "Rare"},
+         {"name": "Cleaning Cube", "price": "50 gp", "page": "Griffon's Saddlebag", "rarity": "Common"},
+         {"name": "Cleansing Stone", "price": "50 gp", "page": "ERLW", "rarity": "Common"},
+         {"name": "Cleaving Greataxe", "price": "120 gp", "page": "Enter Ravenloft", "rarity": "Common"},
+         {"name": "Cloak of Arachnida", "price": "9 Arc Tokens", "page": "DMG", "rarity": "Very Rare"},
+         {"name": "Cloak of Billowing", "price": "100 gp", "page": "XGE", "rarity": "Common"},
+         {"name": "Cloak of Displacement", "price": "3,600 gp", "page": "DMG", "rarity": "Rare"},
+         {"name": "Cloak of Elvenkind", "price": "250 gp", "page": "DMG", "rarity": "Uncommon"},
+         {"name": "Cloak of Many Fashions", "price": "90 gp", "page": "XGE", "rarity": "Common"},
+         {"name": "Cloak of Protection", "price": "400 gp", "page": "DMG", "rarity": "Uncommon"},
+         {"name": "Cloak of the Bat", "price": "4,600 gp", "page": "DMG", "rarity": "Rare"},
+         {"name": "Cloak of the Manta Ray", "price": "350 gp", "page": "DMG", "rarity": "Uncommon"},
+         {"name": "Clockwork Amulet", "price": "100 gp", "page": "XGE", "rarity": "Common"},
+         {"name": "Clockwork Armor", "price": "9 Arc Tokens", "page": "BMT", "rarity": "Very Rare"},
+         {"name": "Clothes of Mending", "price": "50 gp", "page": "XGE", "rarity": "Common"},
+         {"name": "Coin of Delving", "price": "50 gp", "page": "EGW", "rarity": "Common"},
+         {"name": "Companion's Band", "price": "50 gp", "page": "Griffon's Saddlebag", "rarity": "Common"},
+         {"name": "Composite Longbow", "price": "150 gp", "page": "Enter Ravenloft", "rarity": "Common"},
+         {"name": "Corpse Slayer (any weapon)", "price": "Weapon Price + 1,300 gp", "page": "EGW", "rarity": "Rare"},
+         {"name": "Crippling Club", "price": "10 gp", "page": "Enter Ravenloft", "rarity": "Common"},
+         {"name": "Crown of the Wrath Bringer", "price": "4,000 gp", "page": "BGG", "rarity": "Rare"},
+         {"name": "Crown of Whirling Comets", "price": "9 Arc Tokens", "page": "BMT", "rarity": "Very Rare"},
+         {"name": "Crystal Ball", "price": "9 Arc Tokens", "page": "DMG", "rarity": "Very Rare"},
+         {"name": "Crystal Blade", "price": "3,000 gp", "page": "FTD", "rarity": "Rare"},
+         {"name": "Cube of Force", "price": "5,000 gp", "page": "DMG", "rarity": "Rare"},
+         {"name": "Cursed Luckstone", "price": "250 gp", "page": "GoS", "rarity": "Uncommon"},
+         {"name": "Daern's Instant Fortress (Instant Fortress)", "price": "5,000 gp", "page": "DMG", "rarity": "Rare"},
+         {"name": "Dagger of Blindsight", "price": "4,250 gp", "page": "WDMM", "rarity": "Rare"},
+         {"name": "Dagger of the Ogre Mage", "price": "3,500 gp", "page": "Griffon's Saddlebag", "rarity": "Rare"},
+         {"name": "Dagger of Venom", "price": "1,500 gp", "page": "DMG", "rarity": "Rare"},
+         {"name": "Dark Shard Amulet", "price": "75 gp", "page": "XGE", "rarity": "Common"},
+         {"name": "Deafening Maul", "price": "60 gp", "page": "Enter Ravenloft", "rarity": "Common"},
+         {"name": "Debilitating Greatclub", "price": "15 gp", "page": "Enter Ravenloft", "rarity": "Common"},
+         {"name": "Debilitating Greatsword", "price": "150 gp", "page": "Enter Ravenloft", "rarity": "Common"},
+         {"name": "Decanter of Endless Water", "price": "300 gp", "page": "DMG", "rarity": "Uncommon"},
+         {"name": "Deck of Illusions", "price": "450 gp", "page": "DMG", "rarity": "Uncommon"},
+         {"name": "Deck of Miscellany", "price": "400 gp", "page": "TBoMT", "rarity": "Uncommon"},
+         {"name": "Deck of Wild Cards", "price": "9 Arc Tokens", "page": "BMT", "rarity": "Very Rare"},
+         {"name": "Defensive Glaive", "price": "80 gp", "page": "Enter Ravenloft", "rarity": "Common"},
+         {"name": "Delver's Claws", "price": "4,000 gp", "page": "BGG", "rarity": "Rare"},
+         {"name": "Demon Armor", "price": "9 Arc Tokens", "page": "DMG", "rarity": "Very Rare"},
+         {"name": "Devotee's Censer", "price": "4,500 gp", "page": "TCE", "rarity": "Rare"},
+         {"name": "Dimensional Shackles", "price": "2,800 gp", "page": "DMG", "rarity": "Rare"},
+         {"name": "Disarming Whip", "price": "30 gp", "page": "Enter Ravenloft", "rarity": "Common"},
+         {"name": "Dislodging Halberd", "price": "80 gp", "page": "Enter Ravenloft", "rarity": "Common"},
+         {"name": "Disorienting Mace", "price": "50 gp", "page": "Enter Ravenloft", "rarity": "Common"},
+         {"name": "Disorienting Warhammer", "price": "70 gp", "page": "Enter Ravenloft", "rarity": "Common"},
+         {"name": "Distracting Dart", "price": "5 gp", "page": "Enter Ravenloft", "rarity": "Common"},
+         {"name": "Distracting Shortsword", "price": "60 gp", "page": "Enter Ravenloft", "rarity": "Common"},
+         {"name": "Donjon's Sundering Sphere", "price": "3500 gp", "page": "TBoMT", "rarity": "Rare"},
+         {"name": "Doublet of Dramatic Demise", "price": "100 gp", "page": "TDCSR", "rarity": "Common"},
+         {"name": "Dragon Scale Mail", "price": "9 Arc Tokens", "page": "DMG", "rarity": "Very Rare"},
+         {"name": "Dragon Slayer (any sword)", "price": "4,800 gp", "page": "DMG", "rarity": "Rare"},
+         {"name": "Dragon Wing Bow", "price": "Weapon Price + 1,500 gp", "page": "FTD", "rarity": "Rare"},
+         {"name": "Dragonguard", "price": "3,550 gp", "page": "PaBTSO", "rarity": "Rare"},
+         {"name": "Dragonhide Belt, +1", "price": "400 gp", "page": "FTD", "rarity": "Uncommon"},
+         {"name": "Dragonhide Belt, +2", "price": "2,250 gp", "page": "FTD", "rarity": "Rare"},
+         {"name": "Dragonhide Belt, +3", "price": "9 Arc Tokens", "page": "FTD", "rarity": "Very Rare"},
+         {"name": "Dragontooth Dagger", "price": "5,000 gp", "page": "RoT", "rarity": "Rare"},
+         {"name": "Dread Helm", "price": "55 gp", "page": "XGE", "rarity": "Common"},
+         {"name": "Dried Leech", "price": "60 gp", "page": "TBoMT", "rarity": "Uncommon"},
+         {"name": "Duplicitous Manuscript", "price": "3,000 gp", "page": "TCE", "rarity": "Rare"},
+         {"name": "Dust of Deliciousness", "price": "150 gp", "page": "EGW", "rarity": "Uncommon"},
+         {"name": "Dust of Disappearance", "price": "200 gp", "page": "DMG", "rarity": "Uncommon"},
+         {"name": "Dust of Dryness", "price": "350 gp (10 uses)", "page": "DMG", "rarity": "Uncommon"},
+         {"name": "Dwarven Plate", "price": "9 Arc Tokens", "page": "DMG", "rarity": "Very Rare"},
+         {"name": "Dwarven Thrower", "price": "9 Arc Tokens", "page": "DMG", "rarity": "Very Rare"},
+         {"name": "Dyrrn's Tentacle Whip", "price": "9 Arc Tokens", "page": "DMG", "rarity": "Very Rare"},
+         {"name": "Eagle Whistle", "price": "3,000 gp", "page": "TftYP", "rarity": "Rare"},
+         {"name": "Ear Horn of Hearing", "price": "75 gp", "page": "XGE", "rarity": "Common"},
+         {"name": "Earring of Message", "price": "150 gp", "page": "CotN", "rarity": "Common"},
+         {"name": "Earworm", "price": "225 gp", "page": "ERLW", "rarity": "Uncommon"},
+         {"name": "Echo Stone", "price": "250 gp", "page": "TDCSR", "rarity": "Uncommon"},
+         {"name": "Eldritch Staff", "price": "9 Arc Tokens", "page": "WBtW", "rarity": "Very Rare"},
+         {"name": "Elemental Blade", "price": "4,000 gp", "page": "Enter Ravenloft", "rarity": "Rare"},
+         {"name": "Elemental Essence Shard", "price": "3,500 gp", "page": "TCE", "rarity": "Rare"},
+         {"name": "Elemental Gem", "price": "2,000 gp", "page": "DMG", "rarity": "Uncommon"},
+         {"name": "Elven Chain (chain shirt)", "price": "4,500 gp", "page": "DMG", "rarity": "Rare"},
+         {"name": "Elven Thrower", "price": "9 Arc Tokens", "page": "BGG", "rarity": "Very Rare"},
+         {"name": "Emerald Pen", "price": "150 gp", "page": "FTD", "rarity": "Common"},
+         {"name": "Enduring Spellbook", "price": "100 gp", "page": "XGE", "rarity": "Common"},
+         {"name": "Engaging Rapier", "price": "100 gp", "page": "Enter Ravenloft", "rarity": "Common"},
+         {"name": "Engaging Spear", "price": "25 gp", "page": "Enter Ravenloft", "rarity": "Common"},
+         {"name": "Ersatz Eye", "price": "75 gp", "page": "XGE", "rarity": "Common"},
+         {"name": "Everbright Lantern", "price": "100 gp", "page": "ERLW", "rarity": "Common"},
+         {"name": "Eversmoking Bottle", "price": "270 gp", "page": "DMG", "rarity": "Uncommon"},
+         {"name": "Eyes of Charming", "price": "300 gp", "page": "DMG", "rarity": "Uncommon"},
+         {"name": "Eyes of Minute Seeing", "price": "150 gp", "page": "DMG", "rarity": "Uncommon"},
+         {"name": "Eyes of the Eagle", "price": "400 gp", "page": "DMG", "rarity": "Uncommon"},
+         {"name": "Far Realm Shard", "price": "2,500 gp", "page": "TCE", "rarity": "Rare"},
+         {"name": "Fate Cutter Shears", "price": "9 Arc Tokens", "page": "BMT", "rarity": "Very Rare"},
+         {"name": "Fate Dealer's Deck, +1", "price": "1500 gp", "page": "TBoMT", "rarity": "Rare"},
+         {"name": "Fate Dealer's Deck, +2", "price": "9 Arc Tokens", "page": "BMT", "rarity": "Very Rare"},
+         {"name": "Feather of Diatryma Summoning", "price": "600 gp", "page": "WDH", "rarity": "Rare"},
+         {"name": "Feather Token (Feather Fall)", "price": "25 gp", "page": "ERLW", "rarity": "Common"},
+         {"name": "Feywild Shard", "price": "250 gp", "page": "TCE", "rarity": "Uncommon"},
+         {"name": "Feywrought Armor", "price": "Armor Price + 2,850 gp", "page": "TBoMT", "rarity": "Rare"},
+         {"name": "Figurine of Wondrous Power (Bronze Griffon)", "price": "3,600 gp", "page": "DMG", "rarity": "Rare"},
+         {"name": "Figurine of Wondrous Power (Ebony Fly)", "price": "3,600 gp", "page": "DMG", "rarity": "Rare"},
+         {"name": "Figurine of Wondrous Power (Golden Lions)", "price": "5,000 gp", "page": "DMG", "rarity": "Rare"},
+         {"name": "Figurine of Wondrous Power (Ivory Goats)", "price": "5,000 gp", "page": "DMG", "rarity": "Rare"},
+         {"name": "Figurine of Wondrous Power (Marble Elephant)", "price": "5,000 gp", "page": "DMG", "rarity": "Rare"},
+         {"name": "Figurine of Wondrous Power (Obsidian Steed)", "price": "9 Arc Tokens", "page": "DMG",
+          "rarity": "Very Rare"},
+         {"name": "Figurine of Wondrous Power (Onyx Dog)", "price": "3,200 gp", "page": "DMG", "rarity": "Rare"},
+         {"name": "Figurine of Wondrous Power (Serpentine Owl)", "price": "3,000 gp", "page": "DMG", "rarity": "Rare"},
+         {"name": "Figurine of Wondrous Power (Silver Raven)", "price": "380 gp", "page": "DMG", "rarity": "Uncommon"},
+         {"name": "Finder's Goggles", "price": "500 gp", "page": "ERLW", "rarity": "Uncommon"},
+         {"name": "Flame Tongue (any sword)", "price": "5,000 gp", "page": "DMG", "rarity": "Rare"},
+         {"name": "Flayer Slayer", "price": "1,750 gp", "page": "PaBTSO", "rarity": "Rare"},
+         {"name": "Flying Chariot", "price": "4,750 gp", "page": "MOT", "rarity": "Rare"},
+         {"name": "Folding Boat", "price": "4,750 gp", "page": "DMG", "rarity": "Rare"},
+         {"name": "Fool's Blade", "price": "9 Arc Tokens", "page": "BMT", "rarity": "Very Rare"},
+         {"name": "Forcebreaker Weapon", "price": "9 Arc Tokens", "page": "BMT", "rarity": "Very Rare"},
+         {"name": "Foxfire Charm", "price": "50 gp", "page": "Griffon's Saddlebag", "rarity": "Common"},
+         {"name": "Frost Brand", "price": "9 Arc Tokens", "page": "DMG", "rarity": "Very Rare"},
+         {"name": "Fulminating Treatise", "price": "4,000 gp", "page": "TCE", "rarity": "Rare"},
+         {"name": "Gauntlets of Flaming Fury", "price": "2,000 gp", "page": "BGDIA", "rarity": "Rare"},
+         {"name": "Gauntlets of Ogre Power", "price": "450 gp", "page": "DMG", "rarity": "Uncommon"},
+         {"name": "Gavel of the Venn Rune", "price": "2,800 gp", "page": "SKT", "rarity": "Rare"},
+         {"name": "Gelatinous Whip", "price": "400 gp", "page": "Griffon's Saddlebag", "rarity": "Uncommon"},
+         {"name": "Gem of Brightness", "price": "250 gp", "page": "DMG", "rarity": "Uncommon"},
+         {"name": "Gem of Seeing", "price": "5,000 gp", "page": "DMG", "rarity": "Rare"},
+         {"name": "Ghost Lantern", "price": "1,750 gp", "page": "ToA", "rarity": "Rare"},
+         {"name": "Giant Slayer (any axe or sword)", "price": "4,600 gp", "page": "DMG", "rarity": "Rare"},
+         {"name": "Glamerweave (common)", "price": "50 gp", "page": "ERLW", "rarity": "Common"},
+         {"name": "Glamerweave (uncommon)", "price": "150 gp", "page": "ERLW", "rarity": "Uncommon"},
+         {"name": "Glamoured Studded Leather", "price": "4,800 gp", "page": "DMG", "rarity": "Rare"},
+         {"name": "Glimmering Moonbow", "price": "Weapon Price + 2,500 gp", "page": "TBoMT", "rarity": "Rare"},
+         {"name": "Gloomwrought armor", "price": "Armor Price + 2,850 gp", "page": "TBoMT", "rarity": "Rare"},
+         {"name": "Gloves of Missile Snaring", "price": "325 gp", "page": "DMG", "rarity": "Uncommon"},
+         {"name": "Gloves of Swimming and Climbing", "price": "250 gp", "page": "DMG", "rarity": "Uncommon"},
+         {"name": "Gloves of Thievery", "price": "300 gp", "page": "DMG", "rarity": "Uncommon"},
+         {"name": "Glowrune Pigment", "price": "3,500 gp (6 uses)", "page": "BGG", "rarity": "Rare"},
+         {"name": "Goggles of Night", "price": "300 gp", "page": "DMG", "rarity": "Uncommon"},
+         {"name": "Goggles of Object Reading", "price": "350 gp", "page": "EGW", "rarity": "Uncommon"},
+         {"name": "Grasping Whip", "price": "1,500 gp", "page": "TBoMT", "rarity": "Rare"},
+         {"name": "Guardian Emblem", "price": "300 gp", "page": "TCE", "rarity": "Uncommon"},
+         {"name": "Hammer of Runic Focus", "price": "9 Arc Tokens", "page": "BMT", "rarity": "Very Rare"},
+         {"name": "Hat of Disguise", "price": "475 gp", "page": "DMG", "rarity": "Uncommon"},
+         {"name": "Hat of Vermin", "price": "65 gp", "page": "XGE", "rarity": "Common"},
+         {"name": "Hat of Wizardry", "price": "75 gp", "page": "XGE", "rarity": "Common"},
+         {"name": "Hazewalker Plate", "price": "9 Arc Tokens", "page": "DoDk", "rarity": "Very Rare"},
+         {"name": "Headband of Intellect", "price": "450 gp", "page": "DMG", "rarity": "Uncommon"},
+         {"name": "Heart Weaver's Primer", "price": "3,000 gp", "page": "TCE", "rarity": "Rare"},
+         {"name": "Hell Hound Cloak", "price": "1,700 gp", "page": "TftYP", "rarity": "Rare"},
+         {"name": "Helm of Brilliance", "price": "9 Arc Tokens", "page": "DMG", "rarity": "Very Rare"},
+         {"name": "Helm of Comprehending Languages", "price": "200 gp", "page": "DMG", "rarity": "Uncommon"},
+         {"name": "Helm of Telepathy", "price": "300 gp", "page": "DMG", "rarity": "Uncommon"},
+         {"name": "Helm of Teleportation", "price": "4,250 gp", "page": "DMG", "rarity": "Rare"},
+         {"name": "Helm of Underwater Action", "price": "500 gp", "page": "GoS", "rarity": "Uncommon"},
+         {"name": "Hew", "price": "500 gp", "page": "PaBTSO", "rarity": "Uncommon"},
+         {"name": "Heward's Handy Haversack", "price": "2,000 gp", "page": "DMG", "rarity": "Rare"},
+         {"name": "Heward's Handy Spice Pouch", "price": "100 gp", "page": "XGE", "rarity": "Common"},
+         {"name": "Hewward's Hireling Armor", "price": "9 Arc Tokens", "page": "LLK", "rarity": "Very Rare"},
+         {"name": "Hook of Fisher's Delight", "price": "550 gp", "page": "IDRotF", "rarity": "Rare"},
+         {"name": "Hooking Battleaxe", "price": "60 gp", "page": "Enter Ravenloft", "rarity": "Common"},
+         {"name": "Hooking Handaxe", "price": "50 gp", "page": "Enter Ravenloft", "rarity": "Common"},
+         {"name": "Horn of Blasting", "price": "2,500 gp", "page": "DMG", "rarity": "Rare"},
+         {"name": "Horn of Silent Alarm", "price": "85 gp", "page": "XGE", "rarity": "Common"},
+         {"name": "Horn of Valhalla (Silver/Brass)", "price": "5,000 gp", "page": "DMG", "rarity": "Rare"},
+         {"name": "Horseshoes of a Zephyr", "price": "9 Arc Tokens", "page": "DMG", "rarity": "Very Rare"},
+         {"name": "Horseshoes of Speed", "price": "3,000 gp", "page": "DMG", "rarity": "Rare"},
+         {"name": "House of Cards", "price": "200 gp", "page": "TBoMT", "rarity": "Uncommon"},
+         {"name": "Hunter's Coat", "price": "9 Arc Tokens", "page": "EGW", "rarity": "Very Rare"},
+         {"name": "Imbued Wood Focus", "price": "75 gp", "page": "ERLW", "rarity": "Common"},
+         {"name": "Immovable Rod", "price": "500 gp", "page": "DMG", "rarity": "Uncommon"},
+         {"name": "Infernal Plate Armor", "price": "9 Arc Tokens", "page": "CoA", "rarity": "Very Rare"},
+         {"name": "Infernal Puzzle Box", "price": "3,500 gp*", "page": "BGDIA", "rarity": "Uncommon"},
+         {"name": "Instrument of Illusions", "price": "100 gp", "page": "XGE", "rarity": "Common"},
+         {"name": "Instrument of Scribing", "price": "80 gp", "page": "XGE", "rarity": "Common"},
+         {"name": "Instrument of the Bards (Canaith Mandolin)", "price": "3,750 gp", "page": "DMG", "rarity": "Rare"},
+         {"name": "Instrument of the Bards (Cli Lyre)", "price": "4,250 gp", "page": "DMG", "rarity": "Rare"},
+         {"name": "Instrument of the Bards (Doss Lute)", "price": "250 gp", "page": "DMG", "rarity": "Uncommon"},
+         {"name": "Instrument of the Bards (Fochlucan Bandore)", "price": "350 gp", "page": "DMG",
+          "rarity": "Uncommon"},
+         {"name": "Instrument of the Bards (Mac-Fuimidh Cittern)", "price": "450 gp", "page": "DMG",
+          "rarity": "Uncommon"},
+         {"name": "Instrument of the Bards, Ansturth Harp", "price": "9 Arc Tokens", "page": "DMG",
+          "rarity": "Very Rare"},
+         {"name": "Ioun Stone: Absorption", "price": "9 Arc Tokens", "page": "DMG", "rarity": "Very Rare"},
+         {"name": "Ioun Stone: Awareness", "price": "4,000 gp", "page": "DMG", "rarity": "Rare"},
+         {"name": "Ioun Stone: Protection", "price": "3,600 gp", "page": "DMG", "rarity": "Rare"},
+         {"name": "Ioun Stone: Reserve", "price": "4,500 gp", "page": "DMG", "rarity": "Rare"},
+         {"name": "Ioun Stone: Sustenance", "price": "3,000 gp", "page": "DMG", "rarity": "Rare"},
+         {"name": "Iron Bands of Bilarro", "price": "2,600 gp", "page": "DMG", "rarity": "Rare"},
+         {"name": "Javelin of Backbiting", "price": "9 Arc Tokens", "page": "TFTYP", "rarity": "Very Rare"},
+         {"name": "Javelin of Lightning", "price": "750 gp", "page": "DMG", "rarity": "Uncommon"},
+         {"name": "Jousting Lance", "price": "60 gp", "page": "Enter Ravenloft", "rarity": "Common"},
+         {"name": "Kagonesti Forest Shroud", "price": "4,000 gp", "page": "DSotDQ", "rarity": "Rare"},
+         {"name": "Keoghtom's Ointment (Restorative Ointment)", "price": "1,250 gp (5 doses)", "page": "DMG",
+          "rarity": "Uncommon"}, {"name": "Keycharm", "price": "50 gp", "page": "ERLW", "rarity": "Common"},
+         {"name": "Knave's Eye Patch", "price": "2,000 gp", "page": "WDH", "rarity": "Rare"},
+         {"name": "Knock-Back Crossbow, Heavy", "price": "150 gp", "page": "Enter Ravenloft", "rarity": "Common"},
+         {"name": "Knock-Back Javelin", "price": "20 gp", "page": "Enter Ravenloft", "rarity": "Common"},
+         {"name": "Lantern of Revealing", "price": "500 gp", "page": "DMG", "rarity": "Uncommon"},
+         {"name": "Lantern of Tracking", "price": "75 gp", "page": "IDRotF", "rarity": "Common"},
+         {"name": "Lash of Immolation", "price": "4,000 gp", "page": "BGG", "rarity": "Rare"},
+         {"name": "Libram of Souls and Flesh", "price": "4,200 gp", "page": "TCE", "rarity": "Rare"},
+         {"name": "Lightbringer", "price": "400 gp", "page": "PaBTSO", "rarity": "Uncommon"},
+         {"name": "Living Gloves", "price": "500 gp", "page": "ERLW", "rarity": "Uncommon"},
+         {"name": "Loadstone", "price": "150 gp", "page": "TftYP", "rarity": "Rare"},
+         {"name": "Lock of Trickery", "price": "50 gp", "page": "XGE", "rarity": "Common"},
+         {"name": "Luminous War Pick", "price": "1,200 gp", "page": "PaBTSO", "rarity": "Rare"},
+         {"name": "Lyre of Building", "price": "4,750 gp", "page": "TCE", "rarity": "Rare"},
+         {"name": "Mace of Disruption", "price": "1,750 gp", "page": "DMG", "rarity": "Rare"},
+         {"name": "Mace of Smiting", "price": "2,000 gp", "page": "DMG", "rarity": "Rare"},
+         {"name": "Mace of Terror", "price": "3,500 gp", "page": "DMG", "rarity": "Rare"},
+         {"name": "Mantle of Spell Resistance", "price": "4,200 gp", "page": "DMG", "rarity": "Rare"},
+         {"name": "Mariner's Armor (light, medium, or heavy)", "price": "Armor Price + 400", "page": "DMG",
+          "rarity": "Uncommon"},
+         {"name": "Mark of the Order, +1", "price": "425 gp", "page": "Enter Ravenloft", "rarity": "Uncommon"},
+         {"name": "Mark of the Order, +2", "price": "4,250 gp", "page": "Enter Ravenloft", "rarity": "Rare"},
+         {"name": "Mark of the Order, +3", "price": "9 Arc Tokens", "page": "Enter Ravenloft", "rarity": "Very Rare"},
+         {"name": "Mask of the Beast", "price": "200 gp", "page": "ToA", "rarity": "Uncommon"},
+         {"name": "Medallion of Thoughts", "price": "300 gp", "page": "DMG", "rarity": "Uncommon"},
+         {"name": "Mirror of the Past", "price": "3,800 gp", "page": "TftYP", "rarity": "Rare"},
+         {"name": "Mirrorlight Stinger", "price": "Weapon Price + 1,500 gp", "page": "Griffon's Saddlebag",
+          "rarity": "Rare"}, {"name": "Mistral mantle", "price": "9 Arc Tokens", "page": "BGG", "rarity": "Very Rare"},
+         {"name": "Mithral Armor (medium or heavy, but not hide)", "price": "Armor Price + 900 gp", "page": "DMG",
+          "rarity": "Uncommon"}, {"name": "Mizzium Mortar", "price": "2,100 gp", "page": "GGR", "rarity": "Rare"},
+         {"name": "Molten Bronze Skin (breastplate, half plate, or plate)", "price": "Armor Price + 1,850 gp",
+          "page": "MOT", "rarity": "Rare"},
+         {"name": "Moodmark Paint", "price": "50 gp", "page": "GGR", "rarity": "Common"},
+         {"name": "Moon Sickle, +1", "price": "1,500 gp*", "page": "TCE", "rarity": "Uncommon"},
+         {"name": "Moon Sickle, +2", "price": "4,000 gp", "page": "TCE", "rarity": "Rare"},
+         {"name": "Moon Sickle, +3", "price": "9 Arc Tokens", "page": "TCE", "rarity": "Very Rare"},
+         {"name": "Moon-Touched Sword (any sword)", "price": "Weapon Price + 75 gp", "page": "XGE", "rarity": "Common"},
+         {"name": "Mystery Key", "price": "50 gp", "page": "XGE", "rarity": "Common"},
+         {"name": "Nature's Mantle", "price": "325 gp", "page": "TCE", "rarity": "Uncommon"},
+         {"name": "Necklace of Adaptation", "price": "450 gp", "page": "DMG", "rarity": "Uncommon"},
+         {"name": "Necklace of Fireballs", "price": "4,350 gp (9 Beads)", "page": "DMG", "rarity": "Rare"},
+         {"name": "Necklace of Prayer Beads", "price": "5,000 gp", "page": "DMG", "rarity": "Rare"},
+         {"name": "Needle of Mending (dagger)", "price": "1,400 gp", "page": "EGW", "rarity": "Rare"},
+         {"name": "Night Caller", "price": "350 gp", "page": "TftYP", "rarity": "Uncommon"},
+         {"name": "Nimbus Coronet", "price": "9 Arc Tokens", "page": "BGG", "rarity": "Very Rare"},
+         {"name": "Opal of the Ild Rune", "price": "3,500 gp", "page": "SKT", "rarity": "Rare"},
+         {"name": "Orb of Direction", "price": "50 gp", "page": "XGE", "rarity": "Common"},
+         {"name": "Orb of Shielding", "price": "80 gp", "page": "ERLW", "rarity": "Common"},
+         {"name": "Orb of the Stein Rune", "price": "2,700 gp", "page": "SKT", "rarity": "Rare"},
+         {"name": "Orb of Time", "price": "50 gp", "page": "XGE", "rarity": "Common"},
+         {"name": "Outer Essence Shard", "price": "2,000 gp", "page": "TCE", "rarity": "Rare"},
+         {"name": "Paper Bird", "price": "450 gp (9 birds)", "page": "WDH", "rarity": "Uncommon"},
+         {"name": "Pariah's Shield", "price": "1,500 gp", "page": "GGR", "rarity": "Rare"},
+         {"name": "Pearl of Power", "price": "400 gp", "page": "DMG", "rarity": "Uncommon"},
+         {"name": "Periapt of Health", "price": "250 gp", "page": "DMG", "rarity": "Uncommon"},
+         {"name": "Periapt of Proof Against Poison", "price": "4,700 gp", "page": "DMG", "rarity": "Rare"},
+         {"name": "Periapt of Wound Closure", "price": "375 gp", "page": "DMG", "rarity": "Uncommon"},
+         {"name": "Pipe of Remembrance", "price": "50 gp", "page": "GoS", "rarity": "Common"},
+         {"name": "Pipe of Smoke Monsters", "price": "50 gp", "page": "XGE", "rarity": "Common"},
+         {"name": "Pipes of Haunting", "price": "300 gp", "page": "DMG", "rarity": "Uncommon"},
+         {"name": "Pipes of the Sewers", "price": "150 gp", "page": "DMG", "rarity": "Uncommon"},
+         {"name": "Piwafwi (Cloak of Elvenkind)", "price": "200 gp", "page": "OotA", "rarity": "Uncommon"},
+         {"name": "Piwafwi of Fire Resistance", "price": "1,400 gp", "page": "OotA", "rarity": "Rare"},
+         {"name": "Planecaller's Codex", "price": "3,500 gp", "page": "TCE", "rarity": "Rare"},
+         {"name": "Plate of the Knight's Fellowship", "price": "2,500 gp", "page": "TBoMT", "rarity": "Uncommon"},
+         {"name": "Pole of Angling", "price": "50 gp", "page": "XGE", "rarity": "Common"},
+         {"name": "Pole of Collapsing", "price": "55 gp", "page": "XGE", "rarity": "Common"},
+         {"name": "Portable Hole", "price": "5,000 gp", "page": "DMG", "rarity": "Rare"},
+         {"name": "Pot of Awakening", "price": "85 gp", "page": "XGE", "rarity": "Common"},
+         {"name": "Potion of Diminution", "price": "500 gp", "page": "DMG", "rarity": "Rare"},
+         {"name": "Potion of Psionic Fortitude", "price": "500 gp", "page": "PaBTSO", "rarity": "Uncommon"},
+         {"name": "Prehistoric Figurine of Wondrous Power Triceratops", "price": "9 Arc Tokens", "page": "BGG",
+          "rarity": "Very Rare"},
+         {"name": "Prehistoric Figurine of Wondrous Power, Kyanite Pteranodon", "price": "3,000 gp", "page": "BGG",
+          "rarity": "Rare"},
+         {"name": "Prehistoric Figurine of Wondrous Power, Pyrite Plesiosaurus", "price": "400 gp", "page": "BGG",
+          "rarity": "Uncommon"}, {"name": "Pressure Capsule", "price": "25 gp", "page": "GoS", "rarity": "Common"},
+         {"name": "Prosthetic Limb", "price": "100 gp", "page": "TCE", "rarity": "Common"},
+         {"name": "Protective Verses", "price": "3,500 gp", "page": "TCE", "rarity": "Rare"},
+         {"name": "Psi Crystal", "price": "500 gp", "page": "IDRotF", "rarity": "Uncommon"},
+         {"name": "Pyroconverger", "price": "250 gp", "page": "GGR", "rarity": "Uncommon"},
+         {"name": "Quaal's Feather Token (Anchor, Bird, Fan, Swan Boat, Tree or Whip)", "price": "1,000 gp",
+          "page": "DMG", "rarity": "Rare"},
+         {"name": "Quick-Draw Shortbow", "price": "100 gp", "page": "Enter Ravenloft", "rarity": "Common"},
+         {"name": "Quiver of Ehlonna (Efficient Quiver)", "price": "250 gp", "page": "DMG", "rarity": "Uncommon"},
+         {"name": "Redirecting Trident", "price": "50 gp", "page": "Enter Ravenloft", "rarity": "Common"},
+         {"name": "Retaliating Dagger", "price": "30 gp", "page": "Enter Ravenloft", "rarity": "Common"},
+         {"name": "Retaliating Scimitar", "price": "100 gp", "page": "Enter Ravenloft", "rarity": "Common"},
+         {"name": "Reveler's Concertina", "price": "4,250 gp", "page": "TCE", "rarity": "Rare"},
+         {"name": "Rhythm-Maker's Drum, +1", "price": "425 gp", "page": "TCE", "rarity": "Uncommon"},
+         {"name": "Rhythm-Maker's Drum, +2", "price": "4,250 gp", "page": "TCE", "rarity": "Rare"},
+         {"name": "Rhythm-Maker's Drum, +3", "price": "9 Arc Tokens", "page": "TCE", "rarity": "Very Rare"},
+         {"name": "Ring of Animal Influence", "price": "1,000 gp", "page": "DMG", "rarity": "Rare"},
+         {"name": "Ring of Evasion", "price": "4,900 gp", "page": "DMG", "rarity": "Rare"},
+         {"name": "Ring of Feather Falling", "price": "2,200 gp", "page": "DMG", "rarity": "Rare"},
+         {"name": "Ring of Free Action", "price": "4,500 gp", "page": "DMG", "rarity": "Rare"},
+         {"name": "Ring of Jumping", "price": "250 gp", "page": "DMG", "rarity": "Uncommon"},
+         {"name": "Ring of Mind Shielding", "price": "450 gp", "page": "DMG", "rarity": "Uncommon"},
+         {"name": "Ring of Obscuring", "price": "150 gp", "page": "EGW", "rarity": "Uncommon"},
+         {"name": "Ring of Protection", "price": "3,000 gp", "page": "DMG", "rarity": "Rare"},
+         {"name": "Ring of Regeneration", "price": "9 Arc Tokens", "page": "DMG", "rarity": "Very Rare"},
+         {"name": "Ring of Resistance", "price": "3,500 gp", "page": "DMG", "rarity": "Rare"},
+         {"name": "Ring of Shooting Stars", "price": "9 Arc Tokens", "page": "DMG", "rarity": "Very Rare"},
+         {"name": "Ring of Spell Storing", "price": "3,600 gp", "page": "DMG", "rarity": "Rare"},
+         {"name": "Ring of Swimming", "price": "300 gp", "page": "DMG", "rarity": "Uncommon"},
+         {"name": "Ring of Telekinesis", "price": "9 Arc Tokens", "page": "DMG", "rarity": "Very Rare"},
+         {"name": "Ring of Temporal Salvation", "price": "2,250 gp", "page": "EGW", "rarity": "Rare"},
+         {"name": "Ring of the Orator", "price": "250 gp", "page": "PaBTSO", "rarity": "Uncommon"}]
+Items = Items + [{"name": "Ring of the Ram", "price": "4,000 gp", "page": "DMG", "rarity": "Rare"},
+                 {"name": "Ring of Truth Telling", "price": "150 gp", "page": "WDH", "rarity": "Uncommon"},
+                 {"name": "Ring of Warmth", "price": "480 gp", "page": "DMG", "rarity": "Uncommon"},
+                 {"name": "Ring of Water Walking", "price": "500 gp", "page": "DMG", "rarity": "Uncommon"},
+                 {"name": "Ring of X-Ray Vision", "price": "3,500 gp", "page": "DMG", "rarity": "Rare"},
+                 {"name": "Robe of Eyes", "price": "5,000 gp", "page": "DMG", "rarity": "Rare"},
+                 {"name": "Robe of Serpents", "price": "375 gp", "page": "SKT", "rarity": "Uncommon"},
+                 {"name": "Robe of Stars", "price": "9 Arc Tokens", "page": "DMG", "rarity": "Very Rare"},
+                 {"name": "Robe of Summer", "price": "2,900 gp", "page": "TftYP", "rarity": "Rare"},
+                 {"name": "Robe of Useful Items", "price": "400 gp", "page": "DMG", "rarity": "Uncommon"},
+                 {"name": "Rod of Alertness", "price": "9 Arc Tokens", "page": "DMG", "rarity": "Very Rare"},
+                 {"name": "Rod of Hellish Flames", "price": "9 Arc Tokens", "page": "BMT", "rarity": "Very Rare"},
+                 {"name": "Rod of Retribution", "price": "250 gp", "page": "EGW", "rarity": "Uncommon"},
+                 {"name": "Rod of Rulership", "price": "3,600 gp", "page": "DMG", "rarity": "Rare"},
+                 {"name": "Rod of the Pact Keeper, +1", "price": "400 gp", "page": "DMG", "rarity": "Uncommon"},
+                 {"name": "Rod of the Pact Keeper, +2", "price": "4,000 gp", "page": "DMG", "rarity": "Rare"},
+                 {"name": "Rod of the Pact Keeper, +3", "price": "9 Arc Tokens", "page": "DMG", "rarity": "Very Rare"},
+                 {"name": "Rod of the Vonindod", "price": "3,400 gp", "page": "SKT", "rarity": "Rare"},
+                 {"name": "Rope Caster", "price": "400 gp", "page": "Griffon's Saddlebag", "rarity": "Uncommon"},
+                 {"name": "Rope of Climbing", "price": "350 gp", "page": "DMG", "rarity": "Uncommon"},
+                 {"name": "Rope of Entanglement", "price": "1,000 gp", "page": "DMG", "rarity": "Rare"},
+                 {"name": "Rope of Mending", "price": "50 gp", "page": "XGE", "rarity": "Common"},
+                 {"name": "Ruby of the War Mage", "price": "100 gp", "page": "XGE", "rarity": "Common"},
+                 {"name": "Ruinous Flail", "price": "3,500 gp", "page": "TBoMT", "rarity": "Rare"},
+                 {"name": "Saddle of the Cavalier", "price": "250 gp", "page": "DMG", "rarity": "Uncommon"},
+                 {"name": "Sage's Signet (Bear)", "price": "9 Arc Tokens", "page": "BMT", "rarity": "Very Rare"},
+                 {"name": "Sage's Signet (Hart)", "price": "9 Arc Tokens", "page": "BMT", "rarity": "Very Rare"},
+                 {"name": "Sage's Signet (Lion)", "price": "9 Arc Tokens", "page": "BMT", "rarity": "Very Rare"},
+                 {"name": "Sage's Signet (Serpent)", "price": "3600 gp", "page": "TBoMT", "rarity": "Rare"},
+                 {"name": "Sage's Signet (Songbird)", "price": "3600 gp", "page": "TBoMT", "rarity": "Rare"},
+                 {"name": "Sage's Signet (Wolf)", "price": "9 Arc Tokens", "page": "BMT", "rarity": "Very Rare"},
+                 {"name": "Saphire Buckler", "price": "9 Arc Tokens", "page": "FTD", "rarity": "Very Rare"},
+                 {"name": "Sapping Longsword", "price": "70 gp", "page": "Enter Ravenloft", "rarity": "Common"},
+                 {"name": "Scimitar of Speed", "price": "9 Arc Tokens", "page": "DMG", "rarity": "Very Rare"},
+                 {"name": "Scorpion Armor (plate)", "price": "3,600 gp", "page": "ToA", "rarity": "Rare"},
+                 {"name": "Scribe's Pen", "price": "60 gp", "page": "ERLW", "rarity": "Common"},
+                 {"name": "Scroll of Protection", "price": "3,500 gp", "page": "DMG", "rarity": "Rare"},
+                 {"name": "Seeker Dart", "price": "100 gp", "page": "PotA", "rarity": "Uncommon"},
+                 {"name": "Sekolahian Worshipping Statuette", "price": "50 gp", "page": "GoS", "rarity": "Common"},
+                 {"name": "Sending Stones", "price": "500 gp", "page": "DMG", "rarity": "Uncommon"},
+                 {"name": "Sentinel Shield", "price": "300 gp", "page": "DMG", "rarity": "Uncommon"},
+                 {"name": "Serpent Scale Armor", "price": "3,500 gp", "page": "CM", "rarity": "Uncommon"},
+                 {"name": "Shadowfell Shard", "price": "600 gp", "page": "TCE", "rarity": "Rare"},
+                 {"name": "Shatterspike (longsword)", "price": "550 gp", "page": "TftYP", "rarity": "Uncommon"},
+                 {"name": "Shield Arbalest", "price": "250 gp", "page": "Enter Ravenloft", "rarity": "Uncommon"},
+                 {"name": "Shield of Expression", "price": "60 gp", "page": "XGE", "rarity": "Common"},
+                 {"name": "Shield of Missile Attraction", "price": "1,000 gp", "page": "DMG", "rarity": "Rare"},
+                 {"name": "Shield of the Tortoise", "price": "160 gp", "page": "TBoMT", "rarity": "Uncommon"},
+                 {"name": "Shield, +1", "price": "450 gp", "page": "DMG", "rarity": "Uncommon"},
+                 {"name": "Shield, +2", "price": "4,000 gp", "page": "DMG", "rarity": "Rare"},
+                 {"name": "Shifter's Shine (Common)", "price": "150 gp", "page": "Griffon's Saddlebag",
+                  "rarity": "Common"}, {"name": "Shiftweave", "price": "100 gp", "page": "ERLW", "rarity": "Common"},
+                 {"name": "Shrieking Greaves", "price": "1500 gp", "page": "TBoMT", "rarity": "Rare"},
+                 {"name": "Silent Blowgun", "price": "60 gp", "page": "Enter Ravenloft", "rarity": "Common"},
+                 {"name": "Siren Song Lyre", "price": "650 gp", "page": "MOT", "rarity": "Rare"},
+                 {"name": "Skyblinder Staff", "price": "375 gp", "page": "GGR", "rarity": "Uncommon"},
+                 {"name": "Sling of Giant Felling", "price": "350 gp", "page": "TBoMT", "rarity": "Uncommon"},
+                 {"name": "Slippers of Spider Climbing", "price": "500 gp", "page": "DMG", "rarity": "Uncommon"},
+                 {"name": "Slumbering Dragon Vessel", "price": "2,750 gp", "page": "FTD", "rarity": "Uncommon"},
+                 {"name": "Slumbering Dragon's Wrath Weapon", "price": "Weapon Price + 400 gp", "page": "FTD",
+                  "rarity": "Uncommon"},
+                 {"name": "Slumbering Dragon-Touched Focus", "price": "400 gp", "page": "FTD", "rarity": "Uncommon"},
+                 {"name": "Slumbering Scaled Ornament", "price": "400 gp", "page": "FTD", "rarity": "Uncommon"},
+                 {"name": "Smokepowder", "price": "325 gp", "page": "WDH", "rarity": "Uncommon"},
+                 {"name": "Smoldering Armor (light, medium, or heavy)", "price": "Armor Price + 150 gp", "page": "XGE",
+                  "rarity": "Common"},
+                 {"name": "Spear of Backbiting", "price": "9 Arc Tokens", "page": "TFTYP", "rarity": "Very Rare"},
+                 {"name": "Spellguard Shield", "price": "9 Arc Tokens", "page": "DMG", "rarity": "Very Rare"},
+                 {"name": "Spellshard", "price": "100 gp", "page": "ERLW", "rarity": "Common"},
+                 {"name": "Spider Staff", "price": "1,750 gp", "page": "LMoP", "rarity": "Rare"},
+                 {"name": "Spider Staff (replaces legacy)", "price": "1,750 gp", "page": "PaBTSO", "rarity": "Rare"},
+                 {"name": "Spies' Murmur", "price": "475 gp", "page": "GGR", "rarity": "Uncommon"},
+                 {"name": "Staff of Adornment", "price": "50 gp", "page": "XGE", "rarity": "Common"},
+                 {"name": "Staff of Birdcalls", "price": "70 gp", "page": "XGE", "rarity": "Common"},
+                 {"name": "Staff of Charming", "price": "3,750 gp", "page": "DMG", "rarity": "Rare"},
+                 {"name": "Staff of Defense", "price": "3,400 gp", "page": "LMoP", "rarity": "Rare"},
+                 {"name": "Staff of Defense (replaces legacy)", "price": "3,400 gp", "page": "PaBTSO",
+                  "rarity": "Rare"},
+                 {"name": "Staff of Fire", "price": "9 Arc Tokens", "page": "DMG", "rarity": "Very Rare"},
+                 {"name": "Staff of Flowers", "price": "50 gp", "page": "XGE", "rarity": "Common"},
+                 {"name": "Staff of Frost", "price": "9 Arc Tokens", "page": "DMG", "rarity": "Very Rare"},
+                 {"name": "Staff of Healing", "price": "4,800 gp", "page": "DMG", "rarity": "Rare"},
+                 {"name": "Staff of Striking", "price": "9 Arc Tokens", "page": "DMG", "rarity": "Very Rare"},
+                 {"name": "Staff of Swarming Insects", "price": "4,500 gp", "page": "DMG", "rarity": "Rare"},
+                 {"name": "Staff of the Adder", "price": "350 gp", "page": "DMG", "rarity": "Uncommon"},
+                 {"name": "Staff of the Ivory Claw", "price": "1,000 gp", "page": "EGW", "rarity": "Rare"},
+                 {"name": "Staff of the Python", "price": "1,000 gp", "page": "DMG", "rarity": "Uncommon"},
+                 {"name": "Staff of the Woodlands", "price": "4,500 gp", "page": "DMG", "rarity": "Rare"},
+                 {"name": "Staff of Thunder and Lightning", "price": "9 Arc Tokens", "page": "DMG",
+                  "rarity": "Very Rare"},
+                 {"name": "Staff of Withering", "price": "2,100 gp", "page": "DMG", "rarity": "Rare"},
+                 {"name": "Starshot Crossbow", "price": "Weapon Price + 1,500 gp", "page": "TBoMT", "rarity": "Rare"},
+                 {"name": "Stirring Dragon Vessel", "price": "5,500 gp", "page": "FTD", "rarity": "Rare"},
+                 {"name": "Stirring Dragon's Wrath Weapon, +1", "price": "Weapon Price + 2,500 gp", "page": "FTD",
+                  "rarity": "Rare"},
+                 {"name": "Stirring Dragon-Touched Focus", "price": "2,500 gp", "page": "FTD", "rarity": "Rare"},
+                 {"name": "Stirring Scaled Ornament", "price": "3,000 gp", "page": "FTD", "rarity": "Rare"},
+                 {"name": "Stone of Controlling Earth Elementals", "price": "4,700 gp", "page": "DMG",
+                  "rarity": "Rare"},
+                 {"name": "Stone of Good Luck", "price": "400 gp", "page": "DMG", "rarity": "Uncommon"},
+                 {"name": "Stone of Ill Luck", "price": "400 gp", "page": "TftYP", "rarity": "Uncommon"},
+                 {"name": "Stonemaker's War Pick", "price": "9 Arc Tokens", "page": "BMT", "rarity": "Very Rare"},
+                 {"name": "Stonespeaker Crystal", "price": "4,600 gp", "page": "OotA", "rarity": "Rare"},
+                 {"name": "Storm Boomerang", "price": "150 gp", "page": "PotA", "rarity": "Uncommon"},
+                 {"name": "Subtle Crossbow, Hand", "price": "200 gp", "page": "Enter Ravenloft", "rarity": "Common"},
+                 {"name": "Sunforger (warhammer)", "price": "4,600 gp", "page": "GGR", "rarity": "Rare"},
+                 {"name": "Sword of Life Stealing (any sword)", "price": "2,200 gp", "page": "DMG", "rarity": "Rare"},
+                 {"name": "Sword of the Paruns", "price": "9 Arc Tokens", "page": "GGR", "rarity": "Very Rare"},
+                 {"name": "Sword of Vengeance (any sword)", "price": "Weapon Price + 400 gp", "page": "DMG",
+                  "rarity": "Uncommon"},
+                 {"name": "Sword of Wounding (any sword)", "price": "Weapon Price + 1,200 gp", "page": "DMG",
+                  "rarity": "Rare"}, {"name": "Talking Doll", "price": "75 gp", "page": "XGE", "rarity": "Common"},
+                 {"name": "Tankard of Sobriety", "price": "80 gp", "page": "XGE", "rarity": "Common"},
+                 {"name": "Tentacle Rod", "price": "2,000 gp", "page": "DMG", "rarity": "Rare"},
+                 {"name": "Thermal Cube", "price": "50 gp", "page": "IDRotF", "rarity": "Common"},
+                 {"name": "Thrusting Pike", "price": "50 gp", "page": "Enter Ravenloft", "rarity": "Common"},
+                 {"name": "Thundercrack Whip", "price": "400 gp", "page": "Whips, Revised", "rarity": "Uncommon"},
+                 {"name": "Tidecaller Trident", "price": "9 Arc Tokens", "page": "BMT", "rarity": "Very Rare"},
+                 {"name": "Toppling Flail", "price": "60 gp", "page": "Enter Ravenloft", "rarity": "Common"},
+                 {"name": "Toppling Light Hammer", "price": "30 gp", "page": "Enter Ravenloft", "rarity": "Common"},
+                 {"name": "Trapping Net", "price": "25 gp", "page": "Enter Ravenloft", "rarity": "Common"},
+                 {"name": "Trident of Fish Command", "price": "300 gp", "page": "DMG", "rarity": "Uncommon"},
+                 {"name": "Two-Birds Sling", "price": "4,000 gp", "page": "MOT", "rarity": "Rare"},
+                 {"name": "Vaulting Quarterstaff", "price": "15 gp", "page": "Enter Ravenloft", "rarity": "Common"},
+                 {"name": "Ventilating Lungs", "price": "1,000 gp", "page": "ERLW", "rarity": "Rare"},
+                 {"name": "Veteran's Cane", "price": "50 gp", "page": "XGE", "rarity": "Common"},
+                 {"name": "Vicious Weapon (any weapon)", "price": "Weapon Price + 4,000 gp", "page": "DMG",
+                  "rarity": "Rare"}, {"name": "Vox Seeker", "price": "100 gp", "page": "EGW", "rarity": "Common"},
+                 {"name": "Voyager Staff", "price": "9 Arc Tokens", "page": "GGR", "rarity": "Very Rare"},
+                 {"name": "Wakened Dragon Vessel", "price": "9 Arc Tokens", "page": "FTD", "rarity": "Very Rare"},
+                 {"name": "Wakened Dragon-Touched Focus", "price": "9 Arc Tokens", "page": "FTD",
+                  "rarity": "Very Rare"},
+                 {"name": "Walloping Ammunition", "price": "60 gp", "page": "XGE", "rarity": "Common"},
+                 {"name": "Wand of Binding", "price": "2,500 gp", "page": "DMG", "rarity": "Rare"},
+                 {"name": "Wand of Conducting", "price": "90 gp", "page": "XGE", "rarity": "Common"},
+                 {"name": "Wand of Enemy Detection", "price": "3,750 gp", "page": "DMG", "rarity": "Rare"},
+                 {"name": "Wand of Entangle", "price": "250 gp", "page": "TftYP", "rarity": "Uncommon"},
+                 {"name": "Wand of Fear", "price": "3,250 gp", "page": "DMG", "rarity": "Rare"},
+                 {"name": "Wand of Fireballs", "price": "4,800 gp", "page": "DMG", "rarity": "Rare"},
+                 {"name": "Wand of Lightning Bolts", "price": "4,800 gp", "page": "DMG", "rarity": "Rare"},
+                 {"name": "Wand of Magic Detection", "price": "150 gp", "page": "DMG", "rarity": "Uncommon"},
+                 {"name": "Wand of Magic Missiles", "price": "300 gp", "page": "DMG", "rarity": "Uncommon"},
+                 {"name": "Wand of Paralysis", "price": "4,250 gp", "page": "DMG", "rarity": "Rare"},
+                 {"name": "Wand of Pyrotechnics", "price": "65 gp", "page": "XGE", "rarity": "Common"},
+                 {"name": "Wand of Scowls", "price": "60 gp", "page": "XGE", "rarity": "Common"},
+                 {"name": "Wand of Secrets", "price": "125 gp", "page": "DMG", "rarity": "Uncommon"},
+                 {"name": "Wand of Smiles", "price": "60 gp", "page": "XGE", "rarity": "Common"},
+                 {"name": "Wand of the War Mage, +1", "price": "400 gp", "page": "DMG", "rarity": "Uncommon"},
+                 {"name": "Wand of the War Mage, +2", "price": "4,000 gp", "page": "DMG", "rarity": "Rare"},
+                 {"name": "Wand of the War Mage, +3", "price": "9 Arc Tokens", "page": "DMG", "rarity": "Very Rare"},
+                 {"name": "Wand of Web", "price": "300 gp", "page": "DMG", "rarity": "Uncommon"},
+                 {"name": "Wand of Winter", "price": "4,100 gp", "page": "HotDQ", "rarity": "Rare"},
+                 {"name": "Wand of Wonder", "price": "2,250 gp", "page": "DMG", "rarity": "Rare"},
+                 {"name": "Wand Sheath", "price": "75 gp", "page": "ERLW", "rarity": "Common"},
+                 {"name": "Warrior's Passkey", "price": "3000 gp", "page": "TBoMT", "rarity": "Rare"},
+                 {"name": "Wayfarer's Boots", "price": "2,500 gp", "page": "BGG", "rarity": "Rare"},
+                 {"name": "Weapon (any), +1", "price": "Weapon Price + 500 gp", "page": "DMG", "rarity": "Uncommon"},
+                 {"name": "Weapon (any), +2", "price": "Weapon Price + 2,500 gp", "page": "DMG", "rarity": "Rare"},
+                 {"name": "Weapon of Certain Death (any weapon)", "price": "Weapon Price + 1,500 gp", "page": "EGW",
+                  "rarity": "Rare"},
+                 {"name": "Weapon of Throne's Command", "price": "9 Arc Tokens", "page": "BMT", "rarity": "Very Rare"},
+                 {"name": "Weapon of Warning", "price": "Weapon Price + 400 gp", "page": "DMG", "rarity": "Uncommon"},
+                 {"name": "Wind Fan", "price": "150 gp", "page": "DMG", "rarity": "Uncommon"},
+                 {"name": "Winged Boots", "price": "5,000 gp*", "page": "DMG", "rarity": "Uncommon"},
+                 {"name": "Wings of Flying", "price": "3,600 gp", "page": "DMG", "rarity": "Rare"},
+                 {"name": "Wingwear", "price": "300 gp", "page": "PotA", "rarity": "Uncommon"},
+                 {"name": "Wispy Sour (Rare)", "price": "800 gp", "page": "Griffon's Saddlebag", "rarity": "Rare"},
+                 {"name": "Wispy Sour (Uncommon)", "price": "350 gp", "page": "Griffon's Saddlebag",
+                  "rarity": "Uncommon"},
+                 {"name": "Wraps of Unarmed Prowess, +1", "price": "600 gp", "page": "TBoMT", "rarity": "Uncommon"},
+                 {"name": "Wraps of Unarmed Prowess, +2", "price": "3000 gp", "page": "TBoMT", "rarity": "Rare"},
+                 {"name": "Wraps of Unarmed Prowess,+3", "price": "9 Arc Tokens", "page": "BMT", "rarity": "Very Rare"},
+                 {"name": "Zephyr Armor", "price": "4,500 gp", "page": "BGG", "rarity": "Rare"}]
+Cloth = [
+    {'name': 'Infernal Leather', 'price': '750 gp', 'page': 'Special Materials', 'rarity': 'Uncommon', 'type': 'Cloth'},
+    {'name': 'Shadowfell Linen', 'price': '750 gp', 'page': 'Special Materials', 'rarity': 'Uncommon', 'type': 'Cloth'}]
+Organic = [
+    {'name': 'Asmorch Wood', 'price': '500 gp', 'page': 'Special Materials', 'rarity': 'Uncommon', 'type': 'Organic'},
+    {'name': 'Coral', 'price': '100 gp', 'page': 'Special Materials', 'rarity': 'Uncommon', 'type': 'Organic'},
+    {'name': 'Plague wood', 'price': '250 gp', 'page': 'Special Materials', 'rarity': 'Uncommon', 'type': 'Organic'},
+    {'name': 'Spiritual Wood', 'price': '800 gp', 'page': 'Special Materials', 'rarity': 'Uncommon', 'type': 'Organic'}]
+Metal = [{'name': 'Cold Iron', 'price': '100 gp', 'page': 'Special Materials', 'rarity': 'Uncommon', 'type': 'Metal'},
+         {'name': 'Darksteel', 'price': '600 gp', 'page': 'Special Materials', 'rarity': 'Uncommon', 'type': 'Metal'},
+         {'name': 'Flametouched Iron', 'price': '500 gp', 'page': 'Special Materials', 'rarity': 'Uncommon',
+          'type': 'Metal'},
+         {'name': 'Orichalcum', 'price': '650 gp', 'page': 'Special Materials', 'rarity': 'Uncommon', 'type': 'Metal'},
+         {'name': 'Infernal Steel', 'price': '750 gp', 'page': 'Special Materials', 'rarity': 'Uncommon',
+          'type': 'Metal'},
+         {'name': 'Osmodium', 'price': '750 gp', 'page': 'Special Materials', 'rarity': 'Uncommon', 'type': 'Metal'},
+         {'name': 'Stellar Iron', 'price': '850 gp', 'page': 'Special Materials', 'rarity': 'Uncommon',
+          'type': 'Metal'}]
+Mineral = [
+    {'name': 'Aerocrystal', 'price': '750 gp', 'page': 'Special Materials', 'rarity': 'Uncommon', 'type': 'Mineral'},
+    {'name': 'Dwarvenstone', 'price': '300 gp', 'page': 'Special Materials', 'rarity': 'Uncommon', 'type': 'Mineral'},
+    {'name': 'Eternal Ice', 'price': '600 gp', 'page': 'Special Materials', 'rarity': 'Uncommon', 'type': 'Mineral'},
+    {'name': 'Obsidian', 'price': '500 gp', 'page': 'Special Materials', 'rarity': 'Uncommon', 'type': 'Mineral'}]
 
 SpecialMaterials = [Cloth, Organic, Metal, Mineral]
 
@@ -83,7 +820,6 @@ def getMaterials(requested_type, num_materials=1):
 
     materialType = typesOfMaterials.index(requested_type)
 
-
     materials = []
     for i in range(num_materials):
         attempts = 0
@@ -91,7 +827,8 @@ def getMaterials(requested_type, num_materials=1):
             attempts = attempts + 1
 
             randNum = randint(0, len(SpecialMaterials[materialType]) - 1)
-            newScroll = [SpecialMaterials[materialType][randNum][key_name], SpecialMaterials[materialType][randNum][key_price]]
+            newScroll = [SpecialMaterials[materialType][randNum][key_name],
+                         SpecialMaterials[materialType][randNum][key_price]]
             if newScroll not in materials:
                 break
             elif attempts > 100:
@@ -148,73 +885,46 @@ def getVistaniItems():
     spellLevelAndCost = ["Cantrip: 15gp", "1st: 25gp", "2nd: 150gp", "3rd: 400gp"]
     raritiesList = ["Common", "Uncommon", "Rare", "Very Rare"]
     materialTypes = ["Cloth", "Organic", "Metal", "Mineral"]
-    endTableMarker = "ENDTABLE"
-    sectionMarker = "ENDSECTION"
-    mergeMarker = "MERGE"
 
-    itemList = []
+    markets = []
+
+    miscItems = {"title": "Magic Items", "sections": []}
     maxItemsPerSubcategory = 3
     for i in range(len(raritiesList)):
-        itemList.append(raritiesList[i])
-        itemList.append(mergeMarker)
+        bullets = []
         newItems = getItems(marketList[0], max(maxItemsPerSubcategory - i, 1), raritiesList[i])
         for j in range(len(newItems) // 2):
-            itemList.append(newItems[2 * j ])
-            itemList.append(newItems[(2 * j) + 1])
-        if i < (len(raritiesList) - 1):
-            itemList.append(sectionMarker)
-            itemList.append(sectionMarker)
-    itemList.append(endTableMarker)
+            bullets.append({"item": newItems[2 * j], "cost": newItems[(2 * j) + 1]})
 
-    for i in range(len(spellLevelAndCost) // 2):
-        lesserScrollLevel = i * 2
-        greaterScrollLevel = lesserScrollLevel + 1
-        itemList.append(spellLevelAndCost[lesserScrollLevel])
-        itemList.append(spellLevelAndCost[greaterScrollLevel])
+        miscItems["sections"].append({"title": raritiesList[i], "bullets": bullets})
+    markets.append(miscItems)
 
-        weakerScrolls = getScrolls(maxItemsPerSubcategory, lesserScrollLevel)
-        strongerScrolls = getScrolls(maxItemsPerSubcategory, greaterScrollLevel)
-
+    scrolls = {"title": "Spell Scrolls", "sections": []}
+    for i in range(len(spellLevelAndCost)):
+        bullets = []
         for j in range(maxItemsPerSubcategory):
-            itemList.append(weakerScrolls[j])
-            itemList.append(strongerScrolls[j])
+            newScrolls = getScrolls(maxItemsPerSubcategory, i, i)
+            bullets.append({"item": newScrolls[0], "cost": None})
 
-        if i < ((len(spellLevelAndCost) // 2) - 1):
-            itemList.append(sectionMarker)
-            itemList.append(sectionMarker)
+        scrolls["sections"].append({"title": spellLevelAndCost[i], "bullets": bullets})
 
-    itemList.append(endTableMarker)
+    markets.append(scrolls)
 
-    for i in range(len(materialTypes) // 2):
-        firstType = i * 2
-        secondType = firstType + 1
+    specialMaterials = {"title": "Special Materials", "sections": []}
+    for i in range(len(materialTypes)):
+        bullets = []
+        newMaterial = getMaterials(materialTypes[i], 1)
+        for j in range(len(newMaterial) // 2):
+            bullets.append({"item": newMaterial[2 * j], "cost": newMaterial[(2 * j) + 1]})
 
-        itemList.append(materialTypes[firstType])
-        itemList.append(materialTypes[secondType])
+        specialMaterials["sections"].append({"title": materialTypes[i], "bullets": bullets})
 
-        firstMaterial = getMaterials(materialTypes[firstType])
-        secondMaterial = getMaterials(materialTypes[secondType])
+    markets.append(specialMaterials)
 
-        # append names
-        itemList.append(firstMaterial[0])
-        itemList.append(secondMaterial[0])
+    return markets
 
-        # append same line so price and name are in same box
-        itemList.append("SAMELINE")
-        itemList.append("SAMELINE")
-
-        # append prices
-        itemList.append(firstMaterial[1])
-        itemList.append(secondMaterial[1])
-
-        if i < ((len(materialTypes) // 2) - 1):
-            itemList.append(sectionMarker)
-            itemList.append(sectionMarker)
-
-    return itemList
 
 MANUAL_INPUT = getVistaniItems()
-
 
 from textwrap import wrap
 from math import ceil
@@ -265,7 +975,6 @@ def shortestWrap(text, width):
         return simple
     else:
         return even
-
 
 
 class Table:
@@ -423,7 +1132,7 @@ class Table:
 
         return joinedColumns
 
-    def wrapTable(self, max_length= -1):
+    def wrapTable(self, max_length=-1):
         if self.DoesWrap:
             if max_length < 1:
                 max_length = self.widthAllowance - self.NON_CONTENT_WIDTH
@@ -457,7 +1166,8 @@ class Table:
 
                     smallCellContent = self.Cell[row][smallerCell]
                     if self.Cell[row][smallerCell] != self.MERGE_MARKER:
-                        secondaryCells = shortestWrap(self.Cell[row][smallerCell], (max_length - secondaryLengthConstraint))
+                        secondaryCells = shortestWrap(self.Cell[row][smallerCell],
+                                                      (max_length - secondaryLengthConstraint))
                         sameLineMarkers = [self.COMBINE_ROW_MARKER, self.MERGE_MARKER]
                     else:
                         secondaryCells = [self.MERGE_MARKER]
@@ -481,7 +1191,6 @@ class Table:
                             newRowIndex = self.Cell.index(line)
                             self.Cell.insert(newRowIndex + 1, sameLineMarkers)
                             previousLineIndex = self.Cell.index(sameLineMarkers, newRowIndex)
-
 
                 self.getRowTraits()
                 self.measureDimensions()
@@ -571,7 +1280,8 @@ class Table:
             else:
                 combine = False
 
-            self.RowInfo.append({self.MERGE_MARKER: merge, self.SECTION_MARKER: sectionEnd, self.COMBINE_ROW_MARKER: combine})
+            self.RowInfo.append(
+                {self.MERGE_MARKER: merge, self.SECTION_MARKER: sectionEnd, self.COMBINE_ROW_MARKER: combine})
 
     def getBoxCharsForRow(self, row):
         merged = self.MERGE_MARKER
@@ -778,6 +1488,18 @@ def getInputOrDefault(prompt="Enter input: ", stored_value="DEFAULT", code_for_d
     return stored_value
 
 
+def nicePrint(table = []):
+    for market in table:
+        print("## " + market["title"])
+        for section in market["sections"]:
+            print("### " + section["title"])
+            for bullet in section["bullets"]:
+                if bullet["cost"] is not None:
+                    print(f'''- {bullet["item"]} | **{bullet["cost"]}**''')
+                else:
+                    print(f'''- {bullet["item"]}''')
+
+
 def main():
     TABLE_TITLES_DEFAULTS = ["Magic Items", "Spell Scrolls", "Special Materials"]
     NUM_TABLES_DEFAULT = 3
@@ -840,7 +1562,7 @@ def main():
             prompt = "(Enter 'x' for default '%d') Enter number of tables to be made: " % NUM_TABLES_DEFAULT
             numTables = int(getInputOrDefault(prompt, str(NUM_TABLES_DEFAULT)))
         else:
-            print("__**Vistani Market**__\n")
+            print("# Vistani Market")
 
         tableTitles = []
         for i in range(numTables):
@@ -863,21 +1585,12 @@ def main():
         if numTables > 1:
             for i in range(numTables):
 
-                if unprocessedTableInput.count(DELIMITER_STRING) > 0:
-                    IndexOfDelimiter = unprocessedTableInput.index(DELIMITER_STRING)
-                    tableItems = unprocessedTableInput[0:IndexOfDelimiter]
-                    unprocessedTableInput = unprocessedTableInput[(IndexOfDelimiter + 1):]
-                else:
-                    tableItems = unprocessedTableInput
+                tableItems = unprocessedTableInput
 
-                print("**%s**" % tableTitles[i])
-                marketTable = Table(tableItems, TextWrapping, desiredWidth)
-                marketTable.printUnicodeTable()
+            nicePrint(tableItems)
 
         else:
-            print("**%s**" % tableTitles[i])
-            marketTable = Table(unprocessedTableInput, TextWrapping, desiredWidth)
-            marketTable.printUnicodeTable()
+            nicePrint(unprocessedTableInput)
 
         print(closingPlayersTag)
 
