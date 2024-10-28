@@ -98,7 +98,7 @@ def getTattooItems():
 
     spellwroughts = {"title": sections[0], "sections": []}
     for i in range(len(spellwroughtsSpellLevel)):
-        spellwroughts["sections"].append({"title": f'{RaritiesList[i]} ({spellwroughtsSpellLevel[i]}) | {spellwroughtsPrice[i]}', "bullets": [{"item": getScrolls(1, i, i)[0], "cost": None}]})
+        spellwroughts["sections"].append({"title": f'{RaritiesList[i]} ({spellwroughtsSpellLevel[i]}) {spellwroughtsPrice[i]}', "bullets": [{"item": getScrolls(1, i, i)[0], "cost": None}]})
     tattooShop.append(spellwroughts)
 
     permanentTattoo = getTattoo(RaritiesList[0], RaritiesList[2])
